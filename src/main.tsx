@@ -11,7 +11,7 @@ console.log("This is running in the main.tsx file");
  
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-  <BrowserRouter basename="/bos">
+  <BrowserRouter>
     <ReactFlowProvider>
       <App />
     </ReactFlowProvider>
