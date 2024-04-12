@@ -11,9 +11,9 @@ interface IUser {
 }
 
 class User extends Model implements IUser {
-  declare id!: string;
-  declare displayName!: string;
-  declare accelbyteUserId!: string;
+  declare id: string;
+  declare displayName: string;
+  declare accelbyteUserId: string;
 }
 
 User.init({

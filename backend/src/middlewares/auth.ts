@@ -6,8 +6,9 @@ const authMiddleware = (req: express.Request, res: express.Response, next: expre
   if (hasPermission) {
     req.user = hasPermission;
     next();
+  } else {
+    res.status(401).send('Unauthorized');
   }
-  res.status(401).send('Unauthorized');
 }
 
 export default authMiddleware;
