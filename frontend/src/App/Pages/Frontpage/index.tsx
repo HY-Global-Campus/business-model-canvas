@@ -30,10 +30,10 @@ function FrontPage() {
 
   const buttonStyle: CSSProperties = {
     position: 'absolute',
-    bottom: '20px',
-    right: '20px',
+    top: '50%',
+    right: '20%',
     padding: '10px 20px',
-    fontSize: '70px',
+    fontSize: '50px',
     fontStyle: 'bold',
     color: 'black',
     backgroundColor: 'unset',

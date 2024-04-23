@@ -2,11 +2,10 @@ import ReactFlow, { Controls, Panel, NodeOrigin } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 import { useNavigate } from 'react-router-dom';
 import { CSSProperties } from 'react';
- 
 import useStore, { RFState } from '../../store';
- 
 // we have to import the React Flow styles for it to work
 import 'reactflow/dist/style.css';
+import Header from '../../Components/Header';
  
 const selector = (state: RFState) => ({
   nodes: state.nodes,
@@ -19,7 +18,7 @@ const selector = (state: RFState) => ({
     padding: '10px 20px',
     fontSize: '24px',
     position: 'fixed',
-    bottom: '20px',
+    top: '50%',
   };
 
 
@@ -36,6 +35,7 @@ function Flow() {
  
   return (
     <>
+    <Header />
     <ReactFlow
       nodes={nodes}
       edges={edges}
