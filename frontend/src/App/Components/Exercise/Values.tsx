@@ -1,5 +1,6 @@
 import { CSSProperties } from "react";
 import ExpandingTextArea from "./ExpandingTextarea";
+import treeOfValues from '../../../assets/treeOfValues.png'
 
 const ValuesExercise = () => {
 
@@ -58,7 +59,7 @@ const ValuesExercise = () => {
       <div style={panelStyle}>
         {/* Content for right panel, like image */}
         <h2>Tree of Values</h2>
-        <img style={imageStyle} src="path-to-your-tree-image.png" alt="Tree of Values" />
+        <img style={imageStyle} src={treeOfValues} alt="Tree of Values" />
       </div>
       </div>
 	)
