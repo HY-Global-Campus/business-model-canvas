@@ -3,6 +3,7 @@ import Mindmap from "./Pages/Mindmap"
 import FrontPage from './Pages/Frontpage';
 import ExercisePage from './Pages/ExercisePage';
 import gothamNarrow from '../assets/Gotham-Narrow-Font-Family/GothamNarrow-Book.otf'
+import EndPage from './Pages/EndPage';
 
 function App() {
 const myFontFace = `
@@ -28,6 +29,7 @@ const myFontFace = `
       <Route path="/" element={<FrontPage />} />
       <Route path="/mindmap" element={ <Mindmap />} />
       <Route path="/exercise" element= {<ExercisePage />} />
+      <Route path="/endpage" element= {<EndPage />} />
     </Routes>
 
     </>

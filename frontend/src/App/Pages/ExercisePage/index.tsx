@@ -17,7 +17,7 @@ const ExercisePage: React.FC = () => {
   const navigationButtonStyle: CSSProperties = {
     cursor: 'pointer',
     padding: '10px 20px',
-    fontSize: '24px',
+    fontSize: '36px',
     position: 'fixed',
     top: '50%',
   };
