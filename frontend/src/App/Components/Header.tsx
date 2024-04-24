@@ -1,4 +1,4 @@
-
+import hyLogoWhite from '../../assets/HY-Logo_White.svg'
 
 const Header: React.FC = () => {
     const headerStyle: React.CSSProperties = {
@@ -22,7 +22,7 @@ const Header: React.FC = () => {
     return (
         <header style={headerStyle}>
             <h1 style={titleStyle}>Book of Serendip</h1>
-            <img src={'logo'} alt="Logo" style={logoStyle} />
+            <img src={hyLogoWhite} alt="Logo" style={logoStyle} />
         </header>
     );
 };

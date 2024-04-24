@@ -1,6 +1,7 @@
 
 import { CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
+import hyLogo from '../../../assets/HY_Logo.svg'
 
 function FrontPage() {
 
@@ -41,6 +42,11 @@ function FrontPage() {
     cursor: 'pointer',
   };
 
+  const logoStyle: CSSProperties = {
+	width: '200px',
+	height: 'auto',
+  };
+
 
   return (
 		<>
@@ -60,8 +66,7 @@ function FrontPage() {
           placeholder="Enter your name"
         />
       <p>2050</p>
-      <img src="logo-url.png" alt="Logo" />
-      <p>University of Helsinki</p>
+      <img src={hyLogo} alt="Logo" style={logoStyle} />
         <button style={buttonStyle} onClick={() => navigate('/exercise')}>
           &gt;
         </button>
