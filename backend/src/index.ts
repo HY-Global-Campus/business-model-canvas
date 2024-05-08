@@ -2,12 +2,13 @@ import express from 'express'
 import loginRouter from './controllers/login.js';
 import authMiddleware from './middlewares/auth.js'
 import User from './models/user.js';
+import { dbSync } from './services/database.js';
 
 const app = express();
 app.use(express.json());
 app.use('/login', loginRouter);
 
-app.get('/', authMiddleware, async (req, res) => {
+app.get('/', authMiddleware, async (_, res) => {
   res.status(200).send('Success');
 })
 
@@ -23,8 +24,15 @@ app.get('/me', authMiddleware, async (req, res) => {
 
 
 const PORT = process.env.port || 80
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+
+dbSync().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}).catch(error => {
+  console.error('Unable to sync the database:', error);
+  process.exit(1);
+});
+
 
 
