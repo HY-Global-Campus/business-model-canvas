@@ -2,27 +2,27 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
 export interface UserExerciseAttributes {
-  user_id: number;
-  exercise_id: number;
+  userId: number;
+  exerciseId: number;
   status?: string;
   progress?: number;
 }
 
 class UserExercise extends Model implements UserExerciseAttributes {
-  declare user_id: number;
-  declare exercise_id: number;
+  declare userId: number;
+  declare exerciseId: number;
   declare status: string;
   declare progress: number;
 
   static initialize(sequelize: Sequelize): void {
     this.init({
-      user_id: {
+      userId: {
         type: DataTypes.INTEGER,
-        references: { model: 'users', key: 'user_id' }
+        references: { model: 'users', key: 'userId' }
       },
-      exercise_id: {
+      exerciseId: {
         type: DataTypes.INTEGER,
-        references: { model: 'exercises', key: 'exercise_id' }
+        references: { model: 'Exercises', key: 'exerciseId' }
       },
       status: {
         type: DataTypes.STRING,
@@ -36,7 +36,8 @@ class UserExercise extends Model implements UserExerciseAttributes {
         sequelize,
         modelName: 'UserExercise',
         tableName: 'user_exercises',
-        timestamps: false
+        timestamps: false,
+        underscored: true,
       });
 
   }

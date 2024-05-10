@@ -30,6 +30,7 @@ class User extends Model implements IUser {
     }, {
         sequelize,
         modelName: 'User',
+        tableName: 'users',
         underscored: true,
       });
   }

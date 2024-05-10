@@ -1,29 +1,29 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 
 export interface ExerciseAttributes {
-  exercise_id: number;
-  chapter_id: number;
+  exerciseId: number;
+  chapterId: number;
   type: string;
   content: any;
 }
 
 class Exercise extends Model implements ExerciseAttributes {
-  declare exercise_id: number;
-  declare chapter_id: number;
+  declare exerciseId: number;
+  declare chapterId: number;
   declare type: string;
   declare content: any;
 
   static initialize(sequelize: Sequelize): void {
     this.init({
-      exercise_id: {
+      exerciseId: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
       },
-      chapter_id: {
+      chapterId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: { model: 'chapters', key: 'chapter_id' }
+        references: { model: 'chapters', key: 'chapterId' }
       },
       type: {
         type: DataTypes.STRING,
@@ -35,7 +35,9 @@ class Exercise extends Model implements ExerciseAttributes {
       }
     }, {
         sequelize,
-        modelName: 'Exercise'
+        modelName: 'Exercise',
+        tableName: 'exercises',
+        underscored: true,
       });
 
   }

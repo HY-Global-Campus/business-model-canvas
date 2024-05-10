@@ -2,19 +2,19 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
 export interface ChapterAttributes {
-  chapter_id: number;
+  chapterId: number;
   title: string;
   description?: string;
 }
 
 class Chapter extends Model implements ChapterAttributes {
-  declare chapter_id: number;
+  declare chapterId: number;
   declare title: string;
   declare description: string;
 
   static initialize(sequelize: Sequelize): void {
     this.init({
-      chapter_id: {
+      chapterId: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
@@ -29,7 +29,9 @@ class Chapter extends Model implements ChapterAttributes {
       }
     }, {
         sequelize,
-        modelName: 'Chapter'
+        modelName: 'Chapter',
+        tableName: 'chapters',
+        underscored: true,
       });
   }
 }
