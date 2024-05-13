@@ -1,13 +1,13 @@
 
 import { Model, DataTypes, Sequelize } from "sequelize";
 
-interface IUser {
+interface UserAttributes {
   id: string,
   displayName: string,
   accelbyteUserId: string
 }
 
-class User extends Model implements IUser {
+class User extends Model implements UserAttributes {
   declare id: string;
   declare displayName: string;
   declare accelbyteUserId: string;

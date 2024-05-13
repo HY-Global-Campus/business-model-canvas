@@ -3,22 +3,16 @@ import config from '../config.js';
 
 const sequelize = new Sequelize(config.DB_URL, {dialect: 'postgres'});
 
-import Chapter from '../models/Chapter.js';
 import User from '../models/user.js';
-import Exercise from '../models/Exercise.js';
-import UserExercise from '../models/UserExercise.js';
+import BookOne from '../models/BookOne.js';
 
-Chapter.initialize(sequelize);
 User.initialize(sequelize);
-Exercise.initialize(sequelize);
-UserExercise.initialize(sequelize);
+BookOne.initialize(sequelize);
 
 // Setup associations
-Chapter.hasMany(Exercise, { foreignKey: 'chapter_id' });
-Exercise.belongsTo(Chapter, { foreignKey: 'chapter_id' });
 
-User.belongsToMany(Exercise, { through: UserExercise, foreignKey: 'user_id' });
-Exercise.belongsToMany(User, { through: UserExercise, foreignKey: 'exercise_id' });
+User.belongsToMany(BookOne, { through: 'UserBookOne', foreignKey: 'user_id' });
+BookOne.belongsToMany(User, { through: 'UserBookOne', foreignKey: 'book_id' });
 
 export const dbSync = async () => {
   try {
