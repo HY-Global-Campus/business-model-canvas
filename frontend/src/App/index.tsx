@@ -4,6 +4,8 @@ import FrontPage from './Pages/Frontpage';
 import ExercisePage from './Pages/ExercisePage';
 import gothamNarrow from '../assets/Gotham-Narrow-Font-Family/GothamNarrow-Book.otf'
 import EndPage from './Pages/EndPage';
+import ProtectedRoute from './Components/ProtectedRoute';
+import Login from './Components/Login';
 
 function App() {
 const myFontFace = `
@@ -26,10 +28,13 @@ const myFontFace = `
     </style>
 
     <Routes>
-      <Route path="/" element={<FrontPage />} />
-      <Route path="/mindmap" element={ <Mindmap />} />
-      <Route path="/exercise" element= {<ExercisePage />} />
-      <Route path="/endpage" element= {<EndPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<ProtectedRoute />}>
+          <Route path="/" element={<FrontPage />} />
+          <Route path="/mindmap" element={ <Mindmap />} />
+          <Route path="/exercise" element= {<ExercisePage />} />
+          <Route path="/endpage" element= {<EndPage />} />
+      </Route>
     </Routes>
 
     </>

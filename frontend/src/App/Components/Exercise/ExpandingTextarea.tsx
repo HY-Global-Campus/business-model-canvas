@@ -1,13 +1,14 @@
 
 import React, { useState } from 'react';
 
-type ExpandingTextAreaProps = {
+interface ExpandingTextAreaProps {
+  id: string;
   instructionText: string;
-  id: string; // To associate the label with the textarea
-};
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}
 
-const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({ instructionText, id }) => {
-  const [text, setText] = useState('');
+const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({ id, instructionText, value, onChange }) => {
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
@@ -34,20 +35,18 @@ const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({ instructionText, 
     margin: '10px 0px',
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(event.target.value);
-  };
+
 
   return (
     <div style={containerStyle}>
       <label htmlFor={id} style={labelStyle}>{instructionText}</label>
       <textarea
-        id={id}
         style={textAreaStyle}
-        value={text}
-        onChange={handleChange}
-        rows={2}
-        placeholder='Type your answer here. Max. 50 words.'
+        id={id}
+        value={value}
+        onChange={onChange}
+        rows={4}
+        cols={50}
       />
     </div>
   );

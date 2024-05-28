@@ -2,7 +2,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CSSProperties } from 'react';
-import ValuesExercise from '../../Components/Exercise/Values';
+//import ValuesExercise from '../../Components/Exercise/Values';
+import ChooseChallengeExercise from '../../Components/Exercise/ChooseChallenge';
 import Header from '../../Components/Header';
 
 const ExercisePage: React.FC = () => {
@@ -26,7 +27,7 @@ const ExercisePage: React.FC = () => {
 	<>
 	<Header />
     <div style={pageStyle}>
-      <ValuesExercise />
+      <ChooseChallengeExercise />
       <div onClick={() => navigate('/')} style={{ ...navigationButtonStyle, left: '20px' }}>
         {'<'}
       </div>
