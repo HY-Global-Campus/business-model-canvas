@@ -203,17 +203,11 @@ export interface FuturePitchAnswer {
 }
 
 export interface BookOneExercises {
-  chooseChallenge: ChooseChallenge;
   chooseChallengeAnswer: ChooseChallengeAnswer;
-  identifyLeveragePoints: IdentifyLeveragePoints;
   identifyLeveragePointsAnswer: IdentifyLeveragePointsAnswer;
-  redefineChallenge: RedefineChallenge;
   redefineChallengeAnswer: RedefineChallengeAnswer;
-  values: Values;
   valuesAnswer: ValuesAnswer;
-  fromFutureToPresent: FromFutureToPresent;
   fromFutureToPresentAnswer: FromFutureToPresentAnswer;
-  futurePitch: FuturePitch;
   futurePitchAnswer: FuturePitchAnswer;
 }
 

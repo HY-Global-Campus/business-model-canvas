@@ -2,8 +2,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CSSProperties } from 'react';
+//import ChooseChallengeExercise from '../../Components/Exercise/ChooseChallenge';
+//import IdentifyLeveragePointsExercise from '../../Components/Exercise/IdentifyLeveragePoints';
+//import RedefineChallengeExercise from '../../Components/Exercise/RedefineChallenge';
 //import ValuesExercise from '../../Components/Exercise/Values';
-import ChooseChallengeExercise from '../../Components/Exercise/ChooseChallenge';
+//import FromFutureToPresentExercise from '../../Components/Exercise/FromFutureToPresent';
+import FuturePitchExercise from '../../Components/Exercise/FuturePitch';
 import Header from '../../Components/Header';
 
 const ExercisePage: React.FC = () => {
@@ -27,7 +31,7 @@ const ExercisePage: React.FC = () => {
 	<>
 	<Header />
     <div style={pageStyle}>
-      <ChooseChallengeExercise />
+      <FuturePitchExercise />
       <div onClick={() => navigate('/')} style={{ ...navigationButtonStyle, left: '20px' }}>
         {'<'}
       </div>

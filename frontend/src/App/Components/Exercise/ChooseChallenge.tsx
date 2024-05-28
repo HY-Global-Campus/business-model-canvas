@@ -9,7 +9,6 @@ import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
 
 interface ChooseChallengeProps {
-  userId: string;
 }
 
 const ChooseChallengeExercise: React.FC<ChooseChallengeProps> = () => {

@@ -4,25 +4,27 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
-import { Values } from '../../../types/exercises';
+import { RedefineChallenge } from '../../../types/exercises';
 import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
 
-interface ValuesProps {}
+interface RedefineChallengeProps {}
 
-const ValuesExercise: React.FC<ValuesProps> = () => {
+const RedefineChallengeExercise: React.FC<RedefineChallengeProps> = () => {
   const [bookOne, setBookOne] = useState<BookOne | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<Values>({
+  const [answers, setAnswers] = useState<RedefineChallenge>({
     left: {
-      title: 'Values - Left',
-      description: 'Identify core values related to the challenge',
-      question1: { title: 'Question 1', answer: '' },
-      question2: { title: 'Question 2', answer: '' },
-      question3: { title: 'Question 3', answer: '' },
+      title: 'Redefine Challenge - Left',
+      description: 'Redefine a challenge in the context of climate change',
+      answer: '',
     },
-    right: null,
+    right: {
+      title: 'Redefine Challenge - Right',
+      description: 'Provide a detailed explanation of the redefined challenge',
+      answer: '',
+    },
   });
   const userId = localStorage.getItem('id');
 
@@ -35,13 +37,15 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
         setBookOne(data);
         setAnswers({
           left: {
-            title: 'Values - Left',
-            description: 'Identify core values related to the challenge',
-            question1: { title: 'Question 1', answer: data.exercises.valuesAnswer.left.question1.answer },
-            question2: { title: 'Question 2', answer: data.exercises.valuesAnswer.left.question2.answer },
-            question3: { title: 'Question 3', answer: data.exercises.valuesAnswer.left.question3.answer },
+            title: 'Redefine Challenge - Left',
+            description: 'Redefine a challenge in the context of climate change',
+            answer: data.exercises.redefineChallengeAnswer.left.answer,
           },
-          right: null,
+          right: {
+            title: 'Redefine Challenge - Right',
+            description: 'Provide a detailed explanation of the redefined challenge',
+            answer: data.exercises.redefineChallengeAnswer.right.answer,
+          },
         });
       } catch (err) {
         setError('Failed to fetch BookOne data');
@@ -73,13 +77,13 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
     debounce((updatedBook: Partial<BookOne>) => mutation.mutate(updatedBook), 500)
   ).current;
 
-  const handleAnswerChange = (question: 'question1' | 'question2' | 'question3') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleAnswerChange = (side: 'left' | 'right') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      left: {
-        ...prevAnswers.left,
-        [question]: { answer: value },
+      [side]: {
+        ...prevAnswers[side],
+        answer: value,
       },
     }));
 
@@ -90,12 +94,9 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
         ...prevBookOne,
         exercises: {
           ...prevBookOne.exercises,
-          valuesAnswer: {
-            ...prevBookOne.exercises.valuesAnswer,
-            left: {
-              ...prevBookOne.exercises.valuesAnswer.left,
-              [question]: { answer: value },
-            },
+          redefineChallengeAnswer: {
+            ...prevBookOne.exercises.redefineChallengeAnswer,
+            [side]: { answer: value },
           },
         },
       };
@@ -113,34 +114,26 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
       <div style={panelStyle}>
         <h2>{answers.left.title}</h2>
         <p>{answers.left.description}</p>
-        <h3>{answers.left.question1.title}</h3>
         <ExpandingTextArea
-          id="values-question1"
+          id="redefine-challenge-text-area-left"
           instructionText=""
-          value={answers.left.question1.answer}
-          onChange={handleAnswerChange('question1')}
-        />
-        <h3>{answers.left.question2.title}</h3>
-        <ExpandingTextArea
-          id="values-question2"
-          instructionText=""
-          value={answers.left.question2.answer}
-          onChange={handleAnswerChange('question2')}
-        />
-        <h3>{answers.left.question3.title}</h3>
-        <ExpandingTextArea
-          id="values-question3"
-          instructionText=""
-          value={answers.left.question3.answer}
-          onChange={handleAnswerChange('question3')}
+          value={answers.left.answer}
+          onChange={handleAnswerChange('left')}
         />
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
+        <h2>{answers.right.title}</h2>
+        <p>{answers.right.description}</p>
+        <ExpandingTextArea
+          id="redefine-challenge-text-area-right"
+          instructionText=""
+          value={answers.right.answer}
+          onChange={handleAnswerChange('right')}
+        />
       </div>
     </div>
   );
 };
 
-export default ValuesExercise;
-
+export default RedefineChallengeExercise;

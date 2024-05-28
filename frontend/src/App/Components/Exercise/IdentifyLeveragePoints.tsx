@@ -4,25 +4,29 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
-import { Values } from '../../../types/exercises';
+import { IdentifyLeveragePoints } from '../../../types/exercises';
 import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
 
-interface ValuesProps {}
+interface IdentifyLeveragePointsProps {}
 
-const ValuesExercise: React.FC<ValuesProps> = () => {
+const IdentifyLeveragePointsExercise: React.FC<IdentifyLeveragePointsProps> = () => {
   const [bookOne, setBookOne] = useState<BookOne | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<Values>({
+  const [answers, setAnswers] = useState<IdentifyLeveragePoints>({
     left: {
-      title: 'Values - Left',
-      description: 'Identify core values related to the challenge',
+      title: 'Leverage Points - Left',
+      description: 'Identify leverage points caused by climate change in the boreal forest',
       question1: { title: 'Question 1', answer: '' },
       question2: { title: 'Question 2', answer: '' },
       question3: { title: 'Question 3', answer: '' },
     },
-    right: null,
+    right: {
+      title: 'Leverage Points - Right',
+      description: 'Describe overall leverage points and their impacts',
+      answer: '',
+    },
   });
   const userId = localStorage.getItem('id');
 
@@ -35,13 +39,17 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
         setBookOne(data);
         setAnswers({
           left: {
-            title: 'Values - Left',
-            description: 'Identify core values related to the challenge',
-            question1: { title: 'Question 1', answer: data.exercises.valuesAnswer.left.question1.answer },
-            question2: { title: 'Question 2', answer: data.exercises.valuesAnswer.left.question2.answer },
-            question3: { title: 'Question 3', answer: data.exercises.valuesAnswer.left.question3.answer },
+            title: 'Leverage Points - Left',
+            description: 'Identify leverage points caused by climate change in the boreal forest',
+            question1: { title: 'Question 1', answer: data.exercises.identifyLeveragePointsAnswer.left.question1.answer },
+            question2: { title: 'Question 2', answer: data.exercises.identifyLeveragePointsAnswer.left.question2.answer },
+            question3: { title: 'Question 3', answer: data.exercises.identifyLeveragePointsAnswer.left.question3.answer },
           },
-          right: null,
+          right: {
+            title: 'Leverage Points - Right',
+            description: 'Describe overall leverage points and their impacts',
+            answer: data.exercises.identifyLeveragePointsAnswer.right.answer,
+          },
         });
       } catch (err) {
         setError('Failed to fetch BookOne data');
@@ -73,13 +81,13 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
     debounce((updatedBook: Partial<BookOne>) => mutation.mutate(updatedBook), 500)
   ).current;
 
-  const handleAnswerChange = (question: 'question1' | 'question2' | 'question3') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleAnswerChange = (side: 'left' | 'right', question?: 'question1' | 'question2' | 'question3') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      left: {
-        ...prevAnswers.left,
-        [question]: { answer: value },
+      [side]: {
+        ...prevAnswers[side],
+        ...(question ? { [question]: { answer: value } } : { answer: value }),
       },
     }));
 
@@ -90,11 +98,11 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
         ...prevBookOne,
         exercises: {
           ...prevBookOne.exercises,
-          valuesAnswer: {
-            ...prevBookOne.exercises.valuesAnswer,
-            left: {
-              ...prevBookOne.exercises.valuesAnswer.left,
-              [question]: { answer: value },
+          identifyLeveragePointsAnswer: {
+            ...prevBookOne.exercises.identifyLeveragePointsAnswer,
+            [side]: {
+              ...prevBookOne.exercises.identifyLeveragePointsAnswer[side],
+              ...(question ? { [question]: { answer: value } } : { answer: value }),
             },
           },
         },
@@ -115,32 +123,40 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
         <p>{answers.left.description}</p>
         <h3>{answers.left.question1.title}</h3>
         <ExpandingTextArea
-          id="values-question1"
+          id="identify-leverage-points-question1"
           instructionText=""
           value={answers.left.question1.answer}
-          onChange={handleAnswerChange('question1')}
+          onChange={handleAnswerChange('left', 'question1')}
         />
         <h3>{answers.left.question2.title}</h3>
         <ExpandingTextArea
-          id="values-question2"
+          id="identify-leverage-points-question2"
           instructionText=""
           value={answers.left.question2.answer}
-          onChange={handleAnswerChange('question2')}
+          onChange={handleAnswerChange('left', 'question2')}
         />
         <h3>{answers.left.question3.title}</h3>
         <ExpandingTextArea
-          id="values-question3"
+          id="identify-leverage-points-question3"
           instructionText=""
           value={answers.left.question3.answer}
-          onChange={handleAnswerChange('question3')}
+          onChange={handleAnswerChange('left', 'question3')}
         />
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
+        <h2>{answers.right.title}</h2>
+        <p>{answers.right.description}</p>
+        <ExpandingTextArea
+          id="identify-leverage-points-right"
+          instructionText=""
+          value={answers.right.answer}
+          onChange={handleAnswerChange('right')}
+        />
       </div>
     </div>
   );
 };
 
-export default ValuesExercise;
+export default IdentifyLeveragePointsExercise;
 
