@@ -1,6 +1,5 @@
 import ReactFlow, { Controls, Panel, NodeOrigin } from 'reactflow';
 import { shallow } from 'zustand/shallow';
-import { useNavigate } from 'react-router-dom';
 import { CSSProperties } from 'react';
 import useStore, { RFState } from '../../store';
 // we have to import the React Flow styles for it to work
@@ -14,13 +13,7 @@ const selector = (state: RFState) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
 });
-   const navigationButtonStyle: CSSProperties = {
-    cursor: 'pointer',
-    padding: '10px 20px',
-    fontSize: '36px',
-    position: 'fixed',
-    top: '50%',
-  };
+
 const placeholderWrapperStyle: CSSProperties = {
   position: 'relative',
   width: '100%', // Ensure wrapper fills container for full responsiveness
@@ -55,7 +48,6 @@ const overlayTextStyle: CSSProperties = {
 const nodeOrigin: NodeOrigin = [0.5, 0.5];
  
 function Flow() {
-  const navigate = useNavigate();
   // whenever you use multiple values, you should use shallow to make sure the component only re-renders when one of the values changes
   const { nodes, edges, onNodesChange, onEdgesChange } = useStore(
     selector,
@@ -81,12 +73,7 @@ function Flow() {
       <Controls showInteractive={false} />
       <Panel position="top-left">Book of Serendip</Panel>
     </ReactFlow>
-      <div onClick={() => navigate('/exercise')} style={{ ...navigationButtonStyle, left: '20px' }}>
-        {'<'}
-      </div>
-<div onClick={() => navigate('/endpage')} style={{ ...navigationButtonStyle, right: '20px' }}>
-        {'>'}
-      </div>
+
   
     </>
   );

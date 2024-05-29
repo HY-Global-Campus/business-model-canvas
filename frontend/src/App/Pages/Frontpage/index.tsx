@@ -29,19 +29,6 @@ function FrontPage() {
     textAlign: 'center'
   };
 
-  const buttonStyle: CSSProperties = {
-    position: 'absolute',
-    top: '50%',
-    right: '20%',
-    padding: '10px 20px',
-    fontSize: '50px',
-    fontStyle: 'bold',
-    color: 'black',
-    backgroundColor: 'unset',
-    border: 'none',
-    cursor: 'pointer',
-  };
-
   const logoStyle: CSSProperties = {
 	width: '200px',
 	height: 'auto',
@@ -67,9 +54,7 @@ function FrontPage() {
         />
       <p>2050</p>
       <img src={hyLogo} alt="Logo" style={logoStyle} />
-        <button style={buttonStyle} onClick={() => navigate('/exercise')}>
-          &gt;
-        </button>
+
     </div>
     </>
   );
