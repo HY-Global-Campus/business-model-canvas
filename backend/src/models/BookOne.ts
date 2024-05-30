@@ -1,75 +1,48 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
 
-export interface BookAttributes {
-  id: Number,
-  exercise1: Object,
-  exercise1answer: Object,
-  exercise2: Object,
-  exercise2answer: Object,
-  exercise3: Object,
-  exercise3answer: Object,
-  exercise4: Object,
-  exercise4answer: Object
+import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
+import { BookOneExercises } from '../types/exercises';
 
+export interface BookOneAttributes {
+  id: number;
+  exercises: BookOneExercises;
+  userId: string;
 }
 
-class BookOne extends Model implements BookAttributes {
-  declare id: Number;
-  declare exercise1: Object;
-  declare exercise1answer: Object;
-  declare exercise2: Object;
-  declare exercise2answer: Object;
-  declare exercise3: Object;
-  declare exercise3answer: Object;
-  declare exercise4: Object;
-  declare exercise4answer: Object;
+// Define a type for creating a new BookOne entry, making id optional
+export interface BookOneCreationAttributes extends Optional<BookOneAttributes, 'id'> {}
+
+class BookOne extends Model<BookOneAttributes, BookOneCreationAttributes> implements BookOneAttributes {
+  declare id: number;
+  declare exercises: BookOneExercises;
+  declare userId: string;
 
   static initialize(sequelize: Sequelize): void {
-    this.init({
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
+    this.init(
+      {
+        id: {
+          type: DataTypes.INTEGER,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        exercises: {
+          type: DataTypes.JSONB,
+          allowNull: false,
+        },
+        userId: {
+          type: DataTypes.UUID,
+          allowNull: false,
+        },
       },
-      exercise1: {
-        type: DataTypes.JSONB,
-        allowNull: true
-      },
-      exercise1answer: {
-        type: DataTypes.JSONB,
-        allowNull: true
-      },
-      exercise2: {
-        type: DataTypes.JSONB,
-        allowNull: true
-      },
-      exercise2answer: {
-        type: DataTypes.JSONB,
-        allowNull: true
-      },
-      exercise3: {
-        type: DataTypes.JSONB,
-        allowNull: true
-      },
-      exercise3answer: {
-        type: DataTypes.JSONB,
-        allowNull: true
-      },
-      exercise4: {
-        type: DataTypes.JSONB,
-        allowNull: true
-      },
-      exercise4answer: {
-        type: DataTypes.JSONB,
-        allowNull: true
-      }
-    }, {
+      {
         sequelize,
         modelName: 'BookOne',
         tableName: 'book_one',
-        underscored: true
-      });
+        underscored: true,
+      }
+    );
   }
 }
 
 export default BookOne;
+
+

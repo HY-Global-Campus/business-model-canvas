@@ -11,7 +11,14 @@ loginRouter.post('/', async (req, res) => {
   const { username, password } = req.body;
   console.log(username, password);
 
-  const loginRes = await loginWithUsernamePassword({username, password});
+  const loginRes = await loginWithUsernamePassword({username, password}).catch( (e) => {
+    console.log(e);
+  });
+
+  if (!loginRes) {
+    res.status(401).send();
+    return;
+  }
 
   let user = await User.findOne({
     where: {
@@ -32,6 +39,7 @@ loginRouter.post('/', async (req, res) => {
   const responseJson = {
     token,
     displayName: user?.displayName,
+    id: user?.id,
   }
   res.status(200).send(responseJson);
 

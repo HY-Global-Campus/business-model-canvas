@@ -11,8 +11,8 @@ BookOne.initialize(sequelize);
 
 // Setup associations
 
-User.belongsToMany(BookOne, { through: 'UserBookOne', foreignKey: 'user_id' });
-BookOne.belongsToMany(User, { through: 'UserBookOne', foreignKey: 'book_id' });
+User.hasOne(BookOne, { foreignKey: 'userId' });
+BookOne.belongsTo(User, { foreignKey: 'userId' });
 
 export const dbSync = async () => {
   try {

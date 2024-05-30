@@ -3,10 +3,14 @@ import loginRouter from './controllers/login.js';
 import authMiddleware from './middlewares/auth.js'
 import User from './models/user.js';
 import { dbSync } from './services/database.js';
+import BookOneRouter from './controllers/BookOneController.js'
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use('/login', loginRouter);
+app.use('/bookones', BookOneRouter);
 
 app.get('/', authMiddleware, async (_, res) => {
   res.status(200).send('Success');
@@ -21,6 +25,8 @@ app.get('/me', authMiddleware, async (req, res) => {
   console.log(user)
   res.json(user);
 })
+
+app.get('/bookones', authMiddleware, BookOneRouter);
 
 
 const PORT = process.env.port || 80
