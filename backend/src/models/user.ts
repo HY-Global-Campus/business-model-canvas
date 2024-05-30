@@ -6,12 +6,14 @@ interface UserAttributes {
   id: string;
   displayName: string;
   accelbyteUserId: string;
+  isAdmin: boolean;
 }
 
 class User extends Model<UserAttributes> implements UserAttributes {
   declare id: string;
   declare displayName: string;
   declare accelbyteUserId: string;
+  declare isAdmin: boolean;
 
   declare static associations: {
     BookOne: Association<User, BookOne>;
@@ -34,6 +36,11 @@ class User extends Model<UserAttributes> implements UserAttributes {
         accelbyteUserId: {
           type: DataTypes.STRING,
           allowNull: true,
+        },
+        isAdmin: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
+          allowNull: false
         },
       },
       {
