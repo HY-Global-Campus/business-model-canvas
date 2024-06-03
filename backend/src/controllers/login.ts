@@ -22,18 +22,19 @@ loginRouter.post('/', async (req, res) => {
 
   let user = await User.findOne({
     where: {
-      accelbyteUserId: loginRes.response?.data.user_id
+      accelbyteUserId: loginRes.response?.data.user_id!
     }
   })
   if (!user) {
     user = await User.create({
-      displayName: loginRes.response?.data.display_name,
-      accelbyteUserId: loginRes.response?.data.user_id
+      displayName: loginRes.response?.data.display_name!,
+      accelbyteUserId: loginRes.response?.data.user_id!
     });
   }
   const userForToken: UserTokenForm = {
     displayName: user.displayName,
-    id: user.id
+    id: user.id,
+    isAdmin: user.isAdmin,
   };
   const token = jsonwebtoken.sign(userForToken, config.JWT_SECRET);
   const responseJson = {

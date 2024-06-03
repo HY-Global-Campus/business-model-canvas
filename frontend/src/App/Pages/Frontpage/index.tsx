@@ -1,6 +1,5 @@
 
 import { CSSProperties } from 'react';
-import { useNavigate } from 'react-router-dom';
 import hyLogo from '../../../assets/HY_Logo.svg'
 
 function FrontPage() {

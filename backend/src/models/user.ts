@@ -39,8 +39,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
         },
         isAdmin: {
           type: DataTypes.BOOLEAN,
-          defaultValue: false,
-          allowNull: false
+          defaultValue: 0,
         },
       },
       {
