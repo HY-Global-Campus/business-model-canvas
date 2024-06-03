@@ -1,6 +1,4 @@
 
-import React, { useState } from 'react';
-
 interface ExpandingTextAreaProps {
   id: string;
   instructionText: string;

@@ -5,7 +5,6 @@ import hyLogo from '../../../assets/HY_Logo.svg'
 
 function FrontPage() {
 
-  const navigate = useNavigate();
   const containerStyle: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
