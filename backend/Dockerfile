@@ -15,7 +15,7 @@ COPY . .
 
 EXPOSE 80
 
-CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev:watch; else node src/index.ts; fi"]
+CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev:watch; else tsx src/index.ts; fi"]
 
 
 
