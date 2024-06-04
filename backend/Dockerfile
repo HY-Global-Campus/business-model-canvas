@@ -10,12 +10,12 @@ RUN if [ "$NODE_ENV" = "development" ]; then \
 	else \
 	npm install --only=production; \
 	fi
-
+RUN npm i -D tsx
 COPY . .
 
 EXPOSE 80
 
-CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev:watch; else tsx src/index.ts; fi"]
+CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev:watch; else npx tsx src/index.ts; fi"]
 
 
 
