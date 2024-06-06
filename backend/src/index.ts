@@ -29,7 +29,7 @@ app.get('/me', authMiddleware, async (req, res) => {
 app.get('/bookones', authMiddleware, BookOneRouter);
 
 
-const PORT = process.env.port || 80
+const PORT = process.env.port || 8080
 
 dbSync().then(() => {
   app.listen(PORT, () => {
