@@ -13,7 +13,7 @@ RUN if [ "$NODE_ENV" = "development" ]; then \
 RUN npm i -D tsx
 COPY . .
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev:watch; else npx tsx src/index.ts; fi"]
 
