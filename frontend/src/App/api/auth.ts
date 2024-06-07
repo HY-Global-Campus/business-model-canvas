@@ -11,3 +11,7 @@ export const login = async (username: string, password: string): Promise<LoginRe
   return response.data;
 };
 
+export const loginWithAuthCode = async (code: string): Promise<LoginResponse> => {
+  const response = await api.post<LoginResponse>('/login/authcode', { code });
+  return response.data;
+}
