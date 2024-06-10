@@ -46,7 +46,12 @@ const Login: React.FC = () => {
     onError: (error: Error) => {
       console.error('Authcode login failed:', error);
       alert('Authcode login failed: ' + error.message);
-      navigate('/login');
+      const params = new URLSearchParams(location.search);
+      params.delete('authcode');
+      navigate({
+        pathname: location.pathname,
+        search: params.toString()
+      }, { replace: true });
     },
   });
 
@@ -54,9 +59,17 @@ const Login: React.FC = () => {
     const params = new URLSearchParams(location.search);
     const authcode = params.get('authcode');
     if (authcode) {
-      authcodeMutation.mutate(authcode);
+      authcodeMutation.mutate(authcode, {
+        onSettled: () => {
+          params.delete('authcode');
+          navigate({
+            pathname: location.pathname,
+            search: params.toString()
+          }, { replace: true });
+        }
+      });
     }
-  }, [location.search, authcodeMutation]);
+  }, [location.search, authcodeMutation, navigate, location.pathname]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
