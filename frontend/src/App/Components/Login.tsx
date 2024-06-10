@@ -46,6 +46,7 @@ const Login: React.FC = () => {
     onError: (error: Error) => {
       console.error('Authcode login failed:', error);
       alert('Authcode login failed: ' + error.message);
+      navigate('/login');
     },
   });
 
