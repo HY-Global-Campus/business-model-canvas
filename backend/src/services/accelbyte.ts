@@ -1,5 +1,6 @@
 import { Accelbyte, Network } from "@accelbyte/sdk"
 import { IamUserAuthorizationClient } from "@accelbyte/sdk-iam";
+import config from "../config";
 
 const accelbyte = Accelbyte.SDK({
   options: {
@@ -23,7 +24,7 @@ export const loginWithUsernamePassword = async (credentials: {username: string, 
 
 
 export const loginWithAuthCode = async (code: string) => {
-  return await network.post('/iam/v3/token/exchange', {code: code}, {headers: {'Content-Type': 'application/x-www-form-urlencoded', Authorization: "Basic"}})
+  return await network.post('/iam/v3/token/exchange', {code: code}, {headers: {'Content-Type': 'application/x-www-form-urlencoded', Authorization: config.ACCELBYTE_TOKEN}})
   }
 
 
