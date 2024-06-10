@@ -18,6 +18,7 @@ interface LoginVariables {
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [authAttempted, setAuthAttempted] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -56,20 +57,23 @@ const Login: React.FC = () => {
   });
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const authcode = params.get('authcode');
-    if (authcode) {
-      authcodeMutation.mutate(authcode, {
-        onSettled: () => {
-          params.delete('authcode');
-          navigate({
-            pathname: location.pathname,
-            search: params.toString()
-          }, { replace: true });
-        }
-      });
+    if (!authAttempted) {
+      const params = new URLSearchParams(location.search);
+      const authcode = params.get('authcode');
+      if (authcode) {
+        setAuthAttempted(true);
+        authcodeMutation.mutate(authcode, {
+          onSettled: () => {
+            params.delete('authcode');
+            navigate({
+              pathname: location.pathname,
+              search: params.toString()
+            }, { replace: true });
+          }
+        });
+      }
     }
-  }, [location.search, authcodeMutation, navigate, location.pathname]);
+  }, [location.search, authcodeMutation, navigate, location.pathname, authAttempted]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
