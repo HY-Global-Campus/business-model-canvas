@@ -47,6 +47,8 @@ const Login: React.FC = () => {
     onError: (error: Error) => {
       console.error('Authcode login failed:', error);
       alert('Authcode login failed: ' + error.message);
+    },
+    onSettled: () => {
       const params = new URLSearchParams(location.search);
       params.delete('authcode');
       navigate({
@@ -62,15 +64,7 @@ const Login: React.FC = () => {
       const authcode = params.get('authcode');
       if (authcode) {
         setAuthAttempted(true);
-        authcodeMutation.mutate(authcode, {
-          onSettled: () => {
-            params.delete('authcode');
-            navigate({
-              pathname: location.pathname,
-              search: params.toString()
-            }, { replace: true });
-          }
-        });
+        authcodeMutation.mutate(authcode);
       }
     }
   }, [location.search, authcodeMutation, navigate, location.pathname, authAttempted]);
