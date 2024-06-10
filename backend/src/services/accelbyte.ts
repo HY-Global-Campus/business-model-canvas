@@ -1,4 +1,4 @@
-import { Accelbyte } from "@accelbyte/sdk"
+import { Accelbyte, Network } from "@accelbyte/sdk"
 import { IamUserAuthorizationClient } from "@accelbyte/sdk-iam";
 
 const accelbyte = Accelbyte.SDK({
@@ -7,18 +7,24 @@ const accelbyte = Accelbyte.SDK({
     clientId: "35568f9b3f1a44f7a37089948bffefd2",
     namespace: "Serendip",
     redirectURI: "http://127.0.0.1",
-  }
+    
+  },
 });
 
 const iamClient = new IamUserAuthorizationClient(accelbyte);
+
+
+const network = Network.create(accelbyte.assembly());
 
 export const loginWithUsernamePassword = async (credentials: {username: string, password: string}) => {
   return await iamClient.loginWithPasswordAuthorization(credentials);      
 }
 
+
+
 export const loginWithAuthCode = async (code: string) => {
-  return await iamClient.loginWithCodeAuthorization({code}); 
-}
+  return await network.post('/iam/v3/token/exchange', {code: code}, {headers: {'Content-Type': 'application/x-www-form-urlencoded', Authorization: "Basic"}})
+  }
 
 
 

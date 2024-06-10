@@ -21,13 +21,13 @@ loginRouter.post('/', async (req, res) => {
 
   let user = await User.findOne({
     where: {
-      accelbyteUserId: loginRes.response?.data.user_id!
+      accelbyteUserId: loginRes.data.user_id!
     }
   })
   if (!user) {
     user = await User.create({
-      displayName: loginRes.response?.data.display_name!,
-      accelbyteUserId: loginRes.response?.data.user_id!
+      displayName: loginRes.data.display_name!,
+      accelbyteUserId: loginRes.data.user_id!
     });
   }
   const userForToken: UserTokenForm = {
@@ -47,9 +47,11 @@ loginRouter.post('/', async (req, res) => {
 
 loginRouter.post('/authcode', async (req, res) => {
   const { code } = req.body;
+  console.log(code)
   const loginRes = await loginWithAuthCode(code).catch(e => {
     console.log(e);
   })
+  console.log("auth ", loginRes)
   if (!loginRes) {
     res.status(401).send();
     return;
@@ -57,14 +59,14 @@ loginRouter.post('/authcode', async (req, res) => {
 
   let user = await User.findOne({
     where: {
-      accelbyteUserId: loginRes.response?.data.user_id!
+      accelbyteUserId: loginRes.data.user_id!
     }
   })
 
   if (!user) {
     user = await User.create({
-      displayName: loginRes.response?.data.display_name!,
-      accelbyteUserId: loginRes.response?.data.user_id!
+      displayName: loginRes.data.display_name!,
+      accelbyteUserId: loginRes.data.user_id!
     });
   }
   const userForToken: UserTokenForm = {
