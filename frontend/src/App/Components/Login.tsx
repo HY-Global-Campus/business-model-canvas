@@ -47,16 +47,13 @@ const Login: React.FC = () => {
     onError: (error: Error) => {
       console.error('Authcode login failed:', error);
       alert('Authcode login failed: ' + error.message);
-    },
-    onSettled: () => {
       const params = new URLSearchParams(location.search);
       params.delete('authcode');
       navigate({
         pathname: location.pathname,
         search: params.toString()
       }, { replace: true });
-    },
-  });
+    },  });
 
   useEffect(() => {
     if (!authAttempted) {
