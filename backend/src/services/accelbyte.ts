@@ -17,7 +17,9 @@ export const loginWithUsernamePassword = async (credentials: {username: string, 
 }
 
 export const loginWithAuthCode = async (code: string) => {
-  return await iamClient.exchangeAuthorizationCode({code}); 
+  return await iamClient.loginWithCodeAuthorization({code}); 
 }
+
+
 
 export default accelbyte
