@@ -14,6 +14,7 @@ import RedefineChallengeExercise from './Components/Exercise/RedefineChallenge';
 import ValuesExercise from './Components/Exercise/Values';
 import FromFutureToPresentExercise from './Components/Exercise/FromFutureToPresent';
 import FuturePitchExercise from './Components/Exercise/FuturePitch';
+import Logout from './Components/Logout';
 
 const pages = [
   { path: '/', label: 'FrontPage' },
@@ -51,6 +52,7 @@ function App() {
       <NavigationButtons pages={pages} currentPage={currentPageIndex} />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
         <Route path="/" element={<ProtectedRoute />}>
           <Route path="/" element={<FrontPage />} />
           <Route path="/mindmap" element={<Mindmap />} />
