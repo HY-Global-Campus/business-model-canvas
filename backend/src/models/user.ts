@@ -3,10 +3,10 @@ import { Model, DataTypes, Sequelize, Association } from 'sequelize';
 import BookOne from './BookOne';
 
 interface UserAttributes {
-  id: string;
+  id?: string;
   displayName: string;
   accelbyteUserId: string;
-  isAdmin: boolean;
+  isAdmin?: boolean;
 }
 
 class User extends Model<UserAttributes> implements UserAttributes {
