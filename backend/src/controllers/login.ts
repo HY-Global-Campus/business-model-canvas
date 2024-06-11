@@ -10,7 +10,6 @@ const loginRouter = express.Router();
 
 loginRouter.post('/', async (req, res) => {
   const { username, password } = req.body;
-  console.log(username, password);
 
   const loginRes = await loginWithUsernamePassword({username, password}).catch( (e) => {
     console.log(e);
