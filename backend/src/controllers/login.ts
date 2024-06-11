@@ -7,8 +7,10 @@ import { UserTokenForm, isUserTokenForm } from "../types/user.js";
 
 const loginRouter = express.Router();
 
+
 loginRouter.post('/', async (req, res) => {
   const { username, password } = req.body;
+  console.log(username, password);
 
   const loginRes = await loginWithUsernamePassword({username, password}).catch( (e) => {
     console.log(e);
@@ -21,13 +23,13 @@ loginRouter.post('/', async (req, res) => {
 
   let user = await User.findOne({
     where: {
-      accelbyteUserId: loginRes.data.user_id!
+      accelbyteUserId: loginRes.response?.data.user_id!
     }
   })
   if (!user) {
     user = await User.create({
-      displayName: loginRes.data.display_name!,
-      accelbyteUserId: loginRes.data.user_id!
+      displayName: loginRes.response?.data.display_name!,
+      accelbyteUserId: loginRes.response?.data.user_id!
     });
   }
   const userForToken: UserTokenForm = {
