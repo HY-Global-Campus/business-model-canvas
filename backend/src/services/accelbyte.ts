@@ -1,6 +1,6 @@
 import { Accelbyte, Network } from "@accelbyte/sdk"
 import { IamUserAuthorizationClient } from "@accelbyte/sdk-iam";
-import config from "../config";
+import config from "../config.js";
 
 const accelbyte = Accelbyte.SDK({
   options: {
