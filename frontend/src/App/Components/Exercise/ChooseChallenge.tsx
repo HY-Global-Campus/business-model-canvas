@@ -131,6 +131,7 @@ const ChooseChallengeExercise: React.FC<ChooseChallengeProps> = () => {
           instructionText=""
           value={answers.right.answer}
           onChange={handleAnswerChange('right')}
+          rows={20}
         />
       </div>
     </div>

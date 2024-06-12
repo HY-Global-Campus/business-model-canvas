@@ -119,6 +119,7 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
           instructionText=""
           value={answers.left.question1.answer}
           onChange={handleAnswerChange('question1')}
+          rows={2}
         />
         <h3>{answers.left.question2.title}</h3>
         <ExpandingTextArea
@@ -126,6 +127,7 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
           instructionText=""
           value={answers.left.question2.answer}
           onChange={handleAnswerChange('question2')}
+          rows={2}
         />
         <h3>{answers.left.question3.title}</h3>
         <ExpandingTextArea
@@ -133,6 +135,7 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
           instructionText=""
           value={answers.left.question3.answer}
           onChange={handleAnswerChange('question3')}
+          rows={2}
         />
       </div>
       <div style={separatorStyle} />

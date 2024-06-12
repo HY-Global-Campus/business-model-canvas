@@ -136,6 +136,7 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
           instructionText=""
           value={answers.left.answer}
           onChange={handleAnswerChange('left')}
+          rows={16}
         />
       </div>
       <div style={separatorStyle} />
@@ -148,6 +149,7 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
           instructionText=""
           value={answers.right.question1.answer}
           onChange={handleAnswerChange('right', 'question1')}
+          rows={2}
         />
         <h3>{answers.right.question2.title}</h3>
         <ExpandingTextArea
@@ -155,6 +157,7 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
           instructionText=""
           value={answers.right.question2.answer}
           onChange={handleAnswerChange('right', 'question2')}
+          rows={2}
         />
         <h3>{answers.right.question3.title}</h3>
         <ExpandingTextArea
@@ -162,6 +165,7 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
           instructionText=""
           value={answers.right.question3.answer}
           onChange={handleAnswerChange('right', 'question3')}
+          rows={2}
         />
         <h3>{answers.right.question4.title}</h3>
         <ExpandingTextArea
@@ -169,6 +173,7 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
           instructionText=""
           value={answers.right.question4.answer}
           onChange={handleAnswerChange('right', 'question4')}
+          rows={2}
         />
         <h3>{answers.right.question5.title}</h3>
         <ExpandingTextArea
@@ -176,6 +181,7 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
           instructionText=""
           value={answers.right.question5.answer}
           onChange={handleAnswerChange('right', 'question5')}
+          rows={2}
         />
         <h3>{answers.right.question6.title}</h3>
         <ExpandingTextArea
@@ -183,6 +189,7 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
           instructionText=""
           value={answers.right.question6.answer}
           onChange={handleAnswerChange('right', 'question6')}
+          rows={2}
         />
       </div>
     </div>

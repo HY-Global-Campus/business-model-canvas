@@ -106,6 +106,7 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
           instructionText=""
           value={answers.left.answer}
           onChange={handleAnswerChange('left')}
+          rows={20}
         />
       </div>
       <div style={separatorStyle} />

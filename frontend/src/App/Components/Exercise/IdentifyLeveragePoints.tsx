@@ -130,6 +130,7 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
           instructionText=""
           value={answers.left.question1.answer}
           onChange={handleAnswerChange('left', 'question1')}
+          rows={2}
         />
         <h3>{answers.left.question2.title}</h3>
         <ExpandingTextArea
@@ -137,6 +138,7 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
           instructionText=""
           value={answers.left.question2.answer}
           onChange={handleAnswerChange('left', 'question2')}
+          rows={2}
         />
         <h3>{answers.left.question3.title}</h3>
         <ExpandingTextArea
@@ -144,6 +146,7 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
           instructionText=""
           value={answers.left.question3.answer}
           onChange={handleAnswerChange('left', 'question3')}
+          rows={2}
         />
       </div>
       <div style={separatorStyle} />
@@ -155,6 +158,7 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
           instructionText=""
           value={answers.right.answer}
           onChange={handleAnswerChange('right')}
+          rows={20}
         />
       </div>
     </div>

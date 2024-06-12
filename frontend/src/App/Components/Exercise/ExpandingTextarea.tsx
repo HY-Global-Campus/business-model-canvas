@@ -4,9 +4,10 @@ interface ExpandingTextAreaProps {
   instructionText: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  rows?: number;
 }
 
-const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({ id, instructionText, value, onChange }) => {
+const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({ id, instructionText, value, onChange, rows=4 }) => {
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
@@ -44,7 +45,7 @@ const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({ id, instructionTe
         id={id}
         value={value}
         onChange={onChange}
-        rows={4}
+        rows= {rows}
         cols={50}
       />
     </div>

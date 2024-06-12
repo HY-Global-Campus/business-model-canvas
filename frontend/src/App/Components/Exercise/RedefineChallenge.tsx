@@ -130,6 +130,7 @@ const RedefineChallengeExercise: React.FC<RedefineChallengeProps> = () => {
           instructionText=""
           value={answers.right.answer}
           onChange={handleAnswerChange('right')}
+          rows={20}
         />
       </div>
     </div>
