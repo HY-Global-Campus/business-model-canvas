@@ -61,6 +61,7 @@ const Login: React.FC = () => {
       const authcode = params.get('authcode');
       if (authcode) {
         setAuthAttempted(true);
+        //localStorage.clear();
         authcodeMutation.mutate(authcode);
       }
     }
