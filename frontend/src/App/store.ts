@@ -1,3 +1,4 @@
+
 import {
   Edge,
   EdgeChange,
@@ -7,17 +8,23 @@ import {
   OnEdgesChange,
   applyNodeChanges,
   applyEdgeChanges,
+  addEdge,
+  OnConnect,
+  Connection,
+  XYPosition,
 } from 'reactflow';
-import { create } from 'zustand';
- 
+import { createWithEqualityFn } from 'zustand/traditional';
+
 export type RFState = {
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
+  onConnect: OnConnect;
+  addNode: (position: XYPosition) => void;
 };
- 
-const useStore = create<RFState>((set, get) => ({
+
+const useStore = createWithEqualityFn<RFState>((set, get) => ({
   nodes: [
     {
       id: 'root',
@@ -37,6 +44,25 @@ const useStore = create<RFState>((set, get) => ({
       edges: applyEdgeChanges(changes, get().edges),
     });
   },
+  onConnect: (params: Edge | Connection) => {
+    set({
+      edges: addEdge(params, get().edges),
+    });
+  },
+  addNode: (position: XYPosition) => {
+    const newNode: Node = {
+      id: `${get().nodes.length + 1}`,
+      type: 'mindmap',
+      data: { label: `Node ${get().nodes.length + 1}` },
+      position,
+    };
+    set({
+      nodes: [...get().nodes, newNode],
+    });
+    console.log('New node added:', newNode);
+  },
 }));
- 
+
 export default useStore;
+
+

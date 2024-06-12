@@ -1,82 +1,85 @@
-import ReactFlow, { Controls, Panel, NodeOrigin } from 'reactflow';
+
+import { useCallback, useRef } from 'react';
+import ReactFlow, { Controls, Panel, NodeOrigin, useReactFlow, Connection } from 'reactflow';
 import { shallow } from 'zustand/shallow';
-import { CSSProperties } from 'react';
 import useStore, { RFState } from '../../store';
-// we have to import the React Flow styles for it to work
 import 'reactflow/dist/style.css';
 import Header from '../../Components/Header';
-import placeholderImage from '../../../assets/mindmap-placeholder.jpg'
- 
+import './Flow.css'; // Import the CSS file for styling
+
 const selector = (state: RFState) => ({
   nodes: state.nodes,
   edges: state.edges,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+  addNode: state.addNode,
 });
 
-const placeholderWrapperStyle: CSSProperties = {
-  position: 'relative',
-  width: '100%', // Ensure wrapper fills container for full responsiveness
-  height: '100vh' // Adjust based on your design needs
-};
-
-const placeholderStyle: CSSProperties = {
-  width: '100%',
-  height: '100%',
-};
-
-
-const overlayTextStyle: CSSProperties = {
-  position: 'absolute',
-  top: '50%', // Center vertically
-  left: '50%', // Center horizontally
-  transform: 'translate(-50%, -50%)', // Ensure centered regardless of text length
-  color: 'white', // Text color
-  fontSize: '2rem', // Large text size
-  fontWeight: 'bold',
-  textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)', // Text shadow for better readability
-  backgroundColor: 'rgba(0, 0, 0, 0.9)', // Semi-transparent black background
-  padding: '10px 20px', // Padding around the text
-  borderRadius: '10px', // Rounded corners for the background
-  textAlign: 'center', // Center the text inside the box
-  width: 'auto', // Auto width based on content
-  maxWidth: '80%', // Max width to avoid edge cases
-};
-
-
-// this places the node origin in the center of a node
 const nodeOrigin: NodeOrigin = [0.5, 0.5];
- 
+
 function Flow() {
-  // whenever you use multiple values, you should use shallow to make sure the component only re-renders when one of the values changes
-  const { nodes, edges, onNodesChange, onEdgesChange } = useStore(
-    selector,
-    shallow,
+  const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
+  const connectingNodeId = useRef<string | null>(null);
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } = useStore(selector, shallow);
+  const { project } = useReactFlow();
+
+
+  const handleConnectStart = useCallback((_: any, { nodeId }: { nodeId: string }) => {
+    connectingNodeId.current = nodeId;
+  }, []);
+
+  const handleConnectEnd = useCallback(
+    (event: MouseEvent) => {
+      if (!connectingNodeId.current) return;
+
+      const targetIsPane = (event.target as HTMLElement).classList.contains('react-flow__pane');
+
+      if (targetIsPane) {
+        const newNodeId = `${nodes.length + 1}`;
+        const newNode = {
+          id: newNodeId,
+          position: project({ x: event.clientX, y: event.clientY }),
+          data: { label: `Node ${newNodeId}` },
+          origin: [0.5, 0.0],
+        };
+
+        addNode(newNode.position);
+        const connection: Connection = {
+          source: connectingNodeId.current!,
+          sourceHandle: null,
+          target: newNodeId,
+          targetHandle: null,
+        };
+        onConnect(connection);
+        connectingNodeId.current = null;
+      }
+    },
+    [project, addNode, onConnect, nodes.length]
   );
- 
+
   return (
     <>
-    <Header />
-      <div style={placeholderWrapperStyle}>
-        <img src={placeholderImage} style={placeholderStyle} alt="Placeholder" />
-        <div style={overlayTextStyle}>Under Construction</div>
+      <Header />
+      <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onConnectStart={handleConnectStart}
+          onConnectEnd={handleConnectEnd}
+          nodeOrigin={nodeOrigin}
+          fitView
+        >
+          <Controls showInteractive={false} />
+          <Panel position="top-left">Book of Serendip</Panel>
+        </ReactFlow>
       </div>
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      nodeOrigin={nodeOrigin}
-      fitView
-      hidden
-    >
-      <Controls showInteractive={false} />
-      <Panel position="top-left">Book of Serendip</Panel>
-    </ReactFlow>
-
-  
     </>
   );
 }
- 
+
 export default Flow;
+
