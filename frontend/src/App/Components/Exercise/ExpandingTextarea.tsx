@@ -21,15 +21,15 @@ const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({ id, instructionTe
 
   const textAreaStyle: React.CSSProperties = {
     minHeight: '2em', // Height for two rows
-    maxHeight: '10em', // Maximum height for 5 rows before scrolling
+    maxHeight: '30em', // Maximum height for 5 rows before scrolling
     overflowY: 'auto',
-    resize: 'none',
+    resize: 'vertical',
     lineHeight: '1.5em',
     padding: '10px',
     fontSize: '16px',
     boxSizing: 'border-box',
     width: '100%',
-    borderRadius: '10px',
+    borderRadius: '40px',
     margin: '10px 0px',
   };
 

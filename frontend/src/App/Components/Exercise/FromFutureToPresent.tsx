@@ -17,12 +17,12 @@ const FromFutureToPresentExercise: React.FC<FromFutureToPresentProps> = () => {
   const [answers, setAnswers] = useState<FromFutureToPresent>({
     left: {
       title: 'From Future to Present - Left',
-      question: 'Imagine the future and describe your vision',
+      question: '',
       answer: '',
     },
     right: {
       title: 'From Future to Present - Right',
-      description: 'Describe the steps to achieve the vision',
+      description: '',
       question1: { title: 'Step 1', answer: '' },
       question2: { title: 'Step 2', answer: '' },
       question3: { title: 'Step 3', answer: '' },
@@ -42,13 +42,17 @@ const FromFutureToPresentExercise: React.FC<FromFutureToPresentProps> = () => {
         setBookOne(data);
         setAnswers({
           left: {
-            title: 'From Future to Present - Left',
-            question: 'Imagine the future and describe your vision',
+            title: 'From Future to Present',
+            question: `Question 1.
+Think about your desirable future vision for 2050. Imagine one day of your desirable future. Describe that day.
+It can be about: the city of the future (its people, culture, technology,..etc..) , or the boreal forests in the future, or the school of the future, or something else you prefer.`,
             answer: data.exercises.fromFutureToPresentAnswer.left.answer,
           },
           right: {
-            title: 'From Future to Present - Right',
-            description: 'Describe the steps to achieve the vision',
+            title: 'Question 1.',
+            description: `Imagine you are now in 2050 telling your success story. Describe your path from 2050 to present and do a narrative in the past tense, for example: “Back in the days in 2023,  I started by .....”. In your success story, describe: What caused the system to change? What did you do to impact the system? Did you need help? What obstacles did you encounter? How did you overcome them? What was your role in this process?
+
+Make a timeline 2024-2050. Mark down all the significant steps and events that led to the solution. What was your first action in 2024?`,
             question1: { title: 'Step 1', answer: data.exercises.fromFutureToPresentAnswer.right.question1.answer },
             question2: { title: 'Step 2', answer: data.exercises.fromFutureToPresentAnswer.right.question2.answer },
             question3: { title: 'Step 3', answer: data.exercises.fromFutureToPresentAnswer.right.question3.answer },

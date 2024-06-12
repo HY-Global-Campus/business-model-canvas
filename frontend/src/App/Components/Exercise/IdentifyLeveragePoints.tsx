@@ -17,7 +17,7 @@ const IdentifyLeveragePointsExercise: React.FC<IdentifyLeveragePointsProps> = ()
   const [answers, setAnswers] = useState<IdentifyLeveragePoints>({
     left: {
       title: 'Leverage Points - Left',
-      description: 'Identify leverage points caused by climate change in the boreal forest',
+      description: '',
       question1: { title: 'Question 1', answer: '' },
       question2: { title: 'Question 2', answer: '' },
       question3: { title: 'Question 3', answer: '' },
@@ -39,15 +39,18 @@ const IdentifyLeveragePointsExercise: React.FC<IdentifyLeveragePointsProps> = ()
         setBookOne(data);
         setAnswers({
           left: {
-            title: 'Leverage Points - Left',
-            description: 'Identify leverage points caused by climate change in the boreal forest',
-            question1: { title: 'Question 1', answer: data.exercises.identifyLeveragePointsAnswer.left.question1.answer },
-            question2: { title: 'Question 2', answer: data.exercises.identifyLeveragePointsAnswer.left.question2.answer },
-            question3: { title: 'Question 3', answer: data.exercises.identifyLeveragePointsAnswer.left.question3.answer },
+            title: 'Identify the leverage points',
+      description: `
+Leverage points are places within a complex system where a small shift in one thing can produce big changes in everything.
+
+Look at your Map of Connections and estimate how easy/hard it is to affect different factors of the system. In the boxes bellow, mark factors based on the level of change.`,
+            question1: { title: 'Easy to change', answer: data.exercises.identifyLeveragePointsAnswer.left.question1.answer },
+            question2: { title: 'Require something in order to change', answer: data.exercises.identifyLeveragePointsAnswer.left.question2.answer },
+            question3: { title: 'Difficult to change', answer: data.exercises.identifyLeveragePointsAnswer.left.question3.answer },
           },
           right: {
-            title: 'Leverage Points - Right',
-            description: 'Describe overall leverage points and their impacts',
+            title: 'Chosen leverage point',
+            description: 'Choose one leverage point! The chosen leverage point should be one that you have some control on how you affect it.',
             answer: data.exercises.identifyLeveragePointsAnswer.right.answer,
           },
         });

@@ -16,8 +16,8 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Values>({
     left: {
-      title: 'Values - Left',
-      description: 'Identify core values related to the challenge',
+      title: 'Values',
+      description: '',
       question1: { title: 'Question 1', answer: '' },
       question2: { title: 'Question 2', answer: '' },
       question3: { title: 'Question 3', answer: '' },
@@ -35,11 +35,11 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
         setBookOne(data);
         setAnswers({
           left: {
-            title: 'Values - Left',
-            description: 'Identify core values related to the challenge',
-            question1: { title: 'Question 1', answer: data.exercises.valuesAnswer.left.question1.answer },
-            question2: { title: 'Question 2', answer: data.exercises.valuesAnswer.left.question2.answer },
-            question3: { title: 'Question 3', answer: data.exercises.valuesAnswer.left.question3.answer },
+            title: 'Values',
+            description: 'Our actions are guided by our deepest values. What are your top three values? Write them below and let them guide your vision for the future.',
+            question1: { title: 'Value 1.', answer: data.exercises.valuesAnswer.left.question1.answer },
+            question2: { title: 'Value 2.', answer: data.exercises.valuesAnswer.left.question2.answer },
+            question3: { title: 'Value 3.', answer: data.exercises.valuesAnswer.left.question3.answer },
           },
           right: null,
         });
@@ -137,6 +137,7 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
+        <h3> Tree of values </h3>
       </div>
     </div>
   );

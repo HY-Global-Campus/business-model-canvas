@@ -37,13 +37,13 @@ const RedefineChallengeExercise: React.FC<RedefineChallengeProps> = () => {
         setBookOne(data);
         setAnswers({
           left: {
-            title: 'Redefine Challenge - Left',
-            description: 'Redefine a challenge in the context of climate change',
+            title: 'Redefine the chosen challenge',
+            description: 'Is the initial chosen challenge still the focus of your future vision? Or have you found another one that caught your interest? Here you can redefine the chosen challenge based on the information you learned in the game.',
             answer: data.exercises.redefineChallengeAnswer.left.answer,
           },
           right: {
-            title: 'Redefine Challenge - Right',
-            description: 'Provide a detailed explanation of the redefined challenge',
+            title: 'Challenge description',
+            description: 'Describe your new chosen challenge.',
             answer: data.exercises.redefineChallengeAnswer.right.answer,
           },
         });

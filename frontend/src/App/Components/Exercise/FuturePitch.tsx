@@ -16,7 +16,7 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
   const [error, setError] = useState<string | null>(null);
   const [answers, setAnswers] = useState<FuturePitch>({
     left: {
-      title: 'Future Pitch - Left',
+      title: '',
       answer: '',
     },
   });
@@ -31,7 +31,7 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
         setBookOne(data);
         setAnswers({
           left: {
-            title: 'Future Pitch - Left',
+            title: 'My future vision pitch',
             answer: data.exercises.futurePitchAnswer.left.answer,
           },
         });
