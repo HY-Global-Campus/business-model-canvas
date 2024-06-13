@@ -12,6 +12,9 @@ const infoIconStyle: React.CSSProperties = {
   fontSize: '16px',
   textAlign: 'center',
   lineHeight: '24px',
+    position: 'relative',
+    left: '5%',
+    right: '5%'
 };
 
 const floatingWindowStyle: React.CSSProperties = {

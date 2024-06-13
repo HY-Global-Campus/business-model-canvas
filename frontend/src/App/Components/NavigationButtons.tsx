@@ -35,12 +35,12 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ pages, currentPag
   return (
     <div>
       {currentPage > 0 && (
-        <div onClick={goToPreviousPage} style={{ ...navigationButtonStyle, left: '20px', color: pages[currentPage].color }}>
+        <div onClick={goToPreviousPage} style={{ ...navigationButtonStyle, left: '20px', color: pages[currentPage]?.color || 'black' }}>
           {'<'}
         </div>
       )}
       {currentPage < pages.length - 1 && (
-        <div onClick={goToNextPage} style={{ ...navigationButtonStyle, right: '20px', color: pages[currentPage].color }}>
+        <div onClick={goToNextPage} style={{ ...navigationButtonStyle, right: '20px', color: pages[currentPage]?.color || 'black' }}>
           {'>'}
         </div>
       )}
