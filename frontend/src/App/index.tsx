@@ -25,7 +25,6 @@ const pages = [
   { path: '/exercise/values', label: 'Values', color: 'black' },
   { path: '/exercise/from-future-to-present', label: 'From Future to Present', color: 'black' },
   { path: '/exercise/future-pitch', label: 'Future Pitch', color: 'black' },
-  { path: '/endpage', label: 'EndPage', color: 'black' },
 ];
 
 function App() {
