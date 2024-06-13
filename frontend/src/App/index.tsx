@@ -17,15 +17,15 @@ import FuturePitchExercise from './Components/Exercise/FuturePitch';
 import Logout from './Components/Logout';
 
 const pages = [
-  { path: '/', label: 'FrontPage' },
-  { path: '/mindmap', label: 'Mindmap' },
-  { path: '/exercise/choose-challenge', label: 'Choose Challenge' },
-  { path: '/exercise/identify-leverage-points', label: 'Identify Leverage Points' },
-  { path: '/exercise/redefine-challenge', label: 'Redefine Challenge' },
-  { path: '/exercise/values', label: 'Values' },
-  { path: '/exercise/from-future-to-present', label: 'From Future to Present' },
-  { path: '/exercise/future-pitch', label: 'Future Pitch' },
-  { path: '/endpage', label: 'EndPage' },
+  { path: '/', label: 'FrontPage', color: 'white' },
+  { path: '/mindmap', label: 'Mindmap', color: 'black' },
+  { path: '/exercise/choose-challenge', label: 'Choose Challenge', color: 'black' },
+  { path: '/exercise/identify-leverage-points', label: 'Identify Leverage Points', color: 'black' },
+  { path: '/exercise/redefine-challenge', label: 'Redefine Challenge', color: 'black' },
+  { path: '/exercise/values', label: 'Values', color: 'black' },
+  { path: '/exercise/from-future-to-present', label: 'From Future to Present', color: 'black' },
+  { path: '/exercise/future-pitch', label: 'Future Pitch', color: 'black' },
+  { path: '/endpage', label: 'EndPage', color: 'black' },
 ];
 
 function App() {

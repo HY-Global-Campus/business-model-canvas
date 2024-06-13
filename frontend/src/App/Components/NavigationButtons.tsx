@@ -2,11 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface NavigationButtonsProps {
-  pages: { path: string; label: string }[];
+  pages: { path: string; label: string, color: string }[];
   currentPage: number;
 }
 
-const navigationButtonStyle: React.CSSProperties = {
+ const navigationButtonStyle: React.CSSProperties = {
   position: 'absolute',
   top: '50%',
   transform: 'translateY(-50%)',
@@ -17,6 +17,8 @@ const navigationButtonStyle: React.CSSProperties = {
 
 const NavigationButtons: React.FC<NavigationButtonsProps> = ({ pages, currentPage }) => {
   const navigate = useNavigate();
+
+
 
   const goToPreviousPage = () => {
     if (currentPage > 0) {
@@ -33,12 +35,12 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ pages, currentPag
   return (
     <div>
       {currentPage > 0 && (
-        <div onClick={goToPreviousPage} style={{ ...navigationButtonStyle, left: '20px' }}>
+        <div onClick={goToPreviousPage} style={{ ...navigationButtonStyle, left: '20px', color: pages[currentPage].color }}>
           {'<'}
         </div>
       )}
       {currentPage < pages.length - 1 && (
-        <div onClick={goToNextPage} style={{ ...navigationButtonStyle, right: '20px' }}>
+        <div onClick={goToNextPage} style={{ ...navigationButtonStyle, right: '20px', color: pages[currentPage].color }}>
           {'>'}
         </div>
       )}
