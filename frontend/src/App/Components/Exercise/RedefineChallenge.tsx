@@ -115,10 +115,11 @@ const RedefineChallengeExercise: React.FC<RedefineChallengeProps> = () => {
   return (
     <div style={containerStyle}>
       <div style={panelStyle}>
-        <h2>{answers.left.title}</h2>
-        <InfoIcon
+                <InfoIcon
           infoText={infotext}
           />
+        <h2>{answers.left.title}</h2>
+
         <p>{answers.left.description}</p>
         <ExpandingTextArea
           id="redefine-challenge-text-area-left"

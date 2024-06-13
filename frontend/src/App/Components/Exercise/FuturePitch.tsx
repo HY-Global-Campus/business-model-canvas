@@ -103,10 +103,11 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
   return (
     <div style={containerStyle}>
       <div style={panelStyle}>
-        <h2>{answers.left.title}</h2>
-        <InfoIcon
+                <InfoIcon
           infoText={infotext}
           />
+        <h2>{answers.left.title}</h2>
+
         <ExpandingTextArea
           id="future-pitch-text-area-left"
           instructionText=""

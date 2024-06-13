@@ -115,10 +115,11 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
   return (
     <div style={containerStyle}>
       <div style={panelStyle}>
-        <h2>{answers.left.title}</h2>
-        <InfoIcon
+                <InfoIcon
           infoText={infotext}
         />
+        <h2>{answers.left.title}</h2>
+
         <p>{answers.left.description}</p>
         <h3>{answers.left.question1.title}</h3>
         <ExpandingTextArea

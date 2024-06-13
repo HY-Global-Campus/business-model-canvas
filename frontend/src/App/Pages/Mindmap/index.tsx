@@ -78,12 +78,16 @@ function Flow() {
         >
           <Controls showInteractive={false} />
           <Panel position="top-left">
+  
             <h1>Map of connections</h1>
-            <InfoIcon
-              infoText={infotext}
-              />
+
             <p> Add your notes and complete the map of connections</p>
             </Panel>
+          <Panel position="top-right" >
+                                  <InfoIcon
+              infoText={infotext}
+              />
+          </Panel>
         </ReactFlow>
       </div>
     </>

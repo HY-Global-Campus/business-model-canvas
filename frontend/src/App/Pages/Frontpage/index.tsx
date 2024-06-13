@@ -95,6 +95,7 @@ Enjoy writing the Book!`
         <div style={infoIconWrapper} >
         <InfoIcon
           infoText={infotext}
+          color='white'
         />
         </div>
         

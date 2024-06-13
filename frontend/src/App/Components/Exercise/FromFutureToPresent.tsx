@@ -134,10 +134,11 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
   return (
     <div style={containerStyle}>
       <div style={panelStyle}>
-        <h2>{answers.left.title}</h2>
-        <InfoIcon
+                <InfoIcon
           infoText={infotextQ1}
           />
+        <h2>{answers.left.title}</h2>
+
         <p>{answers.left.question}</p>
         <ExpandingTextArea
           id="from-future-to-present-left"
@@ -149,10 +150,11 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
-        <h2>{answers.right.title}</h2>
-        <InfoIcon
+                <InfoIcon
           infoText={infotextQ2}
           />
+        <h2>{answers.right.title}</h2>
+
         <p>{answers.right.description}</p>
         <h3>{answers.right.question1.title}</h3>
         <ExpandingTextArea

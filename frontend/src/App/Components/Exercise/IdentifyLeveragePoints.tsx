@@ -154,10 +154,11 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
-        <h2>{answers.right.title}</h2>
-        <InfoIcon
+                <InfoIcon
           infoText={infotext}
           />
+        <h2>{answers.right.title}</h2>
+
         <p>{answers.right.description}</p>
         <ExpandingTextArea
           id="identify-leverage-points-right"
