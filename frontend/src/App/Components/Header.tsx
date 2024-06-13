@@ -1,4 +1,5 @@
 import hyLogoWhite from '../../assets/HY-Logo_White.svg'
+import borealforest from '../../assets/HY_Serendip-BOREALFOREST.jpg'
 
 const Header: React.FC = () => {
     const headerStyle: React.CSSProperties = {
@@ -6,8 +7,10 @@ const Header: React.FC = () => {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '10px',
-        backgroundColor: 'rgb(70,70,70)', 
+        background: `url(${borealforest})`,
+        backgroundPosition: 'center',
         color: 'white',
+        height: '100px'
     };
 
     const titleStyle: React.CSSProperties = {
