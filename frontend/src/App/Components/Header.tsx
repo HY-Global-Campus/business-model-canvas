@@ -42,7 +42,7 @@ const Header: React.FC = () => {
         <header style={headerStyle}>
             <div style={titlestyle}>
                 <img src={borealforest_icon} alt='Boreal forest icon' style={iconstyle} />
-                <h1 style={titleStyle}>Book of Serendip</h1>
+                <h1 style={titleStyle}>Boreal Forest</h1>
             </div>
             <img src={hyLogoWhite} alt="Logo" style={logoStyle} />
         </header>
