@@ -53,6 +53,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/" element={<ProtectedRoute />}>
+          <Route path="/bos" element={<FrontPage />} />
           <Route path="/" element={<FrontPage />} />
           <Route path="/mindmap" element={<Mindmap />} />
           <Route path="/exercise" element={<ExercisePage />}>
