@@ -7,8 +7,11 @@ import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { RedefineChallenge } from '../../../types/exercises';
 import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
+import InfoIcon from '../InfoIcon';
 
 interface RedefineChallengeProps {}
+
+const infotext = `Write a definition for the problem you have chosen. What exactly does it mean? Why is it a problem? What are the causes and consequences it implies?`
 
 const RedefineChallengeExercise: React.FC<RedefineChallengeProps> = () => {
   const [bookOne, setBookOne] = useState<BookOne | null>(null);
@@ -113,6 +116,9 @@ const RedefineChallengeExercise: React.FC<RedefineChallengeProps> = () => {
     <div style={containerStyle}>
       <div style={panelStyle}>
         <h2>{answers.left.title}</h2>
+        <InfoIcon
+          infoText={infotext}
+          />
         <p>{answers.left.description}</p>
         <ExpandingTextArea
           id="redefine-challenge-text-area-left"

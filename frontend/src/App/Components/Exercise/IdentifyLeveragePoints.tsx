@@ -7,8 +7,11 @@ import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { IdentifyLeveragePoints } from '../../../types/exercises';
 import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
+import InfoIcon from '../InfoIcon';
 
 interface IdentifyLeveragePointsProps {}
+
+const infotext = `After choosing your leverage points, look again over your map, now focusing on the different leverage points you’ve identified and think how difficult or easy they are to change, as you’ve  evaluated them. Think about the different kinds of change that can be used to influence a system, for example: technology, investment, infrastructure,  policies, regulations, awareness, attitudes, values. Think also about feedback cycles and how their dynamics can be influenced. Choose one  aspect you can and want to change in order to influence the system.`
 
 const IdentifyLeveragePointsExercise: React.FC<IdentifyLeveragePointsProps> = () => {
   const [bookOne, setBookOne] = useState<BookOne | null>(null);
@@ -152,6 +155,9 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
       <div style={separatorStyle} />
       <div style={panelStyle}>
         <h2>{answers.right.title}</h2>
+        <InfoIcon
+          infoText={infotext}
+          />
         <p>{answers.right.description}</p>
         <ExpandingTextArea
           id="identify-leverage-points-right"

@@ -7,8 +7,12 @@ import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { Values } from '../../../types/exercises';
 import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
+import InfoIcon from '../InfoIcon';
 
 interface ValuesProps {}
+
+const infotext = `Choose the values that guide your sustainability actions. What is important for you?`
+
 
 const ValuesExercise: React.FC<ValuesProps> = () => {
   const [bookOne, setBookOne] = useState<BookOne | null>(null);
@@ -112,6 +116,9 @@ const ValuesExercise: React.FC<ValuesProps> = () => {
     <div style={containerStyle}>
       <div style={panelStyle}>
         <h2>{answers.left.title}</h2>
+        <InfoIcon
+          infoText={infotext}
+        />
         <p>{answers.left.description}</p>
         <h3>{answers.left.question1.title}</h3>
         <ExpandingTextArea

@@ -7,8 +7,13 @@ import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { FromFutureToPresent } from '../../../types/exercises';
 import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
+import InfoIcon from '../InfoIcon';
 
 interface FromFutureToPresentProps {}
+
+const infotextQ1 = `Thinking about the futures that could be for the problem you’ve chosen. What are the probable, possible and desirable futures for this specific aspect you want to change? Think about how futures are different when they are based on reactions or actions (discuss difference between  mitigation and adaptation—and perhaps beyond those two, creation?). Think about the different stakeholders and interests that can also  influence the system. Imagine the multiple perspectives they represent,  their motivations and their desires. Now, choose one desirable future for your problem and the aspect you are working with, and describe it. It is the year 2050: What is the state of the  problem?`
+
+const infotextQ2 = `Trace back, step by step, what happened during the past 25 years to achieve the change in the system you have described. Focus on the specific aspect you identified and the scenario for 2050 you envisioned. What is required to get to the 2050 you have chosen? What do you have  to do? What is required of others? What material requirements do you  need? What is your role in the change? Who do you want to be in this plan? What does your plan mean for your future personally and professionally? What obstacles did you encounter and how did you overcome them?  What do you need to make this future come true? Think about how you are already  becoming your future self, but how you also exist within a system. How  can you influence the system you live in that determines what is probable, possible and desirable for you?` 
 
 const FromFutureToPresentExercise: React.FC<FromFutureToPresentProps> = () => {
   const [bookOne, setBookOne] = useState<BookOne | null>(null);
@@ -130,6 +135,9 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
     <div style={containerStyle}>
       <div style={panelStyle}>
         <h2>{answers.left.title}</h2>
+        <InfoIcon
+          infoText={infotextQ1}
+          />
         <p>{answers.left.question}</p>
         <ExpandingTextArea
           id="from-future-to-present-left"
@@ -142,6 +150,9 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
       <div style={separatorStyle} />
       <div style={panelStyle}>
         <h2>{answers.right.title}</h2>
+        <InfoIcon
+          infoText={infotextQ2}
+          />
         <p>{answers.right.description}</p>
         <h3>{answers.right.question1.title}</h3>
         <ExpandingTextArea

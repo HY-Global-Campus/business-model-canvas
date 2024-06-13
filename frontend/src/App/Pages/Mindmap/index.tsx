@@ -8,6 +8,7 @@ import useStore, { RFState } from '../../store';
 import 'reactflow/dist/style.css';
 import Header from '../../Components/Header';
 import './Flow.css'; // Import the CSS file for styling
+import InfoIcon from '../../Components/InfoIcon';
 
 const selector = (state: RFState) => ({
   nodes: state.nodes,
@@ -19,6 +20,8 @@ const selector = (state: RFState) => ({
 });
 
 const nodeOrigin: NodeOrigin = [0.5, 0.5];
+
+const infotext = `Starting from the written definition of the challenge you chose, map out the elements of the system in which the problem exists. You can do that with the help of the content you find in the game.`;
 
 function Flow() {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
@@ -74,7 +77,13 @@ function Flow() {
           fitView
         >
           <Controls showInteractive={false} />
-          <Panel position="top-left">Book of Serendip</Panel>
+          <Panel position="top-left">
+            <h1>Map of connections</h1>
+            <InfoIcon
+              infoText={infotext}
+              />
+            <p> Add your notes and complete the map of connections</p>
+            </Panel>
         </ReactFlow>
       </div>
     </>

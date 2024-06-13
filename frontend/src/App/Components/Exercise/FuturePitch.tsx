@@ -7,8 +7,11 @@ import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { FuturePitch } from '../../../types/exercises';
 import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
+import InfoIcon from '../InfoIcon';
 
 interface FuturePitchProps {}
+
+const infotext = `Create a 100 word pitch, where you present your future vision. You are unsure what to write about? Ask Madida in the window on this page. She will guide you through the steps you need to take to create your pitch. Once you are done with the pitch, generate an image that reflects your vision. Take your time to finalize this task.`
 
 const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
   const [bookOne, setBookOne] = useState<BookOne | null>(null);
@@ -101,6 +104,9 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
     <div style={containerStyle}>
       <div style={panelStyle}>
         <h2>{answers.left.title}</h2>
+        <InfoIcon
+          infoText={infotext}
+          />
         <ExpandingTextArea
           id="future-pitch-text-area-left"
           instructionText=""

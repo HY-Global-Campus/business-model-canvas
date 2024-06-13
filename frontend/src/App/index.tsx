@@ -18,8 +18,8 @@ import Logout from './Components/Logout';
 
 const pages = [
   { path: '/', label: 'FrontPage', color: 'white' },
-  { path: '/mindmap', label: 'Mindmap', color: 'black' },
   { path: '/exercise/choose-challenge', label: 'Choose Challenge', color: 'black' },
+  { path: '/mindmap', label: 'Mindmap', color: 'black' },
   { path: '/exercise/identify-leverage-points', label: 'Identify Leverage Points', color: 'black' },
   { path: '/exercise/redefine-challenge', label: 'Redefine Challenge', color: 'black' },
   { path: '/exercise/values', label: 'Values', color: 'black' },
