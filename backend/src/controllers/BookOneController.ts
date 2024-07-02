@@ -47,7 +47,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 router.get('/user/:userid', async (req: Request, res: Response) => {
-    if (req.user?.id !== req.params.id && !req.user?.isAdmin) {
+    if (req.user?.id !== req.params.userid && !req.user?.isAdmin) {
         return res.status(401).send();
     }
   try {

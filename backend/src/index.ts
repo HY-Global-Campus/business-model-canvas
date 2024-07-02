@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/login', loginRouter);
-app.use('/bookones', BookOneRouter);
+app.use('/bookones', authMiddleware, BookOneRouter);
 
 app.get('/', authMiddleware, async (_, res) => {
   res.status(200).send('Success');
@@ -26,7 +26,6 @@ app.get('/me', authMiddleware, async (req, res) => {
   res.json(user);
 })
 
-app.get('/bookones', authMiddleware, BookOneRouter);
 
 
 const PORT = process.env.port || 8080
