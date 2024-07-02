@@ -20,6 +20,9 @@ const handleError = (error: unknown, res: Response) => {
 };
 
 router.get('/', async (req: Request, res: Response) => {
+    if (!req.user?.isAdmin) {
+        return res.status(401).send();
+    }
     try {
         const books = await findAllBookOnes();
         res.json(books);
@@ -29,6 +32,9 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.get('/:id', async (req: Request, res: Response) => {
+    if (!req.user?.isAdmin) {
+        return res.status(401).send();
+    }
     try {
         const book = await findBookOneById(parseInt(req.params.id));
         if (!book) {
@@ -41,6 +47,9 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 router.get('/user/:userid', async (req: Request, res: Response) => {
+    if (req.user?.id !== req.params.id && !req.user?.isAdmin) {
+        return res.status(401).send();
+    }
   try {
     const book = await findBookOneByUserId(req.params.userid);
     if (!book) {
@@ -63,6 +72,10 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.put('/:id', async (req: Request, res: Response) => {
     try {
+        const owner_id = (await findBookOneById(parseInt(req.params.id)))?.userId;
+        if (req.user?.id !== owner_id) {
+            return res.status(401).send();
+        }
         const updatedBook = await updateBookOne(parseInt(req.params.id), req.body);
         if (!updatedBook) {
             return res.status(404).json({ message: 'Book not found' });
@@ -75,6 +88,10 @@ router.put('/:id', async (req: Request, res: Response) => {
 
 router.delete('/:id', async (req: Request, res: Response) => {
     try {
+        const owner_id = (await findBookOneById(parseInt(req.params.id)))?.userId;
+        if (req.user?.id !== owner_id && !req.user?.isAdmin) {
+            return res.status(401).send();
+        }
         const result = await deleteBookOne(parseInt(req.params.id));
         if (!result) {
             return res.status(404).json({ message: 'Book not found' });
