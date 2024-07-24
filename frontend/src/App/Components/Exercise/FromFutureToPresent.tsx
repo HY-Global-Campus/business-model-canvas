@@ -8,6 +8,7 @@ import { FromFutureToPresent } from '../../../types/exercises';
 import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
 import InfoIcon from '../InfoIcon';
+import StyledTextArea from './StyledTextArea';
 
 interface FromFutureToPresentProps {}
 
@@ -128,6 +129,18 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
     });
   };
 
+  const rowStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
+
+  const numberStyle: React.CSSProperties = {
+    marginLeft: '1rem',
+    marginTop: '1rem',
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+  }
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -156,54 +169,66 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
         <h2>{answers.right.title}</h2>
 
         <p>{answers.right.description}</p>
-        <h3>{answers.right.question1.title}</h3>
-        <ExpandingTextArea
-          id="from-future-to-present-question1"
-          instructionText=""
-          value={answers.right.question1.answer}
-          onChange={handleAnswerChange('right', 'question1')}
-          rows={2}
-        />
-        <h3>{answers.right.question2.title}</h3>
-        <ExpandingTextArea
-          id="from-future-to-present-question2"
-          instructionText=""
-          value={answers.right.question2.answer}
-          onChange={handleAnswerChange('right', 'question2')}
-          rows={2}
-        />
-        <h3>{answers.right.question3.title}</h3>
-        <ExpandingTextArea
-          id="from-future-to-present-question3"
-          instructionText=""
-          value={answers.right.question3.answer}
-          onChange={handleAnswerChange('right', 'question3')}
-          rows={2}
-        />
-        <h3>{answers.right.question4.title}</h3>
-        <ExpandingTextArea
-          id="from-future-to-present-question4"
-          instructionText=""
-          value={answers.right.question4.answer}
-          onChange={handleAnswerChange('right', 'question4')}
-          rows={2}
-        />
-        <h3>{answers.right.question5.title}</h3>
-        <ExpandingTextArea
-          id="from-future-to-present-question5"
-          instructionText=""
-          value={answers.right.question5.answer}
-          onChange={handleAnswerChange('right', 'question5')}
-          rows={2}
-        />
-        <h3>{answers.right.question6.title}</h3>
-        <ExpandingTextArea
-          id="from-future-to-present-question6"
-          instructionText=""
-          value={answers.right.question6.answer}
-          onChange={handleAnswerChange('right', 'question6')}
-          rows={2}
-        />
+        <div style={rowStyle} >
+          <StyledTextArea
+            id="from-future-to-present-question1"
+            value={answers.right.question1.answer}
+            onChange={handleAnswerChange('right', 'question1')}
+          />
+          <div style={numberStyle}>
+            2050
+          </div>
+        </div>
+        <div style={rowStyle}>
+          <StyledTextArea
+            id="from-future-to-present-question2"
+            value={answers.right.question2.answer}
+            onChange={handleAnswerChange('right', 'question2')}
+          />
+          <div style={numberStyle}>
+            2045
+          </div>
+        </div>
+        <div style={rowStyle}>
+          <StyledTextArea
+            id="from-future-to-present-question3"
+            value={answers.right.question3.answer}
+            onChange={handleAnswerChange('right', 'question3')}
+          />
+          <div style={numberStyle}>
+            2040
+          </div>
+        </div>
+        <div style={rowStyle}>
+          <StyledTextArea
+            id="from-future-to-present-question4"
+            value={answers.right.question4.answer}
+            onChange={handleAnswerChange('right', 'question4')}
+          />
+          <div style={numberStyle}>
+            2035
+          </div>
+        </div>
+        <div style={rowStyle}>
+          <StyledTextArea
+            id="from-future-to-present-question5"
+            value={answers.right.question5.answer}
+            onChange={handleAnswerChange('right', 'question5')}
+          />
+          <div style={numberStyle}>
+            2030
+          </div>
+        </div>
+        <div style={rowStyle}>
+          <StyledTextArea
+            id="from-future-to-present-question6"
+            value={answers.right.question6.answer}
+            onChange={handleAnswerChange('right', 'question6')}
+          />
+          <div style={numberStyle}>
+            2024
+          </div>
+        </div>
       </div>
     </div>
   );
