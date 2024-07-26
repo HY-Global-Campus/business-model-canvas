@@ -13,6 +13,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.37.1",
     "@tanstack/react-query-devtools": "^5.37.1",
+    "@xyflow/react": "^12.0.3",
     "axios": "^1.7.2",
     "classcat": "^5.0.4",
     "dotenv": "^16.4.5",
@@ -23,7 +24,6 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.22.3",
     "react-router-dom": "^6.22.3",
-    "reactflow": "^11.10.4",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

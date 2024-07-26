@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 import { BrowserRouter } from 'react-router-dom';
 import queryClient from './App/utils/queryClient'; 
 import App from './App';

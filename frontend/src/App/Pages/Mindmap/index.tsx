@@ -2,94 +2,146 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { useCallback, useRef } from 'react';
-import ReactFlow, { Controls, Panel, NodeOrigin, useReactFlow, Connection } from 'reactflow';
+import {
+  ReactFlow,
+  Controls,
+  OnConnectEnd,
+  OnConnectStart,
+  Panel,
+  useStoreApi,
+  useReactFlow,
+  NodeOrigin,
+  ConnectionLineType,
+  InternalNode,
+} from '@xyflow/react';
 import { shallow } from 'zustand/shallow';
 import useStore, { RFState } from '../../store';
-import 'reactflow/dist/style.css';
+import '@xyflow/react/dist/style.css';
 import Header from '../../Components/Header';
 import './Flow.css'; // Import the CSS file for styling
 import InfoIcon from '../../Components/InfoIcon';
+import MindMapNode from './MindMapNode';
+import MindMapEdge from './MindMapEdge';
+
+
+
+const infotext = `Starting from the written definition of the challenge you chose, map out the elements of the system in which the problem exists. You can do that with the help of the content you find in the game.`;
 
 const selector = (state: RFState) => ({
   nodes: state.nodes,
   edges: state.edges,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
-  onConnect: state.onConnect,
-  addNode: state.addNode,
+  addChildNode: state.addChildNode,
 });
 
-const nodeOrigin: NodeOrigin = [0.5, 0.5];
+const nodeTypes = {
+  mindmap: MindMapNode,
+};
 
-const infotext = `Starting from the written definition of the challenge you chose, map out the elements of the system in which the problem exists. You can do that with the help of the content you find in the game.`;
+const edgeTypes = {
+  mindmap: MindMapEdge,
+};
+
+const nodeOrigin: NodeOrigin = [0.5, 0.5];
+const connectionLineStyle = { stroke: '#F6AD55', strokeWidth: 3 };
+const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
 
 function Flow() {
-  const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
+  // whenever you use multiple values, you should use shallow for making sure that the component only re-renders when one of the values change
+  const { nodes, edges, onNodesChange, onEdgesChange, addChildNode } = useStore(
+    selector,
+    shallow,
+  );
   const connectingNodeId = useRef<string | null>(null);
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } = useStore(selector, shallow);
-  const { project } = useReactFlow();
-  const handleConnectStart = useCallback((_, { nodeId }: { nodeId: string }) => {
+  const store = useStoreApi();
+  const { screenToFlowPosition } = useReactFlow();
+
+  const getChildNodePosition = (
+    event: MouseEvent | TouchEvent,
+    parentNode?: InternalNode,
+  ) => {
+    const { domNode } = store.getState();
+
+    if (
+      !domNode ||
+      // we need to check if these properites exist, because when a node is not initialized yet,
+      // it doesn't have a positionAbsolute nor a width or height
+      !parentNode?.internals.positionAbsolute ||
+      !parentNode?.measured.width ||
+      !parentNode?.measured.height
+    ) {
+      return;
+    }
+
+    const isTouchEvent = 'touches' in event;
+    const x = isTouchEvent ? event.touches[0].clientX : event.clientX;
+    const y = isTouchEvent ? event.touches[0].clientY : event.clientY;
+    // we need to remove the wrapper bounds, in order to get the correct mouse position
+    const panePosition = screenToFlowPosition({
+      x,
+      y,
+    });
+
+    // we are calculating with positionAbsolute here because child nodes are positioned relative to their parent
+    return {
+      x:
+        panePosition.x -
+        parentNode.internals.positionAbsolute.x +
+        parentNode.measured.width / 2,
+      y:
+        panePosition.y -
+        parentNode.internals.positionAbsolute.y +
+        parentNode.measured.height / 2,
+    };
+  };
+
+  const onConnectStart: OnConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
   }, []);
 
-  const handleConnectEnd = useCallback(
-    (event: MouseEvent) => {
-      if (!connectingNodeId.current) return;
+  const onConnectEnd: OnConnectEnd = useCallback(
+    (event) => {
+      const { nodeLookup } = store.getState();
+      const targetIsPane = (event.target as Element).classList.contains(
+        'react-flow__pane',
+      );
 
-      const targetIsPane = (event.target as HTMLElement).classList.contains('react-flow__pane');
+      if (targetIsPane && connectingNodeId.current) {
+        const parentNode = nodeLookup.get(connectingNodeId.current);
+        const childNodePosition = getChildNodePosition(event, parentNode);
 
-      if (targetIsPane) {
-        const newNodeId = `${nodes.length + 1}`;
-        const newNode = {
-          id: newNodeId,
-          position: project({ x: event.clientX, y: event.clientY }),
-          data: { label: `Node ${newNodeId}` },
-          origin: [0.5, 0.0],
-        };
-
-        addNode(newNode.position);
-        const connection: Connection = {
-          source: connectingNodeId.current!,
-          sourceHandle: null,
-          target: newNodeId,
-          targetHandle: null,
-        };
-        onConnect(connection);
-        connectingNodeId.current = null;
+        if (parentNode && childNodePosition) {
+          addChildNode(parentNode, childNodePosition);
+        }
       }
     },
-    [project, addNode, onConnect, nodes.length]
+    [getChildNodePosition],
   );
 
   return (
     <>
-      <Header />
-      <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onConnectStart={handleConnectStart}
-          onConnectEnd={handleConnectEnd}
-          nodeOrigin={nodeOrigin}
-          fitView
-        >
-          <Controls showInteractive={false} />
-          <Panel position="top-left">
-  
-            <h1>Map of connections</h1>
-
-            <p> Add your notes and complete the map of connections</p>
-            </Panel>
-          <Panel position="top-right" >
-                                  <InfoIcon
-              infoText={infotext}
-              />
-          </Panel>
-        </ReactFlow>
-      </div>
+    <Header />
+    <ReactFlow
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
+      onConnectStart={onConnectStart}
+      onConnectEnd={onConnectEnd}
+      nodeOrigin={nodeOrigin}
+      connectionLineStyle={connectionLineStyle}
+      defaultEdgeOptions={defaultEdgeOptions}
+      connectionLineType={ConnectionLineType.Straight}
+      fitView
+    >
+      <Controls showInteractive={false} />
+      <Panel position="top-left" className="header">
+        React Flow Mind Map
+      </Panel>
+    </ReactFlow>
     </>
   );
 }

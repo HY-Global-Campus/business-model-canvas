@@ -8,28 +8,26 @@ import {
   OnEdgesChange,
   applyNodeChanges,
   applyEdgeChanges,
-  addEdge,
-  OnConnect,
-  Connection,
   XYPosition,
-} from 'reactflow';
-import { createWithEqualityFn } from 'zustand/traditional';
+} from '@xyflow/react';
+import { create } from 'zustand';
+import { nanoid } from 'nanoid/non-secure';
 
 export type RFState = {
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
-  onConnect: OnConnect;
-  addNode: (position: XYPosition) => void;
+  addChildNode: (parentNode: Node, position: XYPosition) => void;
+  updateNodeLabel: (nodeId: string, label: string) => void;
 };
 
-const useStore = createWithEqualityFn<RFState>((set, get) => ({
+const useStore = create<RFState>((set, get) => ({
   nodes: [
     {
       id: 'root',
       type: 'mindmap',
-      data: { label: 'Book of Serendip' },
+      data: { label: 'React Flow Mind Map' },
       position: { x: 0, y: 0 },
     },
   ],
@@ -44,25 +42,39 @@ const useStore = createWithEqualityFn<RFState>((set, get) => ({
       edges: applyEdgeChanges(changes, get().edges),
     });
   },
-  onConnect: (params: Edge | Connection) => {
-    set({
-      edges: addEdge(params, get().edges),
-    });
-  },
-  addNode: (position: XYPosition) => {
-    const newNode: Node = {
-      id: `${get().nodes.length + 1}`,
+  addChildNode: (parentNode: Node, position: XYPosition) => {
+    const newNode = {
+      id: nanoid(),
       type: 'mindmap',
-      data: { label: `Node ${get().nodes.length + 1}` },
+      data: { label: 'New Node' },
       position,
+      parentId: parentNode.id,
     };
+
+    const newEdge = {
+      id: nanoid(),
+      source: parentNode.id,
+      target: newNode.id,
+    };
+
     set({
       nodes: [...get().nodes, newNode],
+      edges: [...get().edges, newEdge],
     });
-    console.log('New node added:', newNode);
+  },
+  updateNodeLabel: (nodeId: string, label: string) => {
+    set({
+      nodes: get().nodes.map((node) => {
+        if (node.id === nodeId) {
+          // it's important to create a new object here, to inform React Flow about the changes
+          node.data = { ...node.data, label };
+        }
+
+        return node;
+      }),
+    });
   },
 }));
 
 export default useStore;
-
 
