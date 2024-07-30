@@ -9,13 +9,16 @@ export type NodeData = {
 };
 
 function MindMapNode({ id, data }: NodeProps<Node<NodeData>>) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const updateNodeLabel = useStore((state) => state.updateNodeLabel);
   const [label, setLabel] = useState(data.label);
 
   useLayoutEffect(() => {
     if (inputRef.current) {
-      inputRef.current.style.width = `${(label.length * 8)}px`;
+      inputRef.current.style.width = 'auto';
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.width = `${inputRef.current.scrollWidth}px`;
+      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
     }
   }, [label]);
 
@@ -48,7 +51,7 @@ function MindMapNode({ id, data }: NodeProps<Node<NodeData>>) {
             />
           </svg>
         </div>
-        <input
+        <textarea
           value={label}
           onChange={(evt) => updateNodeLabel(id, evt.target.value, setLabel)}
           className="input"
