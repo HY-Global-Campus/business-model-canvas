@@ -22,9 +22,13 @@ body,
 .react-flow__node-mindmap {
   background: #f6ad55;
   border-radius: 25% / 90%;
-  border: 10px solid transparent;
+  border: 4px solid transparent;
   padding: 2px 5px;
   font-weight: 700;
+}
+
+.react-flow__node-mindmap:focus {
+  border: 4px solid black;
 }
 
 .react-flow__handle.target {
@@ -54,6 +58,7 @@ body,
   position: relative;
   pointer-events: none;
   display: inline-block;
+  text-align: center;
 }
 
 .dragHandle {
