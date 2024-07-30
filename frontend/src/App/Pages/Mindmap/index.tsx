@@ -23,8 +23,6 @@ import InfoIcon from '../../Components/InfoIcon';
 import MindMapNode from './MindMapNode';
 import MindMapEdge from './MindMapEdge';
 
-
-
 const infotext = `Starting from the written definition of the challenge you chose, map out the elements of the system in which the problem exists. You can do that with the help of the content you find in the game.`;
 
 const selector = (state: RFState) => ({
@@ -48,11 +46,7 @@ const connectionLineStyle = { stroke: '#F6AD55', strokeWidth: 3 };
 const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
 
 function Flow() {
-  // whenever you use multiple values, you should use shallow for making sure that the component only re-renders when one of the values change
-  const { nodes, edges, onNodesChange, onEdgesChange, addChildNode } = useStore(
-    selector,
-    shallow,
-  );
+  const { nodes, edges, onNodesChange, onEdgesChange, addChildNode } = useStore(selector, shallow);
   const connectingNodeId = useRef<string | null>(null);
   const store = useStoreApi();
   const { screenToFlowPosition } = useReactFlow();
@@ -65,8 +59,6 @@ function Flow() {
 
     if (
       !domNode ||
-      // we need to check if these properites exist, because when a node is not initialized yet,
-      // it doesn't have a positionAbsolute nor a width or height
       !parentNode?.internals.positionAbsolute ||
       !parentNode?.measured.width ||
       !parentNode?.measured.height
@@ -77,13 +69,11 @@ function Flow() {
     const isTouchEvent = 'touches' in event;
     const x = isTouchEvent ? event.touches[0].clientX : event.clientX;
     const y = isTouchEvent ? event.touches[0].clientY : event.clientY;
-    // we need to remove the wrapper bounds, in order to get the correct mouse position
     const panePosition = screenToFlowPosition({
       x,
       y,
     });
 
-    // we are calculating with positionAbsolute here because child nodes are positioned relative to their parent
     return {
       x:
         panePosition.x -

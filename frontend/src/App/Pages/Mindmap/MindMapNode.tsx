@@ -1,5 +1,5 @@
 
-import { useRef, useEffect, useLayoutEffect } from 'react';
+import { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import { Handle, Node, NodeProps, Position } from '@xyflow/react';
 
 import useStore from '../../store';
@@ -9,14 +9,15 @@ export type NodeData = {
 };
 
 function MindMapNode({ id, data }: NodeProps<Node<NodeData>>) {
-  const inputRef = useRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
   const updateNodeLabel = useStore((state) => state.updateNodeLabel);
+  const [label, setLabel] = useState(data.label);
 
   useLayoutEffect(() => {
     if (inputRef.current) {
-      inputRef.current.style.width = `${data.label.length * 8}px`;
+      inputRef.current.style.width = `${(label.length * 8)}px`;
     }
-  }, [data.label.length]);
+  }, [label]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -26,10 +27,17 @@ function MindMapNode({ id, data }: NodeProps<Node<NodeData>>) {
     }, 1);
   }, []);
 
+  const handleParentClick = () => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        } else console.log("no input ref")
+        console.log("handle parent click")
+    };
+
   return (
     <>
-      <div className="inputWrapper">
-        <div className="dragHandle">
+      <div className="inputWrapper" >
+        <div className="dragHandle" onClick={handleParentClick}>
           {/* icon taken from grommet https://icons.grommet.io */}
           <svg viewBox="0 0 24 24">
             <path
@@ -41,8 +49,8 @@ function MindMapNode({ id, data }: NodeProps<Node<NodeData>>) {
           </svg>
         </div>
         <input
-          value={data.label}
-          onChange={(evt) => updateNodeLabel(id, evt.target.value)}
+          value={label}
+          onChange={(evt) => updateNodeLabel(id, evt.target.value, setLabel)}
           className="input"
           ref={inputRef}
         />
@@ -55,3 +63,4 @@ function MindMapNode({ id, data }: NodeProps<Node<NodeData>>) {
 }
 
 export default MindMapNode;
+

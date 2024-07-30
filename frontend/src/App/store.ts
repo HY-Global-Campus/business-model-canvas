@@ -19,7 +19,7 @@ export type RFState = {
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   addChildNode: (parentNode: Node, position: XYPosition) => void;
-  updateNodeLabel: (nodeId: string, label: string) => void;
+  updateNodeLabel: (nodeId: string, label: string, setLabel: React.Dispatch<React.SetStateAction<string>>) => void;
 };
 
 const useStore = create<RFState>((set, get) => ({
@@ -62,12 +62,14 @@ const useStore = create<RFState>((set, get) => ({
       edges: [...get().edges, newEdge],
     });
   },
-  updateNodeLabel: (nodeId: string, label: string) => {
+  updateNodeLabel: (nodeId: string, label: string, setLabel: React.Dispatch<React.SetStateAction<string>>) => {
     set({
       nodes: get().nodes.map((node) => {
         if (node.id === nodeId) {
           // it's important to create a new object here, to inform React Flow about the changes
+          console.log(node.data)
           node.data = { ...node.data, label };
+          setLabel(label);
         }
 
         return node;
