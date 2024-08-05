@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { BaseEdge, EdgeProps, getStraightPath } from '@xyflow/react';
 
 function MindMapEdge(props: EdgeProps) {
