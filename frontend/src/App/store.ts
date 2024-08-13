@@ -26,15 +26,17 @@ export type RFState = {
   bookoneId: number | undefined,
 };
 
-const useStore = create<RFState>((set, get) => ({
-  nodes: [
+const initNodes = [
     {
       id: 'root',
       type: 'mindmap',
       data: { label: 'React Flow Mind Map' },
       position: { x: 0, y: 0 },
     },
-  ],
+  ]
+
+const useStore = create<RFState>((set, get) => ({
+  nodes: initNodes,
   edges: [],
   onNodesChange: (changes: NodeChange[]) => {
     set({
@@ -101,6 +103,7 @@ const useStore = create<RFState>((set, get) => ({
     }
   },
   saveState: async () => {
+    if (get().nodes == initNodes) return;
     if (!get().bookoneId) {
       const id = (await getBookOneByUserId(localStorage.getItem('id')!)).id
       set({bookoneId: id})
