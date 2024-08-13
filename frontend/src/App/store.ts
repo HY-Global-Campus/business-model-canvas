@@ -12,6 +12,9 @@ import {
 } from '@xyflow/react';
 import { create } from 'zustand';
 import { nanoid } from 'nanoid/non-secure';
+import { BookOne, getBookOneByUserId, updateBookOne } from './api/bookOneService';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export type RFState = {
   nodes: Node[];
@@ -20,6 +23,9 @@ export type RFState = {
   onEdgesChange: OnEdgesChange;
   addChildNode: (parentNode: Node, position: XYPosition) => void;
   updateNodeLabel: (nodeId: string, label: string, setLabel: React.Dispatch<React.SetStateAction<string>>) => void;
+  saveState: () => void;
+  loadState: () => void;
+  bookoneId: number | undefined,
 };
 
 const useStore = create<RFState>((set, get) => ({
@@ -36,11 +42,13 @@ const useStore = create<RFState>((set, get) => ({
     set({
       nodes: applyNodeChanges(changes, get().nodes),
     });
+    get().saveState()
   },
   onEdgesChange: (changes: EdgeChange[]) => {
     set({
       edges: applyEdgeChanges(changes, get().edges),
     });
+    get().saveState();
   },
   addChildNode: (parentNode: Node, position: XYPosition) => {
     const newNode = {
@@ -61,6 +69,7 @@ const useStore = create<RFState>((set, get) => ({
       nodes: [...get().nodes, newNode],
       edges: [...get().edges, newEdge],
     });
+    get().saveState();
   },
   updateNodeLabel: (nodeId: string, label: string, setLabel: React.Dispatch<React.SetStateAction<string>>) => {
     set({
@@ -75,7 +84,34 @@ const useStore = create<RFState>((set, get) => ({
         return node;
       }),
     });
+    get().saveState();
   },
+  loadState: async () => {
+    console.log('loadState running')
+    const userId = localStorage.getItem('id');
+    try {
+      const data = await getBookOneByUserId(userId!);
+      set({bookoneId: data.id})
+      if (data.mindmap) {
+        set({
+          nodes: data.mindmap.nodes,
+          edges: data.mindmap.edges
+        });
+      }
+    } catch (err) {
+      console.log(err); 
+    }
+  },
+  saveState: async () => {
+    if (!get().bookoneId) {
+      const id = (await getBookOneByUserId(localStorage.getItem('id')!)).id
+      set({bookoneId: id})
+    }
+    const updatedBookOne: Partial<BookOne> = {mindmap: { nodes: get().nodes , edges: get().edges}};
+    return await updateBookOne(get().bookoneId!,updatedBookOne);
+    
+  },
+  bookoneId: undefined,      
 }));
 
 export default useStore;

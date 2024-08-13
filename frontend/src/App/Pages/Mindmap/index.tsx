@@ -1,7 +1,7 @@
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   ReactFlow,
   Controls,
@@ -15,6 +15,7 @@ import {
   InternalNode,
 } from '@xyflow/react';
 import { shallow } from 'zustand/shallow';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useStore, { RFState } from '../../store';
 import '@xyflow/react/dist/style.css';
 import Header from '../../Components/Header';
@@ -22,6 +23,7 @@ import './Flow.css'; // Import the CSS file for styling
 import InfoIcon from '../../Components/InfoIcon';
 import MindMapNode from './MindMapNode';
 import MindMapEdge from './MindMapEdge';
+import { getBookOneById } from '../../api/bookOneService';
 
 const infotext = `Starting from the written definition of the challenge you chose, map out the elements of the system in which the problem exists. You can do that with the help of the content you find in the game.`;
 
@@ -31,7 +33,10 @@ const selector = (state: RFState) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   addChildNode: state.addChildNode,
+  loadState: state.loadState,
+  saveState: state.saveState
 });
+
 
 const nodeTypes = {
   mindmap: MindMapNode,
@@ -46,10 +51,12 @@ const connectionLineStyle = { stroke: '#F6AD55', strokeWidth: 3 };
 const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
 
 function Flow() {
-  const { nodes, edges, onNodesChange, onEdgesChange, addChildNode } = useStore(selector, shallow);
+  const { nodes, edges, onNodesChange, onEdgesChange, addChildNode, loadState, saveState } = useStore(selector, shallow);
   const connectingNodeId = useRef<string | null>(null);
   const store = useStoreApi();
   const { screenToFlowPosition } = useReactFlow();
+  const queryClient = useQueryClient();
+  const userId = localStorage.getItem('id');
 
   const getChildNodePosition = (
     event: MouseEvent | TouchEvent,
@@ -108,6 +115,20 @@ function Flow() {
     },
     [getChildNodePosition],
   );
+
+  useEffect(() => {
+    loadState(); 
+  }, [])
+
+  // const mutation = useMutation<BookOne, Error, Partial<BookOne>>({
+  //   mutationFn: saveState,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({queryKey: ['bookone', userId]})
+  //   },
+  //   onError: (error) => {
+  //     console.error('Error updating BookOne Mindmap', error);
+  //   }
+  // });
 
   return (
     <>

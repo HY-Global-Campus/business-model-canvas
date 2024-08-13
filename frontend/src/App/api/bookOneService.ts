@@ -1,10 +1,12 @@
 
 import api from './axiosInstance';
 import { BookOneExercises } from '../../types/exercises';
+import { MindMap } from '../../types/mindmap';
 
 export interface BookOne {
   id: number;
-  exercises: BookOneExercises
+  exercises: BookOneExercises;
+  mindmap: MindMap;
 }
 
 export const getAllBookOnes = async (): Promise<BookOne[]> => {

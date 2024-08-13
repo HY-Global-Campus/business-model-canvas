@@ -5,6 +5,7 @@ import { BookOneExercises } from '../types/exercises';
 export interface BookOneAttributes {
   id: number;
   exercises: BookOneExercises;
+  mindmap: object;
   userId: string;
 }
 
@@ -14,6 +15,7 @@ export interface BookOneCreationAttributes extends Optional<BookOneAttributes, '
 class BookOne extends Model<BookOneAttributes, BookOneCreationAttributes> implements BookOneAttributes {
   declare id: number;
   declare exercises: BookOneExercises;
+  declare mindmap: object;
   declare userId: string;
 
   static initialize(sequelize: Sequelize): void {
@@ -27,6 +29,10 @@ class BookOne extends Model<BookOneAttributes, BookOneCreationAttributes> implem
         exercises: {
           type: DataTypes.JSONB,
           allowNull: false,
+        },
+        mindmap: {
+          type: DataTypes.JSONB,
+          allowNull: true,
         },
         userId: {
           type: DataTypes.UUID,
