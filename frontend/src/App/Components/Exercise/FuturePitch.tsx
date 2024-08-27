@@ -8,6 +8,7 @@ import { FuturePitch } from '../../../types/exercises';
 import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
 import { BookOne } from '../../api/bookOneService';
 import InfoIcon from '../InfoIcon';
+import ChatBot from '../ChatBot';
 
 interface FuturePitchProps {}
 
@@ -103,9 +104,9 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
   return (
     <div style={containerStyle}>
       <div style={panelStyle}>
-                <InfoIcon
+        <InfoIcon
           infoText={infotext}
-          />
+        />
         <h2>{answers.left.title}</h2>
 
         <ExpandingTextArea
@@ -118,6 +119,7 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
+        <ChatBot />
       </div>
     </div>
   );

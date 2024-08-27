@@ -11,6 +11,8 @@ services:
       NODE_ENV: development
       DATABASE_URL: postgres://user:password@db:5432/mydatabase
       JWT_SECRET: developmentsecret
+      GCAI_URL: ${GCAI_URL}
+      GCAI_TOKEN: ${GCAI_TOKEN}
     depends_on:
       - db
   db:

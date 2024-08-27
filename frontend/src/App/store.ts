@@ -30,7 +30,7 @@ const initNodes = [
     {
       id: 'root',
       type: 'mindmap',
-      data: { label: 'React Flow Mind Map' },
+      data: { label: 'Chosen challenge' },
       position: { x: 0, y: 0 },
     },
   ]

@@ -85,7 +85,7 @@ const ChooseChallengeExercise: React.FC<ChooseChallengeProps> = () => {
 
   const debouncedMutation = useRef(
     debounce((updatedBook: Partial<BookOne>) => mutation.mutate(updatedBook), 500)
-  ).current;
+  ).current;  
 
   const handleAnswerChange = (side: 'left' | 'right') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
