@@ -21,7 +21,7 @@ body,
 
 .react-flow__node-mindmap {
   background: #f6ad55;
-  border-radius: 10px;
+  border-radius: 25% / 90% 
   border: 4px solid transparent;
   padding: 2px 5px;
   font-weight: 700;

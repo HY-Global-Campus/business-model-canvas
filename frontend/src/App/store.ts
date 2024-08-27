@@ -88,7 +88,7 @@ const useStore = create<RFState>((set, get) => ({
   },
   loadState: async () => {
     console.log('loadState running')
-    const userId = localStorage.getItem('id');
+    const userId = sessionStorage.getItem('id');
     try {
       const data = await getBookOneByUserId(userId!);
       set({bookoneId: data.id})
@@ -105,7 +105,7 @@ const useStore = create<RFState>((set, get) => ({
   saveState: async () => {
     if (get().nodes == initNodes) return;
     if (!get().bookoneId) {
-      const id = (await getBookOneByUserId(localStorage.getItem('id')!)).id
+      const id = (await getBookOneByUserId(sessionStorage.getItem('id')!)).id
       set({bookoneId: id})
     }
     const updatedBookOne: Partial<BookOne> = {mindmap: { nodes: get().nodes , edges: get().edges}};

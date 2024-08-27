@@ -12,9 +12,7 @@ interface Actions {
 
 const MessageParser = ({ children, actions }: MessageParserProps) => {
   const parse = async (message: string) => {
-    actions.newBotMessage("Testing");
     await actions.requestCompletionMessage(message);
-    console.log('awaited');
 
   } 
 
