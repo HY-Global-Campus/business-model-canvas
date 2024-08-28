@@ -29,7 +29,7 @@ const RedefineChallengeExercise: React.FC<RedefineChallengeProps> = () => {
       answer: '',
     },
   });
-  const userId = localStorage.getItem('id');
+  const userId = sessionStorage.getItem('id');
 
   const queryClient = useQueryClient();
 

@@ -5,7 +5,7 @@ interface ActionProviderProps {
     createChatBotMessage: (message: string) => void;
     setState: React.Dispatch<React.SetStateAction<StateType>>;
     children: React.JSX.Element;
-    stateRef: React.MutableRefObject<StateType>;
+    state: StateType;
 }
 
 interface StateType {
@@ -13,7 +13,7 @@ interface StateType {
     gptChatHistory: chatbotService.Message[]
 }
 
-const ActionProvider = ({ createChatBotMessage, setState, stateRef, children }: ActionProviderProps) => {
+const ActionProvider = ({ createChatBotMessage, setState, state, children }: ActionProviderProps) => {
 
     const newBotMessage = (message: string) => {
         const botMessage = createChatBotMessage(message);
@@ -23,13 +23,11 @@ const ActionProvider = ({ createChatBotMessage, setState, stateRef, children }: 
     }
 
     const requestCompletionMessage = async (message: string )=> {
-        console.log(children)
-        console.log(stateRef)
         const newMessage: chatbotService.Message = {
             content: message,
             role: 'user'
         }
-        const response =  await chatbotService.getCompletion({messages: [newMessage]});
+        const response =  await chatbotService.getCompletion({messages: [...state.gptChatHistory, newMessage]});
         const botMessage = createChatBotMessage(response.choices[0].messages[0].content);
         if (botMessage == undefined) {
             return;

@@ -70,9 +70,9 @@ const Login: React.FC = () => {
   const mutation: UseMutationResult<LoginResponse, Error, LoginVariables> = useMutation({
     mutationFn: ({ username, password }: LoginVariables) => login(username, password),
     onSuccess: (data: LoginResponse) => {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('displayName', data.displayName);
-      localStorage.setItem('id', data.id);
+      sessionStorage.setItem('token', data.token);
+      sessionStorage.setItem('displayName', data.displayName);
+      sessionStorage.setItem('id', data.id);
       navigate('/');
     },
     onError: (error: Error) => {
@@ -84,9 +84,9 @@ const Login: React.FC = () => {
   const authcodeMutation: UseMutationResult<LoginResponse, Error, string> = useMutation({
     mutationFn: (authcode: string) => loginWithAuthCode(authcode),
     onSuccess: (data: LoginResponse) => {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('displayName', data.displayName);
-      localStorage.setItem('id', data.id);
+      sessionStorage.setItem('token', data.token);
+      sessionStorage.setItem('displayName', data.displayName);
+      sessionStorage.setItem('id', data.id);
       navigate('/');
     },
     onError: (error: Error) => {
