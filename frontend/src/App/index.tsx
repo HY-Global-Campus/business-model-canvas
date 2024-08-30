@@ -1,4 +1,3 @@
-
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Mindmap from "./Pages/Mindmap";
 import FrontPage from './Pages/Frontpage';

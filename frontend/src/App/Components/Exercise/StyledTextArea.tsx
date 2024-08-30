@@ -3,9 +3,10 @@ interface StyledTextAreaProps {
   id: string,
   value: string,
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  readonly?: boolean;
 }
 
-const StyledTextArea: React.FC<StyledTextAreaProps> = ({id, value, onChange}) => {
+const StyledTextArea: React.FC<StyledTextAreaProps> = ({id, value, onChange, readonly = false}) => {
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
@@ -42,6 +43,7 @@ const StyledTextArea: React.FC<StyledTextAreaProps> = ({id, value, onChange}) =>
         value={value}
         onChange={onChange}
         cols={50}
+        readOnly={readonly}
       />
     </div>
   );

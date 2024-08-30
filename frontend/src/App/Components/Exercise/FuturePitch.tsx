@@ -1,73 +1,32 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { debounce } from 'lodash';
+import React, { useState } from 'react';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { FuturePitch } from '../../../types/exercises';
-import { getBookOneByUserId, updateBookOne } from '../../api/bookOneService';
-import { BookOne } from '../../api/bookOneService';
 import InfoIcon from '../InfoIcon';
 import ChatBot from '../ChatBot';
+import { useOutletContext } from 'react-router-dom';
+import { BookOne } from '../../api/bookOneService';
 
-interface FuturePitchProps {}
+interface FuturePitchOutletContext {
+  bookOne: BookOne | null;
+  onUpdateBookOne: (updatedBook: Partial<BookOne>) => void;
+  loading: boolean;
+  error: string | null;
+}
 
-const infotext = `Create a 100 word pitch, where you present your future vision. You are unsure what to write about? Ask Madida in the window on this page. She will guide you through the steps you need to take to create your pitch. Once you are done with the pitch, generate an image that reflects your vision. Take your time to finalize this task.`
+const infotext = `Create a 100 word pitch, where you present your future vision. You are unsure what to write about? Ask Madida in the window on this page. She will guide you through the steps you need to take to create your pitch. Once you are done with the pitch, generate an image that reflects your vision. Take your time to finalize this task.`;
 
-const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
-  const [bookOne, setBookOne] = useState<BookOne | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+const FuturePitchExercise: React.FC<{ readonly?: boolean }> = ({ readonly = false }) => {
+  const { bookOne, onUpdateBookOne, loading, error } = useOutletContext<FuturePitchOutletContext>();
+
   const [answers, setAnswers] = useState<FuturePitch>({
     left: {
-      title: '',
-      answer: '',
+      title: 'My future vision pitch',
+      answer: bookOne?.exercises.futurePitchAnswer.left.answer || '',
     },
   });
-  const userId = sessionStorage.getItem('id');
 
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const fetchBookOne = async () => {
-      try {
-        const data = await getBookOneByUserId(userId!);
-        setBookOne(data);
-        setAnswers({
-          left: {
-            title: 'My future vision pitch',
-            answer: data.exercises.futurePitchAnswer.left.answer,
-          },
-        });
-      } catch (err) {
-        setError('Failed to fetch BookOne data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookOne();
-  }, [userId]);
-
-  const mutation = useMutation<BookOne, Error, Partial<BookOne>>({
-    mutationFn: async (updatedBook: Partial<BookOne>) => {
-      if (!bookOne) {
-        throw new Error('bookOne is not defined');
-      }
-      return await updateBookOne(bookOne.id, updatedBook);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookone', userId] });
-      console.log('BookOne updated successfully');
-    },
-    onError: (error) => {
-      console.error('Error updating BookOne:', error);
-    }
-  });
-
-  const debouncedMutation = useRef(
-    debounce((updatedBook: Partial<BookOne>) => mutation.mutate(updatedBook), 500)
-  ).current;
 
   const handleAnswerChange = (side: 'left') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
@@ -79,23 +38,20 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
       },
     }));
 
-    setBookOne((prevBookOne) => {
-      if (!prevBookOne) return prevBookOne;
-
+    if (bookOne) {
       const updatedBook = {
-        ...prevBookOne,
+        ...bookOne,
         exercises: {
-          ...prevBookOne.exercises,
+          ...bookOne.exercises,
           futurePitchAnswer: {
-            ...prevBookOne.exercises.futurePitchAnswer,
+            ...bookOne.exercises.futurePitchAnswer,
             [side]: { answer: value },
           },
         },
       };
 
-      debouncedMutation(updatedBook);
-      return updatedBook;
-    });
+      onUpdateBookOne(updatedBook);
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -104,9 +60,7 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
   return (
     <div style={containerStyle}>
       <div style={panelStyle}>
-        <InfoIcon
-          infoText={infotext}
-        />
+        <InfoIcon infoText={infotext} />
         <h2>{answers.left.title}</h2>
 
         <ExpandingTextArea
@@ -115,6 +69,7 @@ const FuturePitchExercise: React.FC<FuturePitchProps> = () => {
           value={answers.left.answer}
           onChange={handleAnswerChange('left')}
           rows={20}
+          readonly={readonly}
         />
       </div>
       <div style={separatorStyle} />
