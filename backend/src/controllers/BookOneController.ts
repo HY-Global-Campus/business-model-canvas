@@ -20,6 +20,9 @@ const handleError = (error: unknown, res: Response) => {
 };
 
 router.get('/', async (req: Request, res: Response) => {
+    if (!req.user?.isAdmin) {
+        return res.status(401).send();
+    }
     try {
         const books = await findAllBookOnes();
         res.json(books);
@@ -44,9 +47,9 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 router.get('/user/:userid', async (req: Request, res: Response) => {
-    if (req.user?.id !== req.params.userid && !req.user?.isAdmin) {
-        return res.status(401).send();
-    }
+    // if (req.user?.id !== req.params.userid && !req.user?.isAdmin) {
+    //     return res.status(401).send();
+    // }
   try {
     const book = await findBookOneByUserId(req.params.userid);
     if (!book) {
