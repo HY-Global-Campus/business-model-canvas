@@ -1,24 +1,17 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { FuturePitch } from '../../../types/exercises';
 import InfoIcon from '../InfoIcon';
 import ChatBot from '../ChatBot';
-import { useOutletContext } from 'react-router-dom';
-import { BookOne } from '../../api/bookOneService';
+import { useExerciseContext } from './ExerciseContext';
 
-interface FuturePitchOutletContext {
-  bookOne: BookOne | null;
-  onUpdateBookOne: (updatedBook: Partial<BookOne>) => void;
-  loading: boolean;
-  error: string | null;
-}
 
 const infotext = `Create a 100 word pitch, where you present your future vision. You are unsure what to write about? Ask Madida in the window on this page. She will guide you through the steps you need to take to create your pitch. Once you are done with the pitch, generate an image that reflects your vision. Take your time to finalize this task.`;
 
-const FuturePitchExercise: React.FC<{ readonly?: boolean }> = ({ readonly = false }) => {
-  const { bookOne, onUpdateBookOne, loading, error } = useOutletContext<FuturePitchOutletContext>();
+const FuturePitchExercise: React.FC = () => {
+  const { bookOne, onUpdateBookOne, loading, error, readonly } = useExerciseContext();
 
   const [answers, setAnswers] = useState<FuturePitch>({
     left: {
@@ -26,6 +19,18 @@ const FuturePitchExercise: React.FC<{ readonly?: boolean }> = ({ readonly = fals
       answer: bookOne?.exercises.futurePitchAnswer.left.answer || '',
     },
   });
+
+    useEffect(() => {
+    if (bookOne) {
+      setAnswers({
+        left: {
+          ...answers.left,
+          answer: bookOne.exercises.futurePitchAnswer.left.answer || '',
+        },
+      });
+    }
+  }, [bookOne]);
+
 
 
   const handleAnswerChange = (side: 'left') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {

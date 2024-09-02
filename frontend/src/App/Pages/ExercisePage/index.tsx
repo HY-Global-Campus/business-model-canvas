@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import Header from '../../Components/Header';
 import { getBookOneByUserId, updateBookOne, BookOne } from '../../api/bookOneService';
+import { ExerciseContext } from '../../Components/Exercise/ExerciseContext';
 
 const ExercisePage: React.FC = () => {
 
@@ -14,6 +15,7 @@ const ExercisePage: React.FC = () => {
 
   const queryClient = useQueryClient();
   const userId = sessionStorage.getItem('id');
+  const [toggle, setToggle] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchBookOne = async () => {
@@ -30,7 +32,7 @@ const ExercisePage: React.FC = () => {
     if (userId) {
       fetchBookOne();
     }
-  }, [userId]);
+  }, [userId, toggle]);
 
   const mutation = useMutation<BookOne, Error, Partial<BookOne>>({
     mutationFn: async (updatedBook: Partial<BookOne>) => {
@@ -42,6 +44,7 @@ const ExercisePage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookone', userId] });
       console.log('BookOne updated successfully');
+      setToggle(!toggle);
     },
     onError: (error) => {
       console.error('Error updating BookOne:', error);
@@ -60,7 +63,9 @@ const ExercisePage: React.FC = () => {
     <>
       <Header />
       <div style={pageStyle}>
-	<Outlet context={{ bookOne, onUpdateBookOne: debouncedUpdateBookOne, loading, error }} />
+	<ExerciseContext.Provider value={{ bookOne, loading, error, readonly: false, onUpdateBookOne: debouncedUpdateBookOne }}>
+	<Outlet  />
+	</ExerciseContext.Provider>
       </div>
     </>
   );

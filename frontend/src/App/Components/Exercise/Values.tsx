@@ -1,22 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { Values } from '../../../types/exercises';
 import InfoIcon from '../InfoIcon';
-import { useOutletContext } from 'react-router-dom';
-import { BookOne } from '../../api/bookOneService';
+import { useExerciseContext } from './ExerciseContext';
 
-interface ValuesOutletContext {
-  bookOne: BookOne | null;
-  onUpdateBookOne: (updatedBook: Partial<BookOne>) => void;
-  loading: boolean;
-  error: string | null;
-}
 
 const infotext = `Choose the values that guide your sustainability actions. What is important for you?`;
 
-const ValuesExercise: React.FC<{ readonly?: boolean }> = ({ readonly = false }) => {
-  const { bookOne, onUpdateBookOne, loading, error } = useOutletContext<ValuesOutletContext>();
+const ValuesExercise: React.FC = () => {
+  const { bookOne, onUpdateBookOne, loading, error, readonly } = useExerciseContext(); 
 
   const [answers, setAnswers] = useState<Values>({
     left: {
@@ -28,6 +21,20 @@ const ValuesExercise: React.FC<{ readonly?: boolean }> = ({ readonly = false }) 
     },
     right: null,
   });
+
+    useEffect(() => {
+    if (bookOne) {
+      setAnswers({
+        left: {
+          ...answers.left,
+          question1: { title: 'Value 1.', answer: bookOne.exercises.valuesAnswer.left.question1.answer || '' },
+          question2: { title: 'Value 2.', answer: bookOne.exercises.valuesAnswer.left.question2.answer || '' },
+          question3: { title: 'Value 3.', answer: bookOne.exercises.valuesAnswer.left.question3.answer || '' },
+        },
+        right: null,
+      });
+    }
+  }, [loading, bookOne]);
 
   const handleAnswerChange = (question: 'question1' | 'question2' | 'question3') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;

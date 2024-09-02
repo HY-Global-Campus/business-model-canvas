@@ -1,23 +1,14 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { RedefineChallenge } from '../../../types/exercises';
 import InfoIcon from '../InfoIcon';
-import { useOutletContext } from 'react-router-dom';
-import { BookOne } from '../../api/bookOneService';
-
-interface RedefineChallengeOutletContext {
-  bookOne: BookOne | null;
-  onUpdateBookOne: (updatedBook: Partial<BookOne>) => void;
-  loading: boolean;
-  error: string | null;
-}
-
+import { useExerciseContext } from './ExerciseContext';
 const infotext = `Write a definition for the problem you have chosen. What exactly does it mean? Why is it a problem? What are the causes and consequences it implies?`;
 
-const RedefineChallengeExercise: React.FC<{ readonly?: boolean }> = ({ readonly = false }) => {
-  const { bookOne, onUpdateBookOne, loading, error } = useOutletContext<RedefineChallengeOutletContext>();
+const RedefineChallengeExercise: React.FC = () => {
+  const { bookOne, onUpdateBookOne, loading, error, readonly } = useExerciseContext(); 
 
   const [answers, setAnswers] = useState<RedefineChallenge>({
     left: {
@@ -31,6 +22,21 @@ const RedefineChallengeExercise: React.FC<{ readonly?: boolean }> = ({ readonly 
       answer: bookOne?.exercises.redefineChallengeAnswer.right.answer || '',
     },
   });
+
+    useEffect(() => {
+    if (bookOne) {
+      setAnswers({
+        left: {
+          ...answers.left,
+          answer: bookOne.exercises.redefineChallengeAnswer.left.answer || '',
+        },
+        right: {
+          ...answers.right,
+          answer: bookOne.exercises.redefineChallengeAnswer.right.answer || '',
+        },
+      });
+    }
+  }, [bookOne]);
 
   const handleAnswerChange = (side: 'left' | 'right') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
