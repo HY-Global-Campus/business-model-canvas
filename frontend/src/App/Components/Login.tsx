@@ -1,4 +1,3 @@
-
 import React, { CSSProperties, useEffect, useState } from 'react';
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -66,6 +65,7 @@ const Login: React.FC = () => {
   const [authAttempted, setAuthAttempted] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const from = (location.state as { from: Location })?.from?.pathname || '/';
 
   const mutation: UseMutationResult<LoginResponse, Error, LoginVariables> = useMutation({
     mutationFn: ({ username, password }: LoginVariables) => login(username, password),
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
       sessionStorage.setItem('token', data.token);
       sessionStorage.setItem('displayName', data.displayName);
       sessionStorage.setItem('id', data.id);
-      navigate('/');
+      navigate(from);  // Redirect to the previous page
     },
     onError: (error: Error) => {
       console.error('Login failed:', error);
@@ -87,7 +87,7 @@ const Login: React.FC = () => {
       sessionStorage.setItem('token', data.token);
       sessionStorage.setItem('displayName', data.displayName);
       sessionStorage.setItem('id', data.id);
-      navigate('/');
+      navigate(from);  // Redirect to the previous page
     },
     onError: (error: Error) => {
       console.error('Authcode login failed:', error);
@@ -152,4 +152,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-

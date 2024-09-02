@@ -24,6 +24,8 @@ export type RFState = {
   saveState: () => void;
   loadState: () => void;
   bookoneId: number | undefined,
+  userId: string | null,
+  setUserId: (id: string) => void
 };
 
 const initNodes = [
@@ -88,7 +90,7 @@ const useStore = create<RFState>((set, get) => ({
   },
   loadState: async () => {
     console.log('loadState running')
-    const userId = sessionStorage.getItem('id');
+    const userId = get().userId; 
     try {
       const data = await getBookOneByUserId(userId!);
       set({bookoneId: data.id})
@@ -105,14 +107,18 @@ const useStore = create<RFState>((set, get) => ({
   saveState: async () => {
     if (get().nodes == initNodes) return;
     if (!get().bookoneId) {
-      const id = (await getBookOneByUserId(sessionStorage.getItem('id')!)).id
+      const id = (await getBookOneByUserId(get().userId!)).id
       set({bookoneId: id})
     }
     const updatedBookOne: Partial<BookOne> = {mindmap: { nodes: get().nodes , edges: get().edges}};
     return await updateBookOne(get().bookoneId!,updatedBookOne);
     
   },
-  bookoneId: undefined,      
+  bookoneId: undefined,
+  userId: sessionStorage.getItem('id'),
+  setUserId: (id: string) => {
+    set({userId: id})
+  }
 }));
 
 export default useStore;
