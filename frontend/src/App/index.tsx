@@ -14,6 +14,7 @@ import ValuesExercise from './Components/Exercise/Values';
 import FromFutureToPresentExercise from './Components/Exercise/FromFutureToPresent';
 import FuturePitchExercise from './Components/Exercise/FuturePitch';
 import Logout from './Components/Logout';
+import ViewAllExercises from './Pages/View';
 
 const pages = [
   { path: '/', label: 'FrontPage', color: 'white' },
@@ -32,7 +33,7 @@ function App() {
       font-family: 'Gotham Narrow';
       src: url(${gothamNarrow}) format('opentype');
       font-weight: normal;
-      font-style: normal;
+      font-style: normal;ind
     }
     body {
       font-family: 'Gotham Narrow', sans-serif;
@@ -64,6 +65,7 @@ function App() {
             <Route path="future-pitch" element={<FuturePitchExercise />} />
           </Route>
           <Route path="/endpage" element={<EndPage />} />
+          <Route path='/view/:userId' element={<ViewAllExercises />} />
         </Route>
       </Routes>
     </>

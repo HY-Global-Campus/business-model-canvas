@@ -59,6 +59,8 @@ const FuturePitchExercise: React.FC = () => {
     }
   };
 
+  const userId = sessionStorage.getItem('id');
+  const link = `${window.location.origin}/view/${userId}`;
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -79,7 +81,8 @@ const FuturePitchExercise: React.FC = () => {
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
-        <ChatBot />
+        { !readonly && <ChatBot />}
+        { !readonly && <p> Share your Book of Serendip with this link: <br/> <a href={link}> {link} </a> </p> }
       </div>
     </div>
   );
