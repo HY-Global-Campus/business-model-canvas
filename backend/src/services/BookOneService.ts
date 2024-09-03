@@ -56,7 +56,7 @@ export const findBookOneByUserId = async (userId: string) => {
       data: { label: 'Chosen challenge' },
       position: { x: 0, y: 0 },
     }],
-      eges: [],
+      edges: [],
     }
 
 
