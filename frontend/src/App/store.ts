@@ -24,8 +24,6 @@ export type RFState = {
   saveState: () => void;
   loadState: () => void;
   bookoneId: number | undefined,
-  userId: string | null,
-  setUserId: (id: string) => void
 };
 
 const useStore = create<RFState>((set, get) => ({
@@ -81,7 +79,7 @@ const useStore = create<RFState>((set, get) => ({
   },
   loadState: async () => {
     console.log('loadState running')
-    const userId = get().userId; 
+    const userId = sessionStorage.getItem('id');
     try {
       const data = await getBookOneByUserId(userId!);
       set({bookoneId: data.id})
@@ -96,9 +94,9 @@ const useStore = create<RFState>((set, get) => ({
     }
   },
   saveState: async () => {
-    if (get().nodes == initNodes) return;
+    if ( isEmpty(get().nodes) ) return;
     if (!get().bookoneId) {
-      const id = (await getBookOneByUserId(get().userId!)).id
+      const id = (await getBookOneByUserId(sessionStorage.getItem('id')!)).id
       set({bookoneId: id})
     }
     const updatedBookOne: Partial<BookOne> = {mindmap: { nodes: get().nodes , edges: get().edges}};
@@ -106,11 +104,11 @@ const useStore = create<RFState>((set, get) => ({
     
   },
   bookoneId: undefined,
-  userId: sessionStorage.getItem('id'),
-  setUserId: (id: string) => {
-    set({userId: id})
-  }
+
 }));
 
 export default useStore;
+
+const isEmpty = (value: unknown) => Array.isArray(value) && !value.length;
+
 
