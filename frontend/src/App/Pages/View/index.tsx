@@ -1,5 +1,5 @@
 
-import React, { CSSProperties, useEffect } from 'react';
+import React, { CSSProperties } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getBookOneByUserId, BookOne } from '../../api/bookOneService';
 import { useParams } from 'react-router';
@@ -11,26 +11,14 @@ import IdentifyLeveragePointsExercise from '../../Components/Exercise/IdentifyLe
 import RedefineChallengeExercise from '../../Components/Exercise/RedefineChallenge';
 import ValuesExercise from '../../Components/Exercise/Values';
 import { ReactFlow, Panel, NodeOrigin, Controls, ConnectionLineType } from '@xyflow/react';
-import { shallow } from 'zustand/shallow';
-import useStore, { RFState } from '../../store.ts';
 import '@xyflow/react/dist/style.css';
 import '../Mindmap/Flow.css';
 import MindMapEdge from '../Mindmap/MindMapEdge';
 import MindMapNode from '../Mindmap/MindMapNode';
 
-const selector = (state: RFState) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  onNodesChange: state.onNodesChange,
-  onEdgesChange: state.onEdgesChange,
-  addChildNode: state.addChildNode,
-  loadState: state.loadState,
-  saveState: state.saveState,
-  setUserId: state.setUserId,
-});
+
 
 const ViewAllExercises: React.FC = () => {
-  const { nodes, edges, setUserId, loadState } = useStore(selector, shallow);
   const { userId } = useParams<{ userId: string }>();
 
   // Use `useQuery` to fetch the bookOne data
@@ -41,13 +29,7 @@ const ViewAllExercises: React.FC = () => {
 ,
   });
 
-	useEffect(() => {
-		if (userId) {
-			setUserId(userId);
-			loadState();
-		}
-		}
-	, [bookOne]);
+
 
 
   const pageStyle: CSSProperties = {
@@ -75,8 +57,8 @@ const ViewAllExercises: React.FC = () => {
           <ChooseChallengeExercise />
           <div style={{ width: '1000px', height: '800px', border: '2px solid black' }}>
             <ReactFlow
-              nodes={nodes}
-              edges={edges}
+              nodes={bookOne?.mindmap.nodes || []}
+              edges={bookOne?.mindmap.edges || []}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
               nodeOrigin={nodeOrigin}

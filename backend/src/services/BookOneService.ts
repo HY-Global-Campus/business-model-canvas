@@ -48,9 +48,19 @@ export const findBookOneByUserId = async (userId: string) => {
       },
       futurePitchAnswer: { left: { answer: '' } }
     };
+    
+    const mindmap = {
+      nodes: [{
+      id: 'root',
+      type: 'mindmap',
+      data: { label: 'Chosen challenge' },
+      position: { x: 0, y: 0 },
+    }],
+      eges: [],
+    }
 
 
-    book = await BookOne.create({ userId, exercises, mindmap: {}, displayName: "" });
+    book = await BookOne.create({ userId, exercises, mindmap, displayName: "" });
   }
 
   return book;

@@ -28,17 +28,8 @@ export type RFState = {
   setUserId: (id: string) => void
 };
 
-const initNodes = [
-    {
-      id: 'root',
-      type: 'mindmap',
-      data: { label: 'Chosen challenge' },
-      position: { x: 0, y: 0 },
-    },
-  ]
-
 const useStore = create<RFState>((set, get) => ({
-  nodes: initNodes,
+  nodes: [],
   edges: [],
   onNodesChange: (changes: NodeChange[]) => {
     set({
