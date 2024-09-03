@@ -60,7 +60,7 @@ export const findBookOneByUserId = async (userId: string) => {
     }
 
 
-    book = await BookOne.create({ userId, exercises, mindmap, displayName: "" });
+    book = await BookOne.create({ userId, exercises, mindmap, displayName: "", reflection: "" });
   }
 
   return book;
