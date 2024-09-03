@@ -19,7 +19,7 @@ export const findBookOneByUserId = async (userId: string) => {
   // This meands that you should refactor elsewhere to take this into account
   // Mostly in frontend, when you are fetching the book for the user
 
-  const user = await User.findByPk(userId);
+  const user = await User.findOne({ where: { id: userId } });
   if (!user) {
     console.log(`User with id ${userId} not found.`);
     return null;
