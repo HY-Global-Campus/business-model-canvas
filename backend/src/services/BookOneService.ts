@@ -14,6 +14,10 @@ export const findBookOneById = async (id: number) => {
 };
 
 export const findBookOneByUserId = async (userId: string) => {
+  // Refactor this to not have side effects
+  // Meaning, do not create a new BookOne if it does not exist
+  // This meands that you should refactor elsewhere to take this into account
+  // Mostly in frontend, when you are fetching the book for the user
 
   const user = await User.findByPk(userId);
   if (!user) {
@@ -46,7 +50,7 @@ export const findBookOneByUserId = async (userId: string) => {
     };
 
 
-    book = await BookOne.create({ userId, exercises, mindmap: {} });
+    book = await BookOne.create({ userId, exercises, mindmap: {}, displayName: "" });
   }
 
   return book;

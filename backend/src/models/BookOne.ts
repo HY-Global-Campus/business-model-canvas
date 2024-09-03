@@ -7,6 +7,7 @@ export interface BookOneAttributes {
   exercises: BookOneExercises;
   mindmap: object;
   userId: string;
+  displayName: string;
 }
 
 // Define a type for creating a new BookOne entry, making id optional
@@ -17,6 +18,7 @@ class BookOne extends Model<BookOneAttributes, BookOneCreationAttributes> implem
   declare exercises: BookOneExercises;
   declare mindmap: object;
   declare userId: string;
+  declare displayName: string;
 
   static initialize(sequelize: Sequelize): void {
     this.init(
@@ -37,6 +39,11 @@ class BookOne extends Model<BookOneAttributes, BookOneCreationAttributes> implem
         userId: {
           type: DataTypes.UUID,
           allowNull: false,
+        },
+        displayName: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          defaultValue: "",
         },
       },
       {
