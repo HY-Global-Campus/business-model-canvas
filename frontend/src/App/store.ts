@@ -94,7 +94,7 @@ const useStore = create<RFState>((set, get) => ({
     try {
       const data = await getBookOneByUserId(userId!);
       set({bookoneId: data.id})
-      if (data.mindmap) {
+      if (data.mindmap && data.mindmap.nodes && data.mindmap.edges) {
         set({
           nodes: data.mindmap.nodes,
           edges: data.mindmap.edges

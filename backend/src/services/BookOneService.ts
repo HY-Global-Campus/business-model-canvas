@@ -14,6 +14,12 @@ export const findBookOneById = async (id: number) => {
 };
 
 export const findBookOneByUserId = async (userId: string) => {
+
+  const user = await User.findByPk(userId);
+  if (!user) {
+    console.log(`User with id ${userId} not found.`);
+    return null;
+  }
   let book = await BookOne.findOne({
     where: { userId },
     include: [User],
@@ -39,7 +45,8 @@ export const findBookOneByUserId = async (userId: string) => {
       futurePitchAnswer: { left: { answer: '' } }
     };
 
-    book = await BookOne.create({ userId, exercises });
+
+    book = await BookOne.create({ userId, exercises, mindmap: {} });
   }
 
   return book;
