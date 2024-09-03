@@ -16,7 +16,7 @@ BookOne.belongsTo(User, { foreignKey: 'userId' });
 
 export const dbSync = async () => {
   try {
-    await sequelize.sync({ force: true }); // Use force: false to avoid dropping tables
+    await sequelize.sync({ force: false }); // Use force: false to avoid dropping tables
     console.log("All models were synchronized successfully.");
   } catch (error) {
     console.error("Failed to synchronize database:", error);
