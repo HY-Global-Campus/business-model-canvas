@@ -18,8 +18,9 @@ interface NavigationButtonsProps {
 const NavigationButtons: React.FC<NavigationButtonsProps> = ({ pages, currentPage }) => {
   const navigate = useNavigate();
 
-
-
+  if (currentPage < 0) {
+    return null;
+  }
   const goToPreviousPage = () => {
     if (currentPage > 0) {
       navigate(pages[currentPage - 1].path);
