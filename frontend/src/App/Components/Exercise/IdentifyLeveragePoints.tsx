@@ -43,7 +43,7 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
         },
       });
     }
-  }, [bookOne]);
+  }, [loading]);
 
   const handleAnswerChange = (side: 'left' | 'right', question?: 'question1' | 'question2' | 'question3') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
@@ -56,21 +56,15 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
     }));
 
     if (bookOne) {
-      const updatedBook = {
-        ...bookOne,
-        exercises: {
-          ...bookOne.exercises,
-          identifyLeveragePointsAnswer: {
-            ...bookOne.exercises.identifyLeveragePointsAnswer,
-            [side]: {
-              ...bookOne.exercises.identifyLeveragePointsAnswer[side],
-              ...(question ? { [question]: { answer: value } } : { answer: value }),
-            },
-          },
-        },
-      };
+     if (side === 'left') {
+        if (question) {
+        bookOne.exercises.identifyLeveragePointsAnswer.left[question].answer = value;
+        }
+      } else {
+        bookOne.exercises.identifyLeveragePointsAnswer.right.answer = value;
+      }
 
-      onUpdateBookOne(updatedBook);
+      onUpdateBookOne(bookOne);
     }
   };
 

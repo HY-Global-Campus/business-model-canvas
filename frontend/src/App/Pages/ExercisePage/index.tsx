@@ -6,6 +6,11 @@ import Header from '../../Components/Header';
 import { getBookOneByUserId, updateBookOne, BookOne } from '../../api/bookOneService';
 import { ExerciseContext } from '../../Components/Exercise/ExerciseContext';
 
+// Define the type for the mutation context
+type MutationContext = {
+  previousData?: BookOne;
+};
+
 const ExercisePage: React.FC = () => {
   const queryClient = useQueryClient();
   const userId = sessionStorage.getItem('id');
@@ -18,21 +23,38 @@ const ExercisePage: React.FC = () => {
   }, queryClient);
 
   // Mutation for updating BookOne
-  const mutation = useMutation<BookOne, Error, Partial<BookOne>>({
+  const mutation = useMutation<BookOne, Error, Partial<BookOne>, MutationContext>({
     mutationFn: async (updatedBook: Partial<BookOne>) => {
       if (!bookOne) {
         throw new Error('bookOne is not defined');
       }
       return await updateBookOne(bookOne.id, updatedBook);
     },
+    onMutate: async (newData) => {
+      await queryClient.cancelQueries({
+        queryKey: ['bookone', userId],
+      }); // Cancel queries to ensure fresh data
+      const previousData = queryClient.getQueryData<BookOne>(['bookone', userId]);
+      queryClient.setQueryData<BookOne>(['bookone', userId], (old) => {
+        if (!old) {
+          throw new Error('bookOne is not defined');
+        }
+        return { ...old, ...newData };
+      });
+      return { previousData };
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookone', userId]}); // Invalidate queries after a successful update
+      queryClient.invalidateQueries({ queryKey: ['bookone', userId] }); // Invalidate queries after a successful update
       console.log('BookOne updated successfully');
     },
-    onError: (error) => {
+    onError: (error, _newData, context) => {
       console.error('Error updating BookOne:', error);
+      if (context?.previousData) {
+        queryClient.setQueryData<BookOne>(['bookone', userId], context.previousData);
+      }
     },
-  }, queryClient);
+    onSettled: () => queryClient.refetchQueries({ queryKey: ['bookone', userId] }), // Refetch queries after mutation
+  });
 
   // Debounced mutation to avoid multiple rapid updates
   const debouncedUpdateBookOne = useRef(

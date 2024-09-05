@@ -56,7 +56,7 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
         },
       });
     }
-  }, [bookOne]);
+  }, [loading]);
 
 
 
@@ -71,21 +71,15 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
     }));
 
     if (bookOne) {
-      const updatedBook = {
-        ...bookOne,
-        exercises: {
-          ...bookOne.exercises,
-          fromFutureToPresentAnswer: {
-            ...bookOne.exercises.fromFutureToPresentAnswer,
-            [side]: {
-              ...bookOne.exercises.fromFutureToPresentAnswer[side],
-              ...(question ? { [question]: { answer: value } } : { answer: value }),
-            },
-          },
-        },
-      };
-
-      onUpdateBookOne(updatedBook);
+     if (side === 'left') {
+      bookOne.exercises.fromFutureToPresentAnswer.left.answer = value;
+      } else {
+        if (question !== undefined) {
+          bookOne.exercises.fromFutureToPresentAnswer.right[question].answer = value;
+        }
+      }
+    
+      onUpdateBookOne(bookOne);
     }
   };
 

@@ -29,7 +29,7 @@ const FuturePitchExercise: React.FC = () => {
         },
       });
     }
-  }, [bookOne]);
+  }, [loading]);
 
 
 
@@ -44,18 +44,8 @@ const FuturePitchExercise: React.FC = () => {
     }));
 
     if (bookOne) {
-      const updatedBook = {
-        ...bookOne,
-        exercises: {
-          ...bookOne.exercises,
-          futurePitchAnswer: {
-            ...bookOne.exercises.futurePitchAnswer,
-            [side]: { answer: value },
-          },
-        },
-      };
-
-      onUpdateBookOne(updatedBook);
+      bookOne.exercises.futurePitchAnswer[side].answer = value; 
+        onUpdateBookOne(bookOne);
     }
   };
 

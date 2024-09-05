@@ -36,7 +36,7 @@ const RedefineChallengeExercise: React.FC = () => {
         },
       });
     }
-  }, [bookOne]);
+  }, [loading]);
 
   const handleAnswerChange = (side: 'left' | 'right') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
@@ -49,18 +49,10 @@ const RedefineChallengeExercise: React.FC = () => {
     }));
 
     if (bookOne) {
-      const updatedBook = {
-        ...bookOne,
-        exercises: {
-          ...bookOne.exercises,
-          redefineChallengeAnswer: {
-            ...bookOne.exercises.redefineChallengeAnswer,
-            [side]: { answer: value },
-          },
-        },
-      };
+      bookOne.exercises.redefineChallengeAnswer[side].answer = value;
 
-      onUpdateBookOne(updatedBook);
+      onUpdateBookOne(bookOne);
+    
     }
   };
 

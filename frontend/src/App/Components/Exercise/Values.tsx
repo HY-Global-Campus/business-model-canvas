@@ -34,7 +34,7 @@ const ValuesExercise: React.FC = () => {
         right: null,
       });
     }
-  }, [loading, bookOne]);
+  }, [loading]);
 
   const handleAnswerChange = (question: 'question1' | 'question2' | 'question3') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
@@ -47,21 +47,9 @@ const ValuesExercise: React.FC = () => {
     }));
 
     if (bookOne) {
-      const updatedBook = {
-        ...bookOne,
-        exercises: {
-          ...bookOne.exercises,
-          valuesAnswer: {
-            ...bookOne.exercises.valuesAnswer,
-            left: {
-              ...bookOne.exercises.valuesAnswer.left,
-              [question]: { answer: value },
-            },
-          },
-        },
-      };
+     bookOne.exercises.valuesAnswer.left[question].answer = value; 
 
-      onUpdateBookOne(updatedBook);
+      onUpdateBookOne(bookOne);
     }
   };
 
