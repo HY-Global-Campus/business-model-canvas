@@ -15,9 +15,11 @@ import FromFutureToPresentExercise from './Components/Exercise/FromFutureToPrese
 import FuturePitchExercise from './Components/Exercise/FuturePitch';
 import Logout from './Components/Logout';
 import ViewAllExercises from './Pages/View';
+import Prologue from './Components/Exercise/Prologue';
 
 const pages = [
   { path: '/', label: 'FrontPage', color: 'white' },
+  { path: '/exercise/prologue', label: 'Prologue', color: 'black' },
   { path: '/exercise/choose-challenge', label: 'Choose Challenge', color: 'black' },
   { path: '/mindmap', label: 'Mindmap', color: 'black' },
   { path: '/exercise/identify-leverage-points', label: 'Identify Leverage Points', color: 'black' },
@@ -57,6 +59,7 @@ function App() {
           <Route path="/" element={<FrontPage />} />
           <Route path="/mindmap" element={<Mindmap />} />
           <Route path="/exercise" element={<ExercisePage />}>
+            <Route path="prologue" element={<Prologue />} />
             <Route path="choose-challenge" element={<ChooseChallengeExercise />} />
             <Route path="identify-leverage-points" element={<IdentifyLeveragePointsExercise />} />
             <Route path="redefine-challenge" element={<RedefineChallengeExercise />} />
