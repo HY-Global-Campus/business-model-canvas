@@ -27,6 +27,10 @@ const Reflection: React.FC = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
+  const userId = sessionStorage.getItem('id');
+    const link = `${window.location.origin}/view/${userId}`;
+
+
   return (
     <div style={containerStyle}>
       <div style={panelStyle}>
@@ -44,6 +48,7 @@ const Reflection: React.FC = () => {
       <div style={separatorStyle} />
       <div style={panelStyle}>
         <div style={{ textAlign: 'center', fontSize: '6rem', fontWeight: 'bold', marginTop: '50%' }}>The End</div>
+        <p> Share your Book of Serendip with this link: <br/> <a href={link}> {link} </a> </p>
       </div>
     </div>
   );
