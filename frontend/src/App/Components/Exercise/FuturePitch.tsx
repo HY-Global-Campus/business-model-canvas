@@ -8,7 +8,7 @@ import ChatBot from '../ChatBot';
 import { useExerciseContext } from './ExerciseContext';
 
 
-const infotext = `Create a 100 word pitch, where you present your future vision. You are unsure what to write about? Ask Madida in the window on this page. She will guide you through the steps you need to take to create your pitch. Once you are done with the pitch, generate an image that reflects your vision. Take your time to finalize this task.`;
+const infotext = `Create a 100 word pitch, where you present your future vision. You are unsure what to write about? Ask Madida in the window on this page. She will guide you through the steps you need to take to create your pitch. Take your time to finalize this task.`;
 
 const FuturePitchExercise: React.FC = () => {
   const { bookOne, onUpdateBookOne, loading, error, readonly } = useExerciseContext();
