@@ -7,6 +7,8 @@ export interface BookOne {
   id: number;
   exercises: BookOneExercises;
   mindmap: MindMap;
+  displayName: string;
+  reflection: string;
 }
 
 export const getAllBookOnes = async (): Promise<BookOne[]> => {

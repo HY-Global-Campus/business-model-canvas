@@ -16,6 +16,7 @@ import FuturePitchExercise from './Components/Exercise/FuturePitch';
 import Logout from './Components/Logout';
 import ViewAllExercises from './Pages/View';
 import Prologue from './Components/Exercise/Prologue';
+import Reflection from './Components/Exercise/Reflection';
 
 const pages = [
   { path: '/', label: 'FrontPage', color: 'white' },
@@ -27,6 +28,7 @@ const pages = [
   { path: '/exercise/values', label: 'Values', color: 'black' },
   { path: '/exercise/from-future-to-present', label: 'From Future to Present', color: 'black' },
   { path: '/exercise/future-pitch', label: 'Future Pitch', color: 'black' },
+  {path: '/exercise/reflection', label: 'Reflection', color: 'black'},
 ];
 
 function App() {
@@ -66,6 +68,7 @@ function App() {
             <Route path="values" element={<ValuesExercise />} />
             <Route path="from-future-to-present" element={<FromFutureToPresentExercise />} />
             <Route path="future-pitch" element={<FuturePitchExercise />} />
+            <Route path="reflection" element={<Reflection />} />
           </Route>
           <Route path="/endpage" element={<EndPage />} />
           <Route path='/view/:userId' element={<ViewAllExercises />} />
