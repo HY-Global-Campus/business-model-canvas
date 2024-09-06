@@ -1,10 +1,11 @@
 import React, { useRef, CSSProperties } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import Header from '../../Components/Header';
 import { getBookOneByUserId, updateBookOne, BookOne } from '../../api/bookOneService';
 import { ExerciseContext } from '../../Components/Exercise/ExerciseContext';
+import axios from 'axios';
 
 // Define the type for the mutation context
 type MutationContext = {
@@ -21,6 +22,8 @@ const ExercisePage: React.FC = () => {
     queryFn: () => getBookOneByUserId(userId!), // Query function
     enabled: !!userId, // Only run if userId exists
   }, queryClient);
+
+
 
   // Mutation for updating BookOne
   const mutation = useMutation<BookOne, Error, Partial<BookOne>, MutationContext>({
@@ -64,6 +67,13 @@ const ExercisePage: React.FC = () => {
   const pageStyle: CSSProperties = {
     padding: '0px 20px',
   };
+
+    if (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      sessionStorage.clear();
+      return <Navigate to ="/login" />;
+      }
+  }
 
   return (
     <>
