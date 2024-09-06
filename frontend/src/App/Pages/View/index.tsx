@@ -15,6 +15,8 @@ import '@xyflow/react/dist/style.css';
 import '../Mindmap/Flow.css';
 import MindMapEdge from '../Mindmap/MindMapEdge';
 import MindMapNode from '../Mindmap/MindMapNode';
+import { Navigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 
@@ -47,6 +49,13 @@ const ViewAllExercises: React.FC = () => {
   const connectionLineStyle = { stroke: '#F6AD55', strokeWidth: 3 };
   const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
   const nodeOrigin: NodeOrigin = [0.5, 0.5];
+
+    if (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      sessionStorage.clear();
+      return <Navigate to ="/login" />;
+      }
+  }
 
   return (
     <>
