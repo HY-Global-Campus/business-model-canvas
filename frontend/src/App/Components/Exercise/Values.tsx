@@ -4,6 +4,7 @@ import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { Values } from '../../../types/exercises';
 import InfoIcon from '../InfoIcon';
 import { useExerciseContext } from './ExerciseContext';
+import treeOfValues from '../../../assets/treeOfValues.png';
 
 
 const infotext = `Choose the values that guide your sustainability actions. What is important for you?`;
@@ -93,6 +94,7 @@ const ValuesExercise: React.FC = () => {
       <div style={separatorStyle} />
       <div style={panelStyle}>
         <h3>Tree of values</h3>
+        <img src={treeOfValues} alt="Tree of values" style={{ width: '100%' }} />
       </div>
     </div>
   );
