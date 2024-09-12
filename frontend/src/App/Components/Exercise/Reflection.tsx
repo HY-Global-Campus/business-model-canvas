@@ -11,7 +11,7 @@ const Reflection: React.FC = () => {
     if (bookOne) {
       setAnswers(bookOne.reflection || '');
     }
-  }, [loading]);
+  }, [bookOne]);
 
 
   const handleAnswerChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

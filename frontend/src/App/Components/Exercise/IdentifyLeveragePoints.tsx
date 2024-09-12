@@ -30,20 +30,20 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
   });
   useEffect(() => {
     if (bookOne) {
-      setAnswers({
+      setAnswers((prev) => ({
         left: {
-          ...answers.left,
-          question1: { ...answers.left.question1, answer: bookOne.exercises.identifyLeveragePointsAnswer.left.question1.answer || '' },
-          question2: { ...answers.left.question2, answer: bookOne.exercises.identifyLeveragePointsAnswer.left.question2.answer || '' },
-          question3: { ...answers.left.question3, answer: bookOne.exercises.identifyLeveragePointsAnswer.left.question3.answer || '' },
+          ...prev.left,
+          question1: { ...prev.left.question1, answer: bookOne.exercises.identifyLeveragePointsAnswer.left.question1.answer || '' },
+          question2: { ...prev.left.question2, answer: bookOne.exercises.identifyLeveragePointsAnswer.left.question2.answer || '' },
+          question3: { ...prev.left.question3, answer: bookOne.exercises.identifyLeveragePointsAnswer.left.question3.answer || '' },
         },
         right: {
-          ...answers.right,
+          ...prev.right,
           answer: bookOne.exercises.identifyLeveragePointsAnswer.right.answer || '',
         },
-      });
+      }));
     }
-  }, [loading]);
+  }, [bookOne]);
 
   const handleAnswerChange = (side: 'left' | 'right', question?: 'question1' | 'question2' | 'question3') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;

@@ -25,18 +25,18 @@ const RedefineChallengeExercise: React.FC = () => {
 
     useEffect(() => {
     if (bookOne) {
-      setAnswers({
+      setAnswers((prev) => ({
         left: {
-          ...answers.left,
+          ...prev.left,
           answer: bookOne.exercises.redefineChallengeAnswer.left.answer || '',
         },
         right: {
-          ...answers.right,
+          ...prev.right,
           answer: bookOne.exercises.redefineChallengeAnswer.right.answer || '',
         },
-      });
+      }));
     }
-  }, [loading]);
+  }, [bookOne]);
 
   const handleAnswerChange = (side: 'left' | 'right') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;

@@ -40,23 +40,23 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
 
     useEffect(() => {
     if (bookOne) {
-      setAnswers({
+      setAnswers((prev) => ({
         left: {
-          ...answers.left,
+          ...prev.left,
           answer: bookOne.exercises.fromFutureToPresentAnswer.left.answer || '',
         },
         right: {
-          ...answers.right,
-          question1: { ...answers.right.question1, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question1.answer || '' },
-          question2: { ...answers.right.question2, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question2.answer || '' },
-          question3: { ...answers.right.question3, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question3.answer || '' },
-          question4: { ...answers.right.question4, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question4.answer || '' },
-          question5: { ...answers.right.question5, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question5.answer || '' },
-          question6: { ...answers.right.question6, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question6.answer || '' },
+          ...prev.right,
+          question1: { ...prev.right.question1, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question1.answer || '' },
+          question2: { ...prev.right.question2, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question2.answer || '' },
+          question3: { ...prev.right.question3, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question3.answer || '' },
+          question4: { ...prev.right.question4, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question4.answer || '' },
+          question5: { ...prev.right.question5, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question5.answer || '' },
+          question6: { ...prev.right.question6, answer: bookOne.exercises.fromFutureToPresentAnswer.right.question6.answer || '' },
         },
-      });
+      }));
     }
-  }, [loading]);
+  }, [bookOne]);
 
 
 

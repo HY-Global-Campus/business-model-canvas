@@ -25,17 +25,17 @@ const ValuesExercise: React.FC = () => {
 
     useEffect(() => {
     if (bookOne) {
-      setAnswers({
+      setAnswers((prev) => ({
         left: {
-          ...answers.left,
+          ...prev.left,
           question1: { title: 'Value 1.', answer: bookOne.exercises.valuesAnswer.left.question1.answer || '' },
           question2: { title: 'Value 2.', answer: bookOne.exercises.valuesAnswer.left.question2.answer || '' },
           question3: { title: 'Value 3.', answer: bookOne.exercises.valuesAnswer.left.question3.answer || '' },
         },
         right: null,
-      });
+      }));
     }
-  }, [loading]);
+  }, [bookOne]);
 
   const handleAnswerChange = (question: 'question1' | 'question2' | 'question3') => (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;

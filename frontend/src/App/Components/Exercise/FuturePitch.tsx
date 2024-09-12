@@ -22,14 +22,14 @@ const FuturePitchExercise: React.FC = () => {
 
     useEffect(() => {
     if (bookOne) {
-      setAnswers({
+      setAnswers((prev) => ({
         left: {
-          ...answers.left,
+          ...prev.left,
           answer: bookOne.exercises.futurePitchAnswer.left.answer || '',
         },
-      });
+      }));
     }
-  }, [loading]);
+  }, [bookOne]);
 
 
 
