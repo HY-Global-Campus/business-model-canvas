@@ -17,7 +17,7 @@ function FrontPage() {
   const userId = sessionStorage.getItem('id');
 
  // Use `useQuery` to fetch the bookOne data
-  const { data: bookOne, isLoading: loading, error } = useQuery<BookOne, Error>({
+  const { data: bookOne } = useQuery<BookOne, Error>({
     queryKey: ['bookone', userId], // Unique query key
     queryFn: () => getBookOneByUserId(userId!), // Query function
     enabled: !!userId, // Only run if userId exists
