@@ -138,6 +138,9 @@ function Flow() {
     >
       <Controls showInteractive={false} />
       <Panel position="top-left" className="header">
+          <div style={{paddingLeft: '50px'}}>
+          <InfoIcon text={infotext} />
+          </div>
           <h1> Map of connections</h1>
       Analyze your chosen challenge and identify the leverage points which can lead you to finding solutions.
       </Panel>
