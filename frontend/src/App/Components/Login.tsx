@@ -120,6 +120,7 @@ const Login: React.FC = () => {
   return (
     <div style={wrapperStyle}>
       <div style={containerStyle}>
+        <p> Use the same credentials as you do for the game.</p>
         <h1>Login</h1>
         <form onSubmit={handleSubmit}>
           <div>
