@@ -5,5 +5,20 @@
 
 .react-chatbot-kit-chat-bot-message {
 	margin-left: 5px;
+	background-color: #ff9914;
 
+}
+.react-chatbot-kit-chat-bot-message-arrow {
+
+	border-right: 8px solid #ff9914;
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+}
+
+.react-chatbot-kit-chat-btn-send {
+	background-color: #ff9914;
+}
+
+input:focus {
+    outline: 2px solid #ff9914;
 }
