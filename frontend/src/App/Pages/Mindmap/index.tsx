@@ -22,6 +22,7 @@ import './Flow.css'; // Import the CSS file for styling
 import InfoIcon from '../../Components/InfoIcon';
 import MindMapNode from './MindMapNode';
 import MindMapEdge from './MindMapEdge';
+import RootNode from './RootNode';
 
 const infotext = `Starting from the written definition of the challenge you chose, map out the elements of the system in which the problem exists. You can do that with the help of the content you find in the game.`;
 
@@ -38,6 +39,7 @@ const selector = (state: RFState) => ({
 
 const nodeTypes = {
   mindmap: MindMapNode,
+  root: RootNode
 };
 
 const edgeTypes = {

@@ -52,7 +52,7 @@ export const findBookOneByUserId = async (userId: string) => {
     const mindmap = {
       nodes: [{
       id: 'root',
-      type: 'mindmap',
+      type: 'root',
       data: { label: 'Chosen challenge' },
       position: { x: 0, y: 0 },
     }],
