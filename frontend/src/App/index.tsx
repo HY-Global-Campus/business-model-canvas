@@ -37,7 +37,7 @@ function App() {
       font-family: 'Gotham Narrow';
       src: url(${gothamNarrow}) format('opentype');
       font-weight: normal;
-      font-style: normal;ind
+      font-style: normal;
     }
     body {
       font-family: 'Gotham Narrow', sans-serif;

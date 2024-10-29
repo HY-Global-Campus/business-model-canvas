@@ -47,7 +47,7 @@ const useStore = create<RFState>((set, get) => ({
       type: 'mindmap',
       data: { label: 'New Node' },
       position,
-      parentId: parentNode.id,
+      // parentId: parentNode.id, // uncomment this line to enable parent-child relationship
     };
 
     const newEdge = {
@@ -78,7 +78,6 @@ const useStore = create<RFState>((set, get) => ({
     get().saveState();
   },
   loadState: async () => {
-    console.log('loadState running')
     const userId = sessionStorage.getItem('id');
     try {
       const data = await getBookOneByUserId(userId!);

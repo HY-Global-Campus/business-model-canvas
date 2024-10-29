@@ -139,9 +139,9 @@ function Flow() {
       fitView
     >
       <Controls showInteractive={false} />
-      <Panel position="top-left" className="header">
-          <div style={{paddingLeft: '50px'}}>
-          <InfoIcon text={infotext} />
+      <Panel position="top-left" >
+          <div style={{paddingLeft: '300px'}}>
+          <InfoIcon infoText={infotext} />
           </div>
           <h1> Map of connections</h1>
       Analyze your chosen challenge and identify the leverage points which can lead you to finding solutions.
