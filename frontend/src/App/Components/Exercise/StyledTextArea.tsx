@@ -28,7 +28,6 @@ const StyledTextArea: React.FC<StyledTextAreaProps> = ({id, value, onChange, rea
     margin: '5px 0px',
     paddingLeft: '25px',
     resize: 'none',
-    background: 'grey'
 
   };
 
