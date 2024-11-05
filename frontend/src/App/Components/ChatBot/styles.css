@@ -5,7 +5,7 @@
 
 .react-chatbot-kit-chat-bot-message {
 	margin-left: 5px;
-	background-color: #ff9914;
+	background-color: #ff9813;
 
 }
 .react-chatbot-kit-chat-bot-message-arrow {
@@ -17,6 +17,10 @@
 
 .react-chatbot-kit-chat-btn-send {
 	background-color: #ff9914;
+}
+
+.react-chatbot-kit-user-avatar-container {
+	background-color: #293317;
 }
 
 input:focus {

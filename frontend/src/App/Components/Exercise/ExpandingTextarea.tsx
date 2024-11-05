@@ -34,6 +34,7 @@ const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({ id, instructionTe
     borderRadius: '40px',
     margin: '10px 0px',
     paddingLeft: '25px',
+    fontFamily: 'inherit',
   };
 
 

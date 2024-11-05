@@ -69,6 +69,7 @@ const FuturePitchExercise: React.FC = () => {
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
+        <h2>Chat with Madida</h2>
         { !readonly && <ChatBot />}
       </div>
     </div>
