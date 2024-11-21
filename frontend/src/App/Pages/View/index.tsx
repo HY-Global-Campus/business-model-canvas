@@ -17,6 +17,7 @@ import MindMapEdge from '../Mindmap/MindMapEdge';
 import MindMapNode from '../Mindmap/MindMapNode';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
+import Reflection from '../../Components/Exercise/Reflection';
 
 
 
@@ -87,6 +88,7 @@ const ViewAllExercises: React.FC = () => {
           <ValuesExercise />
           <FromFutureToPresentExercise />
           <FuturePitchExercise />
+          <Reflection />
         </ExerciseContext.Provider>
       </div>
     </>
