@@ -46,8 +46,8 @@ const ExercisePage: React.FC = () => {
       });
       return { previousData };
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookone', userId] }); // Invalidate queries after a successful update
+    onSuccess: (data) => {
+      queryClient.setQueryData(['bookone', userId], data);
       console.log('BookOne updated successfully');
     },
     onError: (error, _newData, context) => {
@@ -56,7 +56,6 @@ const ExercisePage: React.FC = () => {
         queryClient.setQueryData<BookOne>(['bookone', userId], context.previousData);
       }
     },
-    onSettled: () => queryClient.refetchQueries({ queryKey: ['bookone', userId] }), // Refetch queries after mutation
   });
 
   // Debounced mutation to avoid multiple rapid updates
