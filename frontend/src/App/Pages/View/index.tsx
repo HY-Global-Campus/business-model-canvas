@@ -1,4 +1,3 @@
-
 import React, { CSSProperties } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getBookOneByUserId, BookOne } from '../../api/bookOneService';
@@ -19,24 +18,49 @@ import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Reflection from '../../Components/Exercise/Reflection';
 
-
-
 const ViewAllExercises: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
 
-  // Use `useQuery` to fetch the bookOne data
   const { data: bookOne, isLoading: loading, error } = useQuery<BookOne, Error>({
-    queryKey: ['bookone', userId], // Unique query key
-    queryFn: () => getBookOneByUserId(userId!), // Query function
-    enabled: !!userId // Only run if userId exists
-,
+    queryKey: ['bookone', userId],
+    queryFn: () => getBookOneByUserId(userId!),
+    enabled: !!userId
   });
 
+  // Container for the entire page
+  const pageContainerStyle: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: '80px', // Large vertical gap between sections
+    padding: '40px',
+    maxWidth: '1200px',
+    margin: '0 auto',
+    boxSizing: 'border-box',
+    backgroundColor: '#f9f9f9' // Light background for contrast
+  };
 
+  // Each exercise or section container
+  const sectionStyle: CSSProperties = {
+    position: 'relative',
+    backgroundColor: '#fff',
+    border: '1px solid #ccc',
+    height: 'auto',
+    padding: '20px',
+    flex: '0 0 auto', // Prevent shrinking
+    boxSizing: 'border-box',
+  };
 
-
-  const pageStyle: CSSProperties = {
-    padding: '0px 20px',
+  // The ReactFlow container
+  const flowContainerStyle: CSSProperties = {
+    position: 'relative',
+    width: '100%',
+    height: '800px',
+    border: '2px solid black',
+    overflow: 'auto', // Allow scrolling so flow doesn't overlap other elements
+    flex: '0 0 auto',
+    boxSizing: 'border-box',
+    backgroundColor: '#fff'
   };
 
   const nodeTypes = {
@@ -51,21 +75,30 @@ const ViewAllExercises: React.FC = () => {
   const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
   const nodeOrigin: NodeOrigin = [0.5, 0.5];
 
-    if (error) {
+  if (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       sessionStorage.clear();
-      return <Navigate to ="/login" />;
-      }
+      return <Navigate to="/login" />;
+    }
   }
 
   return (
-    <>
-      <div style={pageStyle}>
-        <ExerciseContext.Provider
-          value={{ bookOne: bookOne || null, onUpdateBookOne: () => {}, loading, error: error?.message || null, readonly: true }}
-        >
+    <div style={pageContainerStyle}>
+      <ExerciseContext.Provider
+        value={{
+          bookOne: bookOne || null,
+          onUpdateBookOne: () => {},
+          loading,
+          error: error?.message || null,
+          readonly: true
+        }}
+      >
+        <div style={sectionStyle}>
           <ChooseChallengeExercise />
-          <div style={{ width: '1000px', height: '800px', border: '2px solid black' }}>
+        </div>
+
+        <div style={sectionStyle}>
+          <div style={flowContainerStyle}>
             <ReactFlow
               nodes={bookOne?.mindmap.nodes || []}
               edges={bookOne?.mindmap.edges || []}
@@ -83,15 +116,33 @@ const ViewAllExercises: React.FC = () => {
               </Panel>
             </ReactFlow>
           </div>
+        </div>
+
+        <div style={sectionStyle}>
           <IdentifyLeveragePointsExercise />
+        </div>
+
+        <div style={sectionStyle}>
           <RedefineChallengeExercise />
+        </div>
+
+        <div style={sectionStyle}>
           <ValuesExercise />
+        </div>
+
+        <div style={sectionStyle}>
           <FromFutureToPresentExercise />
+        </div>
+
+        <div style={sectionStyle}>
           <FuturePitchExercise />
+        </div>
+
+        <div style={sectionStyle}>
           <Reflection />
-        </ExerciseContext.Provider>
-      </div>
-    </>
+        </div>
+      </ExerciseContext.Provider>
+    </div>
   );
 };
 

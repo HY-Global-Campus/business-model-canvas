@@ -23,6 +23,5 @@ import { CSSProperties } from "react";
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'stretch', // To ensure the separator stretches full height
-    height: '100vh', // Full height of the viewport
     whiteSpace: 'pre-line'
   };
