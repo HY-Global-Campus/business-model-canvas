@@ -14,8 +14,9 @@
   "author": "Daniel Koch",
   "license": "ISC",
   "dependencies": {
-    "@accelbyte/sdk": "^2.4.2",
-    "@accelbyte/sdk-iam": "^4.0.0",
+    "@accelbyte/sdk": "^4.0.0",
+    "@accelbyte/sdk-cloudsave": "^6.1.0",
+    "@accelbyte/sdk-iam": "^6.0.0",
     "axios": "^1.7.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
