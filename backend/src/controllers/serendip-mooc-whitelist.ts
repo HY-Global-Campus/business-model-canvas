@@ -4,8 +4,10 @@ import config from '../config.js';
 const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
-    if (req.headers.authorization?.trim() !== `Bearer ${config.SERENDIP_WHITELIST_TOKEN.trim()}`) {
-        console.log("Unauthorized, the token was: '", req.headers.authorization, "' expected: '", `Bearer ${config.SERENDIP_WHITELIST_TOKEN}`, "'");
+    const authHeader = req.headers.authorization?.trim();
+    const expectedToken = `Bearer ${config.SERENDIP_WHITELIST_TOKEN}`.trim();
+    if (authHeader !== expectedToken) {
+        console.log("Unauthorized, the token was: ", authHeader, "' expected: ", expectedToken);
         res.status(401).json({message: 'Unauthorized'});
         return;
     }
