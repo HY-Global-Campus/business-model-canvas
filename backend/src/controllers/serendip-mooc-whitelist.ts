@@ -11,7 +11,10 @@ router.get('/', async (req: Request, res: Response) => {
         res.status(401).json({message: 'Unauthorized'});
         return;
     }
+    console.log("Auth successfull, trying to access cloudsace");
     let result = await getCloudSave('permissions');
+    console.log("result", result);
+    
     res.json(result);
 });
 
