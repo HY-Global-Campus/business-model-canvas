@@ -31,10 +31,13 @@ const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({ id, instructionTe
     fontSize: '16px',
     boxSizing: 'border-box',
     width: '100%',
-    borderRadius: '40px',
+    //borderRadius: '40px',
     margin: '10px 0px',
     paddingLeft: '25px',
     fontFamily: 'inherit',
+    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    borderWidth: '1px',
+    borderColor: 'rgba(0, 0, 0, 0.2)',
   };
 
 

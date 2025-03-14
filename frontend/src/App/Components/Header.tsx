@@ -9,10 +9,11 @@ const Header: React.FC = () => {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '10px',
-        background: `url(${borealforest})`,
-        backgroundPosition: 'center',
+        background: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${borealforest})`,
+        backgroundPosition: 'up',
         color: 'white',
-        height: '100px'
+        height: '100px',
+        margin: '30px'
     };
 
     const titleStyle: React.CSSProperties = {
@@ -28,7 +29,9 @@ const Header: React.FC = () => {
         height: '60px',
         width: 'auto',
         position: 'relative',
-        top: '25px'
+        top: '30px',
+        marginLeft: '20px',
+        marginRight: '20px'
     }
 
     const titlestyle: CSSProperties = {

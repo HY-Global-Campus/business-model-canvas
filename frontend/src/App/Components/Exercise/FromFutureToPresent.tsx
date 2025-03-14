@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { FromFutureToPresent } from '../../../types/exercises';
-import InfoIcon from '../InfoIcon';
 import StyledTextArea from './StyledTextArea';
 import { useExerciseContext } from './ExerciseContext';
+import ReadMore from '../ReadMore';
 
 
 
@@ -101,11 +101,8 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
   return (
     <div style={containerStyle}>
       <div style={panelStyle}>
-                <InfoIcon
-          infoText={infotextQ1}
-          />
         <h2>{answers.left.title}</h2>
-
+        <ReadMore><i>{infotextQ1}</i></ReadMore>
         <p>{answers.left.question}</p>
         <ExpandingTextArea
           id="from-future-to-present-left"
@@ -118,11 +115,8 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
-                <InfoIcon
-          infoText={infotextQ2}
-          />
         <h2>{answers.right.title}</h2>
-
+        <ReadMore><i>{infotextQ2}</i></ReadMore>
         <p>{answers.right.description}</p>
         <div style={rowStyle} >
           <StyledTextArea

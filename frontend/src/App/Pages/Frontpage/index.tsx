@@ -164,23 +164,11 @@ Enjoy writing the Book!`
         `}
       </style>
     <div style={containerStyle}>
-        <div style={infoIconWrapper} >
-        <InfoIcon
-          infoText={infotext}
-          color='white'
-        />
-        </div>
+
         
       <h1 style={h1style}>Book of Serendip</h1>
-        <input 
-          style={inputStyle} 
-          type="text" 
-          placeholder="Enter your name"
-          value={answer}
-          onChange={handleAnswerChange}
-        />
+
       <img src={icons} alt='chapter icons' style={iconsStyle} />
-      <img src={hyLogo} alt="Logo" style={logoStyle} />
 
     </div>
     </>

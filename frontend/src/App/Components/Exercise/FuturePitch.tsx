@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { FuturePitch } from '../../../types/exercises';
-import InfoIcon from '../InfoIcon';
 import ChatBot from '../ChatBot';
 import { useExerciseContext } from './ExerciseContext';
 
@@ -55,9 +54,8 @@ const FuturePitchExercise: React.FC = () => {
   return (
     <div style={containerStyle}>
       <div style={panelStyle}>
-        <InfoIcon infoText={infotext} />
         <h2>{answers.left.title}</h2>
-
+        <p><i>{infotext}</i></p>
         <ExpandingTextArea
           id="future-pitch-text-area-left"
           instructionText=""

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { IdentifyLeveragePoints } from '../../../types/exercises';
-import InfoIcon from '../InfoIcon';
 import { useExerciseContext } from './ExerciseContext';
 
 
@@ -14,8 +13,7 @@ const IdentifyLeveragePointsExercise: React.FC = () => {
   const [answers, setAnswers] = useState<IdentifyLeveragePoints>({
     left: {
       title: 'Identify the leverage points',
-      description: `
-Leverage points are places within a complex system where a small shift in one thing can produce big changes in everything.
+      description: `Leverage points are places within a complex system where a small shift in one thing can produce big changes in everything.
 
 Look at your Map of Connections and estimate how easy/hard it is to affect different factors of the system. In the boxes below, mark factors based on the level of change.`,
       question1: { title: 'Easy to change', answer: bookOne?.exercises.identifyLeveragePointsAnswer.left.question1.answer || '' },
@@ -107,15 +105,15 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
-        <InfoIcon infoText={infotext} />
         <h2>{answers.right.title}</h2>
+        <p><i>{infotext}</i></p>
         <p>{answers.right.description}</p>
         <ExpandingTextArea
           id="identify-leverage-points-right"
           instructionText=""
           value={answers.right.answer}
           onChange={handleAnswerChange('right')}
-          rows={20}
+          rows={15}
           readonly={readonly}
         />
       </div>
