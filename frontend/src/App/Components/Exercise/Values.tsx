@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ExpandingTextArea from './ExpandingTextarea';
 import { containerStyle, panelStyle, separatorStyle } from './styles';
 import { Values } from '../../../types/exercises';
-import InfoIcon from '../InfoIcon';
 import { useExerciseContext } from './ExerciseContext';
 import treeOfValues from '../../../assets/treeOfValues.png';
 
