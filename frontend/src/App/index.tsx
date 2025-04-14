@@ -17,9 +17,11 @@ import Logout from './Components/Logout';
 import ViewAllExercises from './Pages/View';
 import Prologue from './Components/Exercise/Prologue';
 import Reflection from './Components/Exercise/Reflection';
+import Welcome from './Components/Exercise/Welcome';
 
 const pages = [
   { path: '/', label: 'FrontPage', color: 'white' },
+  { path: '/exercise/welcome', label: 'Welcome', color: 'black' },
   { path: '/exercise/prologue', label: 'Prologue', color: 'black' },
   { path: '/exercise/choose-challenge', label: 'Choose Challenge', color: 'black' },
   { path: '/mindmap', label: 'Mindmap', color: 'black' },
@@ -61,6 +63,7 @@ function App() {
           <Route path="/" element={<FrontPage />} />
           <Route path="/mindmap" element={<Mindmap />} />
           <Route path="/exercise" element={<ExercisePage />}>
+            <Route path="welcome" element={<Welcome />} />
             <Route path="prologue" element={<Prologue />} />
             <Route path="choose-challenge" element={<ChooseChallengeExercise />} />
             <Route path="identify-leverage-points" element={<IdentifyLeveragePointsExercise />} />
