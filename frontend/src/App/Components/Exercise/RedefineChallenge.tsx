@@ -17,7 +17,7 @@ const RedefineChallengeExercise: React.FC = () => {
     },
     right: {
       title: 'Challenge description',
-      description: 'Describe your new chosen challenge.',
+      description: 'Describe your newly chosen challenge.',
       answer: bookOne?.exercises.redefineChallengeAnswer.right.answer || '',
     },
   });

@@ -2,7 +2,9 @@ import React from 'react';
 import { containerStyle } from './styles';
 
 const desc = `
-This is your Book of Serendip. It is your main task in this programme. Fill it in and you will complete the first stage of your training. The main goal of this exercise is to create a desirable future vision based on a specific Boreal forest challenge.
+This is the Book of Serendip. It is your main task in this programme. Fill it in as you proceed in your journey and you will complete the first stage of your training.
+
+The main goal of this exercise is to create a desirable future vision based on a specific Boreal forest challenge.
 `;
 
 

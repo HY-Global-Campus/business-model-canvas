@@ -9,13 +9,12 @@ const Prologue: React.FC = () => {
       <style>{`
         .star-circle-list {
           list-style: none;
-          padding: 0;
-          margin: 0;
         }
         .star-circle-list li {
           position: relative;
           padding-left: 28px;
-          margin-bottom: 20px;
+          margin-bottom: 15px;
+          margin-top: 15px;
         }
         .star-circle-list li::before {
           content: "";
@@ -38,11 +37,15 @@ const Prologue: React.FC = () => {
           The Book includes seven sections, which for the best learning experience, you need to fill them in order:
         </p>
         <ul className="star-circle-list">
+          <h3> chapter 1 </h3>
           <li>Choose and define a challenge</li>
+          <h3> chapter 2 </h3>
           <li>Map of connections</li>
           <li>Identify leverage points</li>
           <li>Redefine the chosen challenge</li>
+          <h3> chapter 3 </h3>
           <li>Values</li>
+          <h3> chapter 4 </h3>
           <li>Future vision and steps to achieve it</li>
           <li>My future vision pitch</li>
         </ul>

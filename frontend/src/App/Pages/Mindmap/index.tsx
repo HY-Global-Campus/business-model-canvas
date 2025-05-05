@@ -11,7 +11,6 @@ import {
   useStoreApi,
   useReactFlow,
   NodeOrigin,
-  ConnectionLineType,
   InternalNode,
 } from '@xyflow/react';
 import { shallow } from 'zustand/shallow';
@@ -46,9 +45,9 @@ const edgeTypes = {
   mindmap: MindMapEdge,
 };
 
-const nodeOrigin: NodeOrigin = [0.5, 0.5];
-const connectionLineStyle = { stroke: '#F6AD55', strokeWidth: 3 };
-const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
+const nodeOrigin: NodeOrigin = [0.5, 0];
+const connectionLineStyle = { stroke: 'lightgrey', strokeWidth: 1 };
+const defaultEdgeOptions = { style: connectionLineStyle, type: 'bezier', animated: true };
 
 function Flow() {
   const { nodes, edges, onNodesChange, onEdgesChange, addChildNode, loadState, saveState } = useStore(selector, shallow);
@@ -79,16 +78,18 @@ function Flow() {
       y,
     });
 
-    return {
-      x:
-        panePosition.x -
-        parentNode.internals.positionAbsolute.x +
-        parentNode.measured.width / 2,
-      y:
-        panePosition.y -
-        parentNode.internals.positionAbsolute.y +
-        parentNode.measured.height / 2,
-    };
+    return panePosition;
+
+    // return {
+    //   x:
+    //     panePosition.x -
+    //     parentNode.internals.positionAbsolute.x +
+    //     parentNode.measured.width / 2,
+    //   y:
+    //     panePosition.y -
+    //     parentNode.internals.positionAbsolute.y +
+    //     parentNode.measured.height / 2,
+    // };
   };
 
   const onConnectStart: OnConnectStart = useCallback((_, { nodeId }) => {
@@ -129,22 +130,20 @@ function Flow() {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       nodeTypes={nodeTypes}
-      edgeTypes={edgeTypes}
+      //edgeTypes={edgeTypes}
       onConnectStart={onConnectStart}
       onConnectEnd={onConnectEnd}
       nodeOrigin={nodeOrigin}
       connectionLineStyle={connectionLineStyle}
       defaultEdgeOptions={defaultEdgeOptions}
-      connectionLineType={ConnectionLineType.Straight}
-      fitView
     >
-      <Controls showInteractive={false} />
+      <Controls showInteractive={true} />
       <Panel position="top-left" >
           <div style={{paddingLeft: '300px'}}>
           <InfoIcon infoText={infotext} />
           </div>
           <h1> Map of connections</h1>
-      Analyze your chosen challenge and identify the leverage points which can lead you to finding solutions.
+     Analyze your chosen challenge. Think how does the content that you find in the game relates to the challenge you chose. Make the most of the OWL boxes, by asking question from the perspective of your challenge.
       </Panel>
     </ReactFlow>
     </>

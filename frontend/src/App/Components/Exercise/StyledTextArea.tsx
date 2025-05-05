@@ -20,15 +20,16 @@ const StyledTextArea: React.FC<StyledTextAreaProps> = ({id, value, onChange, rea
   };
 
   const textAreaStyle: React.CSSProperties = {
-   padding: '2px',
     fontSize: '16px',
     boxSizing: 'border-box',
     width: '100%',
-    borderRadius: '10px',
     margin: '5px 0px',
-    paddingLeft: '25px',
     resize: 'none',
     fontFamily: 'inherit',
+    lineHeight: '0.8em',
+    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    borderWidth: '1px',
+    borderColor: 'rgba(0, 0, 0, 0.2)',
 
   };
 

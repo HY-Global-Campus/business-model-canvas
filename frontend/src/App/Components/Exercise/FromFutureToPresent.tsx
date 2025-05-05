@@ -9,23 +9,22 @@ import ReadMore from '../ReadMore';
 
 
 
-const infotextQ1 = `Thinking about the futures that could be for the problem you’ve chosen. What are the probable, possible and desirable futures for this specific aspect you want to change? Think about how futures are different when they are based on reactions or actions (discuss difference between mitigation and adaptation—and perhaps beyond those two, creation?). Think about the different stakeholders and interests that can also influence the system. Imagine the multiple perspectives they represent, their motivations and their desires. Now, choose one desirable future for your problem and the aspect you are working with, and describe it. It is the year 2050: What is the state of the problem?`;
+const infotextQ1 = ``;
 
-const infotextQ2 = `Trace back, step by step, what happened during the past 25 years to achieve the change in the system you have described. Focus on the specific aspect you identified and the scenario for 2050 you envisioned. What is required to get to the 2050 you have chosen? What do you have to do? What is required of others? What material requirements do you need? What is your role in the change? Who do you want to be in this plan? What does your plan mean for your future personally and professionally? What obstacles did you encounter and how did you overcome them? What do you need to make this future come true? Think about how you are already becoming your future self, but how you also exist within a system. How can you influence the system you live in that determines what is probable, possible and desirable for you?`;
+const infotextQ2 = ``;
 
 const FromFutureToPresentExercise: React.FC = () => {
   const { bookOne, onUpdateBookOne, loading, error, readonly } = useExerciseContext(); 
 
   const [answers, setAnswers] = useState<FromFutureToPresent>({
     left: {
-      title: 'From Future to Present - Left',
-      question: `Question 1.
-Think about your desirable future vision for 2050. Imagine one day of your desirable future. Describe that day.
-It can be about: the city of the future (its people, culture, technology,..etc..) , or the boreal forests in the future, or the school of the future, or something else you prefer.`,
+      title: 'From Future to Present',
+      question: `
+Thinking about the futures that could be for the problem you’ve chosen. What are the probable, possible and desirable futures for this specific aspect you want to change? Think about how futures are different when they are based on reactions or actions (discuss difference between mitigation and adaptation—and perhaps beyond those two, creation?). Think about the different stakeholders and interests that can also influence the system. Imagine the multiple perspectives they represent, their motivations and their desires. Now, choose one desirable future for your problem and the aspect you are working with, and describe it. It is the year 2050: What is the state of the problem?`,
       answer: bookOne?.exercises.fromFutureToPresentAnswer.left.answer || '',
     },
     right: {
-      title: 'From Future to Present - Right',
+      title: 'Timeline',
       description: `Imagine you are now in 2050 telling your success story. Describe your path from 2050 to present and do a narrative in the past tense, for example: “Back in the days in 2023,  I started by .....”. In your success story, describe: What caused the system to change? What did you do to impact the system? Did you need help? What obstacles did you encounter? How did you overcome them? What was your role in this process?
 
 Make a timeline 2024-2050. Mark down all the significant steps and events that led to the solution. What was your first action in 2024?`,
@@ -119,70 +118,74 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
         <ReadMore><i>{infotextQ2}</i></ReadMore>
         <p>{answers.right.description}</p>
         <div style={rowStyle} >
+          <div style={numberStyle}>
+            2050
+          </div>
           <StyledTextArea
             id="from-future-to-present-question1"
             value={answers.right.question1.answer}
             onChange={handleAnswerChange('right', 'question1')}
             readonly={readonly}
           />
-          <div style={numberStyle}>
-            2050
-          </div>
+
         </div>
         <div style={rowStyle}>
+          <div style={numberStyle}>
+            2045
+          </div>
+
           <StyledTextArea
             id="from-future-to-present-question2"
             value={answers.right.question2.answer}
             onChange={handleAnswerChange('right', 'question2')}
             readonly={readonly}
           />
-          <div style={numberStyle}>
-            2045
-          </div>
         </div>
         <div style={rowStyle}>
+          <div style={numberStyle}>
+            2040
+          </div>
           <StyledTextArea
             id="from-future-to-present-question3"
             value={answers.right.question3.answer}
             onChange={handleAnswerChange('right', 'question3')}
             readonly={readonly}
           />
-          <div style={numberStyle}>
-            2040
-          </div>
         </div>
         <div style={rowStyle}>
+           <div style={numberStyle}>
+            2035
+          </div>
           <StyledTextArea
             id="from-future-to-present-question4"
             value={answers.right.question4.answer}
             onChange={handleAnswerChange('right', 'question4')}
             readonly={readonly}
           />
-          <div style={numberStyle}>
-            2035
-          </div>
         </div>
         <div style={rowStyle}>
+          <div style={numberStyle}>
+            2030
+          </div>
           <StyledTextArea
             id="from-future-to-present-question5"
             value={answers.right.question5.answer}
             onChange={handleAnswerChange('right', 'question5')}
             readonly={readonly}
           />
-          <div style={numberStyle}>
-            2030
-          </div>
+
         </div>
         <div style={rowStyle}>
+          <div style={numberStyle}>
+            2024
+          </div>
           <StyledTextArea
             id="from-future-to-present-question6"
             value={answers.right.question6.answer}
             onChange={handleAnswerChange('right', 'question6')}
             readonly={readonly}
           />
-          <div style={numberStyle}>
-            2024
-          </div>
+
         </div>
       </div>
     </div>

@@ -20,8 +20,7 @@ body,
 }
 
 .react-flow__node-mindmap {
-  background: #f6ad55;
-  border-radius: 25% / 90%; 
+  background: lightgrey;
   border: 4px solid transparent;
   padding: 2px 5px;
   font-weight: 700;
@@ -29,7 +28,6 @@ body,
 
 .react-flow__node-root {
   background: grey;
-  border-radius: 25% / 90%; 
   border: 4px solid transparent;
   padding: 2px 5px;
   font-weight: 700;
@@ -40,20 +38,17 @@ body,
 }
 
 .react-flow__handle.target {
-  top: 50%;
   pointer-events: none;
-  opacity: 0;
+  top: -15px;
+  visibility: hidden;
 }
 
 .react-flow__handle.source {
-  top: 0;
-  left: 0;
-  transform: none;
-  background: transparent;
-  height: 100%;
-  width: 100%;
   border-radius: 2px;
   border: none;
+  width: 15px;
+  height: 15px;
+  bottom: -10px;
 }
 
 .react-flow .react-flow__connectionline {
@@ -70,8 +65,8 @@ body,
 }
 
 .dragHandle {
-  background: transparent;
-  width: 14px;
+  background: black;
+  width: 50px;
   float: left;
   height: 100%;
   margin-right: 4px;
