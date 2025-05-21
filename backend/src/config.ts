@@ -13,15 +13,15 @@ interface Config {
 }
 
 const config: Config = {
-  JWT_SECRET: process.env.JWT_SECRET!,
-  DB_URL: process.env.DATABASE_URL!,
+  JWT_SECRET: process.env.JWT_SECRET!.trim(),
+  DB_URL: process.env.DATABASE_URL!.trim(),
   PORT: Number(process.env.PORT) || 80,
-  ACCELBYTE_TOKEN: process.env.ACCELBYTE_TOKEN!,
-  GCAI_URL: process.env.GCAI_URL!,
-  GCAI_TOKEN: process.env.GCAI_TOKEN!,
-  ACCELBYTE_ADMIN_SECRET: process.env.ACCELBYTE_ADMIN_SECRET!,
-  ACCELBYTE_ADMIN_CLIENT_ID: process.env.ACCELBYTE_ADMIN_CLIENT_ID!,
-  SERENDIP_WHITELIST_TOKEN: process.env.SERENDIP_WHITELIST_TOKEN!
+  ACCELBYTE_TOKEN: process.env.ACCELBYTE_TOKEN!.trim(),
+  GCAI_URL: process.env.GCAI_URL!.trim(),
+  GCAI_TOKEN: process.env.GCAI_TOKEN!.trim(),
+  ACCELBYTE_ADMIN_SECRET: process.env.ACCELBYTE_ADMIN_SECRET!.trim(),
+  ACCELBYTE_ADMIN_CLIENT_ID: process.env.ACCELBYTE_ADMIN_CLIENT_ID!.trim(),
+  SERENDIP_WHITELIST_TOKEN: process.env.SERENDIP_WHITELIST_TOKEN.trim()!
 }
 
 export default config;
