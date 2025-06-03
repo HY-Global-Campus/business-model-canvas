@@ -19,7 +19,7 @@ const FuturePitchExercise: React.FC = () => {
     },
   });
 
-    useEffect(() => {
+  useEffect(() => {
     if (bookOne) {
       setAnswers((prev) => ({
         left: {
@@ -43,8 +43,8 @@ const FuturePitchExercise: React.FC = () => {
     }));
 
     if (bookOne) {
-      bookOne.exercises.futurePitchAnswer[side].answer = value; 
-        onUpdateBookOne(bookOne);
+      bookOne.exercises.futurePitchAnswer[side].answer = value;
+      onUpdateBookOne(bookOne);
     }
   };
 
@@ -68,7 +68,9 @@ const FuturePitchExercise: React.FC = () => {
       <div style={separatorStyle} />
       <div style={panelStyle}>
         <h2>Chat with Madida</h2>
-        { !readonly && <ChatBot />}
+        <div style={{ margin: '80px' }}>
+          {!readonly && <ChatBot />}
+        </div>
       </div>
     </div>
   );

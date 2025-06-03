@@ -11,6 +11,10 @@ body,
 h3, h2 {
   margin: 0;
 }
+h3 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
 
 p {
   margin:10px;

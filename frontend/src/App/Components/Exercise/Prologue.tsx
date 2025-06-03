@@ -34,7 +34,7 @@ const Prologue: React.FC = () => {
       <div style={panelStyle}>
         <h2>Structure of the assignment</h2>
         <p>
-          The Book includes seven sections, which for the best learning experience, you need to fill them in order:
+          The Book includes four chapters, which for the best learning experience, you need to fill them in order:
         </p>
         <ul className="star-circle-list">
           <h3> chapter 1 </h3>

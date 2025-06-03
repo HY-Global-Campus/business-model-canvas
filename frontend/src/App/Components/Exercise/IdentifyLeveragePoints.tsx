@@ -54,9 +54,9 @@ Look at your Map of Connections and estimate how easy/hard it is to affect diffe
     }));
 
     if (bookOne) {
-     if (side === 'left') {
+      if (side === 'left') {
         if (question) {
-        bookOne.exercises.identifyLeveragePointsAnswer.left[question].answer = value;
+          bookOne.exercises.identifyLeveragePointsAnswer.left[question].answer = value;
         }
       } else {
         bookOne.exercises.identifyLeveragePointsAnswer.right.answer = value;

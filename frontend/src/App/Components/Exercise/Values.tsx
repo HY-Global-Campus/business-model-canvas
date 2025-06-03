@@ -9,7 +9,7 @@ import treeOfValues from '../../../assets/treeOfValues.png';
 const infotext = `Choose the values that guide your sustainability actions. What is important for you?`;
 
 const ValuesExercise: React.FC = () => {
-  const { bookOne, onUpdateBookOne, loading, error, readonly } = useExerciseContext(); 
+  const { bookOne, onUpdateBookOne, loading, error, readonly } = useExerciseContext();
 
   const [answers, setAnswers] = useState<Values>({
     left: {
@@ -22,7 +22,7 @@ const ValuesExercise: React.FC = () => {
     right: null,
   });
 
-    useEffect(() => {
+  useEffect(() => {
     if (bookOne) {
       setAnswers((prev) => ({
         left: {
@@ -47,7 +47,7 @@ const ValuesExercise: React.FC = () => {
     }));
 
     if (bookOne) {
-     bookOne.exercises.valuesAnswer.left[question].answer = value; 
+      bookOne.exercises.valuesAnswer.left[question].answer = value;
 
       onUpdateBookOne(bookOne);
     }
@@ -92,8 +92,8 @@ const ValuesExercise: React.FC = () => {
       </div>
       <div style={separatorStyle} />
       <div style={panelStyle}>
-        <h3>Tree of values</h3>
-        <img src={treeOfValues} alt="Tree of values" style={{ width: '100%' }} />
+        <h2>Tree of values</h2>
+        <img src={treeOfValues} alt="Tree of values" style={{ width: '100%', marginTop: '100px' }} />
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ const infotextQ1 = ``;
 const infotextQ2 = ``;
 
 const FromFutureToPresentExercise: React.FC = () => {
-  const { bookOne, onUpdateBookOne, loading, error, readonly } = useExerciseContext(); 
+  const { bookOne, onUpdateBookOne, loading, error, readonly } = useExerciseContext();
 
   const [answers, setAnswers] = useState<FromFutureToPresent>({
     left: {
@@ -37,7 +37,7 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
     },
   });
 
-    useEffect(() => {
+  useEffect(() => {
     if (bookOne) {
       setAnswers((prev) => ({
         left: {
@@ -70,14 +70,14 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
     }));
 
     if (bookOne) {
-     if (side === 'left') {
-      bookOne.exercises.fromFutureToPresentAnswer.left.answer = value;
+      if (side === 'left') {
+        bookOne.exercises.fromFutureToPresentAnswer.left.answer = value;
       } else {
         if (question !== undefined) {
           bookOne.exercises.fromFutureToPresentAnswer.right[question].answer = value;
         }
       }
-    
+
       onUpdateBookOne(bookOne);
     }
   };
@@ -117,75 +117,77 @@ Make a timeline 2024-2050. Mark down all the significant steps and events that l
         <h2>{answers.right.title}</h2>
         <ReadMore><i>{infotextQ2}</i></ReadMore>
         <p>{answers.right.description}</p>
-        <div style={rowStyle} >
-          <div style={numberStyle}>
-            2050
-          </div>
-          <StyledTextArea
-            id="from-future-to-present-question1"
-            value={answers.right.question1.answer}
-            onChange={handleAnswerChange('right', 'question1')}
-            readonly={readonly}
-          />
+        <div style={{ marginTop: '1.5rem' }}>
+          <div style={rowStyle} >
+            <div style={numberStyle}>
+              2050
+            </div>
+            <StyledTextArea
+              id="from-future-to-present-question1"
+              value={answers.right.question1.answer}
+              onChange={handleAnswerChange('right', 'question1')}
+              readonly={readonly}
+            />
 
-        </div>
-        <div style={rowStyle}>
-          <div style={numberStyle}>
-            2045
           </div>
+          <div style={rowStyle}>
+            <div style={numberStyle}>
+              2045
+            </div>
 
-          <StyledTextArea
-            id="from-future-to-present-question2"
-            value={answers.right.question2.answer}
-            onChange={handleAnswerChange('right', 'question2')}
-            readonly={readonly}
-          />
-        </div>
-        <div style={rowStyle}>
-          <div style={numberStyle}>
-            2040
+            <StyledTextArea
+              id="from-future-to-present-question2"
+              value={answers.right.question2.answer}
+              onChange={handleAnswerChange('right', 'question2')}
+              readonly={readonly}
+            />
           </div>
-          <StyledTextArea
-            id="from-future-to-present-question3"
-            value={answers.right.question3.answer}
-            onChange={handleAnswerChange('right', 'question3')}
-            readonly={readonly}
-          />
-        </div>
-        <div style={rowStyle}>
-           <div style={numberStyle}>
-            2035
+          <div style={rowStyle}>
+            <div style={numberStyle}>
+              2040
+            </div>
+            <StyledTextArea
+              id="from-future-to-present-question3"
+              value={answers.right.question3.answer}
+              onChange={handleAnswerChange('right', 'question3')}
+              readonly={readonly}
+            />
           </div>
-          <StyledTextArea
-            id="from-future-to-present-question4"
-            value={answers.right.question4.answer}
-            onChange={handleAnswerChange('right', 'question4')}
-            readonly={readonly}
-          />
-        </div>
-        <div style={rowStyle}>
-          <div style={numberStyle}>
-            2030
+          <div style={rowStyle}>
+            <div style={numberStyle}>
+              2035
+            </div>
+            <StyledTextArea
+              id="from-future-to-present-question4"
+              value={answers.right.question4.answer}
+              onChange={handleAnswerChange('right', 'question4')}
+              readonly={readonly}
+            />
           </div>
-          <StyledTextArea
-            id="from-future-to-present-question5"
-            value={answers.right.question5.answer}
-            onChange={handleAnswerChange('right', 'question5')}
-            readonly={readonly}
-          />
+          <div style={rowStyle}>
+            <div style={numberStyle}>
+              2030
+            </div>
+            <StyledTextArea
+              id="from-future-to-present-question5"
+              value={answers.right.question5.answer}
+              onChange={handleAnswerChange('right', 'question5')}
+              readonly={readonly}
+            />
 
-        </div>
-        <div style={rowStyle}>
-          <div style={numberStyle}>
-            2024
           </div>
-          <StyledTextArea
-            id="from-future-to-present-question6"
-            value={answers.right.question6.answer}
-            onChange={handleAnswerChange('right', 'question6')}
-            readonly={readonly}
-          />
+          <div style={rowStyle}>
+            <div style={numberStyle}>
+              2024
+            </div>
+            <StyledTextArea
+              id="from-future-to-present-question6"
+              value={answers.right.question6.answer}
+              onChange={handleAnswerChange('right', 'question6')}
+              readonly={readonly}
+            />
 
+          </div>
         </div>
       </div>
     </div>

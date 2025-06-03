@@ -116,36 +116,36 @@ function Flow() {
   );
 
   useEffect(() => {
-    loadState(); 
+    loadState();
   }, [])
 
 
 
   return (
     <>
-    <Header />
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      nodeTypes={nodeTypes}
-      //edgeTypes={edgeTypes}
-      onConnectStart={onConnectStart}
-      onConnectEnd={onConnectEnd}
-      nodeOrigin={nodeOrigin}
-      connectionLineStyle={connectionLineStyle}
-      defaultEdgeOptions={defaultEdgeOptions}
-    >
-      <Controls showInteractive={true} />
-      <Panel position="top-left" >
-          <div style={{paddingLeft: '300px'}}>
-          <InfoIcon infoText={infotext} />
+      <Header />
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodeTypes={nodeTypes}
+        //edgeTypes={edgeTypes}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
+        nodeOrigin={nodeOrigin}
+        connectionLineStyle={connectionLineStyle}
+        defaultEdgeOptions={defaultEdgeOptions}
+      >
+        <Controls showInteractive={true} />
+        <Panel position="top-left" >
+          <div style={{ paddingLeft: '300px' }}>
+            <InfoIcon infoText={infotext} />
           </div>
           <h1> Map of connections</h1>
-     Analyze your chosen challenge. Think how does the content that you find in the game relates to the challenge you chose. Make the most of the OWL boxes, by asking question from the perspective of your challenge.
-      </Panel>
-    </ReactFlow>
+          Analyze your chosen challenge. Think how does the content that you find in the game relates to the challenge you chose. Make the most of the OWL boxes, by asking questions from the perspective of your challenge.
+        </Panel>
+      </ReactFlow>
     </>
   );
 }
