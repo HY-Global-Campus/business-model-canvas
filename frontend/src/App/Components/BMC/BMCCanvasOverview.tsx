@@ -27,19 +27,72 @@ const BMCCanvasOverview: React.FC = () => {
     const wasFullscreen = isFullscreen;
     
     try {
-      // Enter fullscreen if not already
+      // Enter fullscreen mode temporarily (but keep it hidden)
       if (!wasFullscreen) {
         toggleFullscreen();
-        // Wait for DOM to update
-        await new Promise(resolve => setTimeout(resolve, 300));
+        // Wait for layout to update
+        await new Promise(resolve => setTimeout(resolve, 400));
       }
       
+      // Create an overlay to hide the visual change
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100vw';
+      overlay.style.height = '100vh';
+      overlay.style.backgroundColor = wasFullscreen ? 'transparent' : 'rgba(255, 255, 255, 0.95)';
+      overlay.style.zIndex = '9998';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.fontSize = '18px';
+      overlay.style.fontFamily = 'Gotham Narrow, Arial, sans-serif';
+      overlay.innerHTML = wasFullscreen ? '' : 'Exporting canvas...';
+      
+      if (!wasFullscreen) {
+        document.body.appendChild(overlay);
+      }
+      
+      // Hide completion badges and click hints for export
+      const completionBadges = canvasRef.current.querySelectorAll('.completion-badge');
+      const clickHints = canvasRef.current.querySelectorAll('.click-hint');
+      const blockFooters = canvasRef.current.querySelectorAll('.block-footer');
+      
+      const hiddenElements: HTMLElement[] = [];
+      completionBadges.forEach(el => {
+        hiddenElements.push(el as HTMLElement);
+        (el as HTMLElement).style.display = 'none';
+      });
+      clickHints.forEach(el => {
+        hiddenElements.push(el as HTMLElement);
+        (el as HTMLElement).style.display = 'none';
+      });
+      blockFooters.forEach(el => {
+        hiddenElements.push(el as HTMLElement);
+        (el as HTMLElement).style.display = 'none';
+      });
+      
+      // Wait for layout update
+      await new Promise(resolve => setTimeout(resolve, 50));
+      
+      // Capture the canvas
       const canvas = await html2canvas(canvasRef.current, {
-        scale: 2, // Higher quality
+        scale: 2,
         backgroundColor: '#f8f9fa',
         logging: false,
         useCORS: true,
       });
+      
+      // Restore hidden elements
+      hiddenElements.forEach(el => {
+        el.style.display = '';
+      });
+      
+      // Remove overlay
+      if (!wasFullscreen && overlay.parentNode) {
+        document.body.removeChild(overlay);
+      }
       
       // Convert to blob and download
       canvas.toBlob((blob) => {
@@ -56,16 +109,15 @@ const BMCCanvasOverview: React.FC = () => {
         }
       }, 'image/png');
       
-      // Restore previous fullscreen state
+      // Restore previous state
       if (!wasFullscreen) {
-        // Wait a bit before exiting fullscreen
         await new Promise(resolve => setTimeout(resolve, 100));
         toggleFullscreen();
       }
     } catch (error) {
       console.error('Error exporting canvas:', error);
       alert('Failed to export canvas. Please try again.');
-      // Restore fullscreen state on error too
+      // Restore state on error
       if (!wasFullscreen && isFullscreen) {
         toggleFullscreen();
       }
