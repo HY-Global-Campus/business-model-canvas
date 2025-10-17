@@ -189,23 +189,26 @@ Chapter4Banner
 .course-header {
   background: #2c2c2c;
   color: white;
-  padding: 20px 40px;
+  padding: 12px 40px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   font-family: 'Gotham Narrow', Arial, sans-serif;
+  height: 60px;
+  box-sizing: border-box;
 }
 
 .course-header h1 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: normal;
   margin: 0;
 }
 
 .course-header-icon {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   fill: white;
+  flex-shrink: 0;
 }
 
 /* Exercise Container */
@@ -427,11 +430,17 @@ Chapter4Banner
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .course-header {
-    padding: 15px 20px;
+    padding: 10px 20px;
+    height: 50px;
   }
   
   .course-header h1 {
-    font-size: 20px;
+    font-size: 16px;
+  }
+  
+  .course-header-icon {
+    width: 16px;
+    height: 16px;
   }
   
   .exercise-content {

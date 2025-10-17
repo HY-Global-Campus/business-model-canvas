@@ -1,0 +1,215 @@
+.bmc-page {
+  height: 100vh;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.bmc-layout {
+  display: flex;
+  height: 100%;
+  gap: 0;
+}
+
+/* Left panel with canvas and chatbot */
+.bmc-left-panel {
+  flex: 0 0 45%;
+  min-width: 400px;
+  background: #f8f9fa;
+  border-right: 2px solid #000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.bmc-canvas-section {
+  flex: 1;
+  overflow-y: auto;
+  border-bottom: 2px solid #000;
+  max-height: 50%;
+}
+
+.bmc-chatbot-section {
+  flex: 1;
+  background: white;
+  overflow: hidden;
+  max-height: 50%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatbot-header-fixed {
+  background: #2c2c2c;
+  color: white;
+  padding: 10px 16px;
+  border-bottom: 1px solid #000;
+  flex-shrink: 0;
+}
+
+.chatbot-header-fixed h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+}
+
+.chatbot-body-fixed {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.chatbot-wrapper {
+  grid-row: 2;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Right panel - editor */
+.bmc-editor-panel {
+  flex: 1;
+  overflow-y: auto;
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Welcome screen */
+.bmc-welcome {
+  max-width: 800px;
+  padding: 30px 40px;
+  margin: 0 auto;
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.bmc-welcome h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 16px 0;
+  color: #000;
+}
+
+.bmc-welcome > p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.welcome-instructions,
+.welcome-tips {
+  margin-bottom: 24px;
+}
+
+.welcome-instructions h3,
+.welcome-tips h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 12px 0;
+  color: #000;
+}
+
+.welcome-instructions ol,
+.welcome-tips ul {
+  margin: 0;
+  padding-left: 24px;
+}
+
+.welcome-instructions li,
+.welcome-tips li {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.welcome-instructions li:last-child,
+.welcome-tips li:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive design */
+@media (max-width: 1400px) {
+  .bmc-left-panel {
+    flex: 0 0 40%;
+    min-width: 350px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .bmc-layout {
+    flex-direction: column;
+  }
+
+  .bmc-left-panel {
+    flex: 0 0 50%;
+    min-width: unset;
+    border-right: none;
+    border-bottom: 2px solid #000;
+  }
+  
+  .bmc-canvas-section {
+    flex: 1;
+    max-height: 50%;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .bmc-chatbot-section {
+    flex: 1;
+    max-height: 50%;
+  }
+
+  .bmc-editor-panel {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .bmc-page {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .bmc-layout {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .bmc-left-panel {
+    flex: none;
+    height: auto;
+    min-height: 800px;
+  }
+  
+  .bmc-canvas-section {
+    flex: 1;
+    min-height: 400px;
+    max-height: 50%;
+  }
+  
+  .bmc-chatbot-section {
+    flex: 1;
+    min-height: 400px;
+    max-height: 50%;
+  }
+
+  .bmc-editor-panel {
+    flex: none;
+    min-height: 400px;
+  }
+
+  .bmc-welcome {
+    padding: 20px;
+  }
+
+  .bmc-welcome h2 {
+    font-size: 22px;
+  }
+}
+
