@@ -28,7 +28,13 @@
   color: #000;
 }
 
-.fullscreen-toggle-btn {
+.canvas-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.canvas-action-btn {
   background: #2c2c2c;
   color: white;
   border: none;
@@ -42,13 +48,32 @@
   flex-shrink: 0;
 }
 
-.fullscreen-toggle-btn:hover {
+.canvas-action-btn:hover:not(:disabled) {
   background: #000;
   transform: scale(1.05);
 }
 
-.fullscreen-toggle-btn svg {
+.canvas-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.canvas-action-btn svg {
   display: block;
+}
+
+/* Spinner animation for export button */
+.canvas-action-btn .spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .business-context {

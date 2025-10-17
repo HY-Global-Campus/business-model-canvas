@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import html2canvas from 'html2canvas';
 import { useBMCContext } from '../../contexts/BMCContext';
 import { bmcBlocksMeta, getBlockOrder } from '../../../content/bmcBlocks';
 import { BMCBlockId } from '../../../types/bmc';
@@ -8,6 +9,8 @@ import './canvas.css';
 const BMCCanvasOverview: React.FC = () => {
   const { project, loading, isFullscreen, toggleFullscreen } = useBMCContext();
   const navigate = useNavigate();
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   if (loading || !project) {
     return <div className="canvas-loading">Loading canvas...</div>;
@@ -15,6 +18,60 @@ const BMCCanvasOverview: React.FC = () => {
 
   const handleBlockClick = (blockId: BMCBlockId) => {
     navigate(`/bmc/${blockId}`);
+  };
+
+  const handleExport = async () => {
+    if (!canvasRef.current || !toggleFullscreen) return;
+    
+    setIsExporting(true);
+    const wasFullscreen = isFullscreen;
+    
+    try {
+      // Enter fullscreen if not already
+      if (!wasFullscreen) {
+        toggleFullscreen();
+        // Wait for DOM to update
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+      
+      const canvas = await html2canvas(canvasRef.current, {
+        scale: 2, // Higher quality
+        backgroundColor: '#f8f9fa',
+        logging: false,
+        useCORS: true,
+      });
+      
+      // Convert to blob and download
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          const fileName = `${project.displayName || 'Business-Model-Canvas'}_${new Date().toISOString().split('T')[0]}.png`;
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }
+      }, 'image/png');
+      
+      // Restore previous fullscreen state
+      if (!wasFullscreen) {
+        // Wait a bit before exiting fullscreen
+        await new Promise(resolve => setTimeout(resolve, 100));
+        toggleFullscreen();
+      }
+    } catch (error) {
+      console.error('Error exporting canvas:', error);
+      alert('Failed to export canvas. Please try again.');
+      // Restore fullscreen state on error too
+      if (!wasFullscreen && isFullscreen) {
+        toggleFullscreen();
+      }
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const getBlockContent = (blockId: BMCBlockId): string => {
@@ -45,27 +102,47 @@ const BMCCanvasOverview: React.FC = () => {
               </p>
             )}
           </div>
-          <button 
-            className="fullscreen-toggle-btn"
-            onClick={toggleFullscreen}
-            title={isFullscreen ? 'Exit fullscreen (ESC)' : 'View fullscreen'}
-          >
-            {isFullscreen ? (
-              // Exit fullscreen icon
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
-              </svg>
-            ) : (
-              // Enter fullscreen icon
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-              </svg>
-            )}
-          </button>
+          <div className="canvas-actions">
+            <button 
+              className="canvas-action-btn"
+              onClick={handleExport}
+              disabled={isExporting}
+              title="Export as image"
+            >
+              {isExporting ? (
+                // Loading spinner
+                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
+                </svg>
+              ) : (
+                // Download icon
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+                </svg>
+              )}
+            </button>
+            <button 
+              className="canvas-action-btn"
+              onClick={toggleFullscreen}
+              title={isFullscreen ? 'Exit fullscreen (ESC)' : 'View fullscreen'}
+            >
+              {isFullscreen ? (
+                // Exit fullscreen icon
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+                </svg>
+              ) : (
+                // Enter fullscreen icon
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
       </div>
       
-      <div className="canvas-grid">
+      <div className="canvas-grid" ref={canvasRef}>
         {getBlockOrder().map((blockId) => {
           const meta = bmcBlocksMeta.find(b => b.id === blockId);
           if (!meta) return null;
