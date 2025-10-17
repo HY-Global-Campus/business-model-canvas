@@ -204,6 +204,9 @@ export interface FuturePitchAnswer {
 
 export interface BookOneExercises {}
 
+// Import BMC types
+export * from './bmc';
+
 export type CourseExercises = BookOneExercises & {
   courseInfo?: {
     Name?: string;

@@ -1,13 +1,18 @@
 import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
-import { CourseExercises } from '../types/exercises';
+import { CourseExercises, BMCExercises, BusinessContext } from '../types/exercises';
 
 export interface CourseAttributes {
   id: number;
-  exercises: CourseExercises; // TODO: replace with new course exercise types when defined
+  exercises: CourseExercises;
   mindmap: object | null;
   userId: string;
   displayName: string;
   reflection: string | null;
+  // BMC fields
+  canvasData: BMCExercises;
+  businessContext: BusinessContext;
+  lastModified: Record<string, string>;
+  completionStatus: Record<string, number>;
 }
 
 export interface CourseCreationAttributes extends Optional<CourseAttributes, 'id'> {}
@@ -19,6 +24,11 @@ class Course extends Model<CourseAttributes, CourseCreationAttributes> implement
   declare userId: string;
   declare displayName: string;
   declare reflection: string | null;
+  // BMC fields
+  declare canvasData: BMCExercises;
+  declare businessContext: BusinessContext;
+  declare lastModified: Record<string, string>;
+  declare completionStatus: Record<string, number>;
 
   static initialize(sequelize: Sequelize): void {
     this.init(
@@ -48,6 +58,26 @@ class Course extends Model<CourseAttributes, CourseCreationAttributes> implement
         reflection: {
           type: DataTypes.TEXT,
           allowNull: true,
+        },
+        canvasData: {
+          type: DataTypes.JSONB,
+          allowNull: false,
+          defaultValue: {},
+        },
+        businessContext: {
+          type: DataTypes.JSONB,
+          allowNull: false,
+          defaultValue: { industry: '', stage: '', description: '' },
+        },
+        lastModified: {
+          type: DataTypes.JSONB,
+          allowNull: false,
+          defaultValue: {},
+        },
+        completionStatus: {
+          type: DataTypes.JSONB,
+          allowNull: false,
+          defaultValue: {},
         },
       },
       {

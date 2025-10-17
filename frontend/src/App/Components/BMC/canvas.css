@@ -1,0 +1,189 @@
+.bmc-canvas-overview {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  background: #f8f9fa;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.canvas-header {
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.canvas-header h2 {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  color: #000;
+}
+
+.business-context {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+}
+
+.canvas-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 18px;
+  color: #666;
+}
+
+.canvas-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 8px;
+  grid-template-areas:
+    "key-partnerships key-activities value-propositions customer-relationships customer-segments"
+    "key-partnerships key-resources value-propositions channels customer-segments"
+    "cost-structure cost-structure cost-structure revenue-streams revenue-streams";
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.canvas-block {
+  border: 2px solid #000;
+  border-radius: 6px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.canvas-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-width: 3px;
+}
+
+.canvas-block.empty {
+  opacity: 0.7;
+}
+
+.canvas-block.started {
+  border-color: #e67e22;
+}
+
+.canvas-block.in-progress {
+  border-color: #f39c12;
+}
+
+.canvas-block.complete {
+  border-color: #2ecc71;
+}
+
+.block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.block-title {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 0;
+  color: #000;
+  flex: 1;
+  line-height: 1.2;
+}
+
+.completion-badge {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 8px;
+  margin-left: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.block-preview {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 11px;
+  line-height: 1.3;
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  min-height: 0;
+}
+
+.block-footer {
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.click-hint {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 9px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .canvas-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(5, minmax(150px, auto));
+    grid-template-areas:
+      "value-propositions value-propositions customer-segments"
+      "key-partnerships key-activities customer-relationships"
+      "key-partnerships key-resources channels"
+      "cost-structure cost-structure revenue-streams"
+      "cost-structure cost-structure revenue-streams";
+  }
+}
+
+@media (max-width: 768px) {
+  .canvas-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "customer-segments"
+      "value-propositions"
+      "channels"
+      "customer-relationships"
+      "revenue-streams"
+      "key-resources"
+      "key-activities"
+      "key-partnerships"
+      "cost-structure";
+    gap: 16px;
+  }
+
+  .canvas-block {
+    min-height: 120px;
+  }
+
+  .canvas-legend {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+

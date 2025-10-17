@@ -44,6 +44,40 @@
 .front-university {
   font-size: 16px;
   font-weight: normal;
+  margin-bottom: 30px;
+}
+
+.front-start-button {
+  background: white;
+  color: #000;
+  border: 2px solid white;
+  padding: 16px 40px;
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-bottom: 40px;
+}
+
+.front-start-button:hover {
+  background: transparent;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.front-description {
+  max-width: 600px;
+  margin-top: 20px;
+}
+
+.front-description p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  color: #ddd;
 }
 
 /* Tablet styles (≥ 512px) */
