@@ -43,3 +43,16 @@ export const getSuggestion = async (request: SuggestionRequest): Promise<Suggest
     const response = await api.post<SuggestionResponse>('/chatbot/suggest', request);
     return response.data;
 }
+
+export interface FeedbackRequest {
+    canvasData: any;
+}
+
+export interface FeedbackResponse {
+    feedback: string;
+}
+
+export const getFeedback = async (request: FeedbackRequest): Promise<FeedbackResponse> => {
+    const response = await api.post<FeedbackResponse>('/chatbot/feedback', request);
+    return response.data;
+}

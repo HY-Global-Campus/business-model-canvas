@@ -13,12 +13,67 @@
   flex-shrink: 0;
 }
 
+.canvas-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
 .canvas-header h2 {
   font-family: 'Gotham Narrow', Arial, sans-serif;
   font-size: 20px;
   font-weight: bold;
   margin: 0 0 5px 0;
   color: #000;
+}
+
+.canvas-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.canvas-action-btn {
+  background: #2c2c2c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.canvas-action-btn:hover:not(:disabled) {
+  background: #000;
+  transform: scale(1.05);
+}
+
+.canvas-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.canvas-action-btn svg {
+  display: block;
+}
+
+/* Spinner animation for export button */
+.canvas-action-btn .spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .business-context {
@@ -41,7 +96,7 @@
 .canvas-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(3, minmax(180px, 1fr));
   gap: 8px;
   grid-template-areas:
     "key-partnerships key-activities value-propositions customer-relationships customer-segments"
@@ -49,13 +104,13 @@
     "cost-structure cost-structure cost-structure revenue-streams revenue-streams";
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .canvas-block {
   border: 2px solid #000;
   border-radius: 6px;
-  padding: 10px;
+  padding: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -91,7 +146,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   flex-shrink: 0;
 }
 
@@ -127,21 +182,21 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 20;
   -webkit-box-orient: vertical;
   min-height: 0;
 }
 
 .block-footer {
-  margin-top: 5px;
-  padding-top: 5px;
+  margin-top: 4px;
+  padding-top: 4px;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
 }
 
 .click-hint {
   font-family: 'Gotham Narrow', Arial, sans-serif;
-  font-size: 9px;
+  font-size: 8px;
   color: #666;
   font-style: italic;
 }

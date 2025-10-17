@@ -1,17 +1,19 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Outlet, useLocation, useParams } from 'react-router-dom';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
+import { Outlet, useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 import ChatBot from '../../Components/ChatBot';
 import BMCCanvasOverview from '../../Components/BMC/BMCCanvasOverview';
+import BMCFeedbackView from '../../Components/BMC/BMCFeedbackView';
 import { BMCContext } from '../../contexts/BMCContext';
 import { 
   getBMCProjectByUserId, 
   updateBMCProject, 
   calculateBlockCompletion 
 } from '../../api/bmcService';
+import { getFeedback } from '../../api/chatbotService';
 import { BMCProject, BMCBlockId, BusinessContext } from '../../../types/bmc';
 import './bmc.css';
 
@@ -23,11 +25,15 @@ const BMCPage: React.FC = () => {
   const queryClient = useQueryClient();
   const userId = sessionStorage.getItem('id');
   const location = useLocation();
+  const navigate = useNavigate();
   const { blockId } = useParams<{ blockId?: string }>();
   
   const [currentBlock, setCurrentBlock] = useState<BMCBlockId | null>(
     blockId as BMCBlockId || null
   );
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
 
   // Fetch BMC project data
   const { data: project, isLoading: loading, error } = useQuery<BMCProject, Error>({
@@ -121,6 +127,51 @@ const BMCPage: React.FC = () => {
     debouncedSaveToServer();
   }, [updateProjectImmediate, debouncedSaveToServer]);
 
+  // Toggle fullscreen
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => !prev);
+  }, []);
+
+  // Handle ESC key to exit fullscreen
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
+
+  // Handle feedback request
+  const handleRequestFeedback = useCallback(async () => {
+    console.log('handleRequestFeedback called', { project: !!project });
+    if (!project) {
+      console.error('No project available');
+      return;
+    }
+    
+    // Navigate to main canvas view if currently editing a block
+    if (location.pathname !== '/bmc') {
+      navigate('/bmc');
+    }
+    
+    setIsFetchingFeedback(true);
+    setFeedback(''); // Set empty to trigger loading state
+    
+    try {
+      console.log('Calling getFeedback API...');
+      const response = await getFeedback({ canvasData: project });
+      console.log('Feedback response received:', response);
+      setFeedback(response.feedback);
+    } catch (error) {
+      console.error('Error fetching feedback:', error);
+      setFeedback('Failed to generate feedback. Please try again later.');
+    } finally {
+      setIsFetchingFeedback(false);
+    }
+  }, [project, location.pathname, navigate]);
+
   if (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       sessionStorage.clear();
@@ -132,7 +183,7 @@ const BMCPage: React.FC = () => {
 
   return (
     <>
-      <div className="bmc-page">
+      <div className={`bmc-page ${isFullscreen ? 'fullscreen' : ''}`}>
         <BMCContext.Provider value={{
           project: project || null,
           loading,
@@ -141,7 +192,10 @@ const BMCPage: React.FC = () => {
           readonly: false,
           onUpdateBlock,
           onUpdateBusinessContext,
-          setCurrentBlock
+          setCurrentBlock,
+          isFullscreen,
+          toggleFullscreen,
+          onRequestFeedback: handleRequestFeedback
         }}>
           <div className="bmc-layout">
             {/* Left panel: Canvas Overview + Chatbot */}
@@ -149,24 +203,34 @@ const BMCPage: React.FC = () => {
               <div className="bmc-canvas-section">
                 <BMCCanvasOverview />
               </div>
-              <div className="bmc-chatbot-section">
-                <div className="chatbot-header-fixed">
-                  <h3>AI Advisor</h3>
+              {!isFullscreen && (
+                <div className="bmc-chatbot-section">
+                  <div className="chatbot-header-fixed">
+                    <h3>AI Advisor</h3>
+                  </div>
+                  <div className="chatbot-body-fixed">
+                    <ChatBot />
+                  </div>
                 </div>
-                <div className="chatbot-body-fixed">
-                  <ChatBot />
-                </div>
-              </div>
-            </div>
-
-            {/* Right panel: Editor only */}
-            <div className="bmc-editor-panel">
-              {isEditingBlock ? (
-                <Outlet />
-              ) : (
-                <BMCWelcome />
               )}
             </div>
+
+            {/* Right panel: Editor/Feedback/Welcome */}
+            {!isFullscreen && (
+              <div className="bmc-editor-panel">
+                {isEditingBlock ? (
+                  <Outlet />
+                ) : feedback !== null ? (
+                  <BMCFeedbackView 
+                    feedback={feedback} 
+                    onClose={() => setFeedback(null)} 
+                    isLoading={isFetchingFeedback}
+                  />
+                ) : (
+                  <BMCWelcome />
+                )}
+              </div>
+            )}
           </div>
         </BMCContext.Provider>
       </div>

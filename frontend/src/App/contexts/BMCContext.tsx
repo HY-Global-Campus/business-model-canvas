@@ -10,6 +10,9 @@ interface BMCContextProps {
   onUpdateBlock: (blockId: BMCBlockId, content: string) => void;
   onUpdateBusinessContext: (context: BusinessContext) => void;
   setCurrentBlock: (blockId: BMCBlockId | null) => void;
+  isFullscreen: boolean;
+  toggleFullscreen: () => void;
+  onRequestFeedback?: () => Promise<void>;
 }
 
 export const BMCContext = createContext<BMCContextProps | undefined>(undefined);

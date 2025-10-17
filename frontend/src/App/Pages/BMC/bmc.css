@@ -213,3 +213,20 @@
   }
 }
 
+/* Fullscreen mode */
+.bmc-page.fullscreen .bmc-left-panel {
+  flex: 1 1 100%;
+  max-width: 100%;
+  min-width: 0;
+  border-right: none;
+}
+
+.bmc-page.fullscreen .bmc-canvas-section {
+  max-height: 100%;
+  border-bottom: none;
+}
+
+.bmc-page.fullscreen .bmc-editor-panel {
+  display: none;
+}
+
