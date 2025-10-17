@@ -32,16 +32,25 @@ export const useAISuggestions = ({
   const fetchSuggestion = async () => {
     if (!project || !enabled) return;
 
+    // Check if canvas has any content
+    const hasContent = Object.values(project.canvasData).some(content => {
+      return content && typeof content === 'string' && content.trim().length > 0;
+    });
+    
+    if (!hasContent) {
+      return; // No content yet, skip suggestion
+    }
+
     // Don't fetch suggestions too frequently (minimum 30 seconds between suggestions)
     const now = Date.now();
     if (now - lastSuggestionTime.current < 30000) {
       return;
     }
 
-    // Check if canvas has changed significantly
+    // Check if canvas has changed since last suggestion
     const currentCanvasState = JSON.stringify(project.canvasData);
     if (currentCanvasState === lastCanvasState.current) {
-      return; // No changes, skip suggestion
+      return; // No changes since last suggestion, skip
     }
 
     try {
@@ -79,16 +88,29 @@ export const useAISuggestions = ({
     setSuggestion(null);
   };
 
-  // Set up periodic suggestion trigger (every 60 seconds while typing has stopped)
+  // Set up periodic suggestion trigger (every 60 seconds when data changes)
   useEffect(() => {
     if (!enabled || !project) return;
+
+    // Check if there's any content
+    const hasContent = Object.values(project.canvasData).some(content => {
+      return content && typeof content === 'string' && content.trim().length > 0;
+    });
+    
+    if (!hasContent) return; // No content, don't set timer
+
+    // Check if data has changed since last suggestion
+    const currentCanvasState = JSON.stringify(project.canvasData);
+    if (currentCanvasState === lastCanvasState.current) {
+      return; // No changes, don't reset timer
+    }
 
     // Clear existing timer
     if (suggestionTimer.current) {
       clearTimeout(suggestionTimer.current);
     }
 
-    // Set new timer for 60 seconds
+    // Set new timer for 60 seconds after data change
     suggestionTimer.current = setTimeout(() => {
       fetchSuggestion();
     }, 60000);
@@ -98,11 +120,17 @@ export const useAISuggestions = ({
         clearTimeout(suggestionTimer.current);
       }
     };
-  }, [project, currentBlock, enabled]);
+  }, [project?.canvasData, enabled]);
 
   // Trigger suggestion when block changes (after a delay)
   useEffect(() => {
     if (!currentBlock || !project || !enabled) return;
+
+    // Check if the current block has content
+    const blockContent = project.canvasData[currentBlock];
+    if (!blockContent || blockContent.trim().length === 0) {
+      return; // Block is empty, don't trigger suggestion
+    }
 
     const blockChangeTimer = setTimeout(() => {
       fetchSuggestion();
