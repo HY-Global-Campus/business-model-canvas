@@ -6,7 +6,7 @@ import { BMCBlockId } from '../../../types/bmc';
 import './canvas.css';
 
 const BMCCanvasOverview: React.FC = () => {
-  const { project, loading } = useBMCContext();
+  const { project, loading, isFullscreen, toggleFullscreen } = useBMCContext();
   const navigate = useNavigate();
 
   if (loading || !project) {
@@ -35,13 +35,34 @@ const BMCCanvasOverview: React.FC = () => {
   return (
     <div className="bmc-canvas-overview">
       <div className="canvas-header">
-        <h2>{project.displayName || 'Business Model Canvas'}</h2>
-        {project.businessContext.industry && (
-          <p className="business-context">
-            {project.businessContext.industry} 
-            {project.businessContext.stage && ` • ${project.businessContext.stage}`}
-          </p>
-        )}
+        <div className="canvas-header-content">
+          <div>
+            <h2>{project.displayName || 'Business Model Canvas'}</h2>
+            {project.businessContext.industry && (
+              <p className="business-context">
+                {project.businessContext.industry} 
+                {project.businessContext.stage && ` • ${project.businessContext.stage}`}
+              </p>
+            )}
+          </div>
+          <button 
+            className="fullscreen-toggle-btn"
+            onClick={toggleFullscreen}
+            title={isFullscreen ? 'Exit fullscreen (ESC)' : 'View fullscreen'}
+          >
+            {isFullscreen ? (
+              // Exit fullscreen icon
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+              </svg>
+            ) : (
+              // Enter fullscreen icon
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
       
       <div className="canvas-grid">

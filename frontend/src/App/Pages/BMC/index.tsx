@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
@@ -28,6 +28,7 @@ const BMCPage: React.FC = () => {
   const [currentBlock, setCurrentBlock] = useState<BMCBlockId | null>(
     blockId as BMCBlockId || null
   );
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Fetch BMC project data
   const { data: project, isLoading: loading, error } = useQuery<BMCProject, Error>({
@@ -121,6 +122,22 @@ const BMCPage: React.FC = () => {
     debouncedSaveToServer();
   }, [updateProjectImmediate, debouncedSaveToServer]);
 
+  // Toggle fullscreen
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => !prev);
+  }, []);
+
+  // Handle ESC key to exit fullscreen
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
+
   if (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       sessionStorage.clear();
@@ -132,7 +149,7 @@ const BMCPage: React.FC = () => {
 
   return (
     <>
-      <div className="bmc-page">
+      <div className={`bmc-page ${isFullscreen ? 'fullscreen' : ''}`}>
         <BMCContext.Provider value={{
           project: project || null,
           loading,
@@ -141,7 +158,9 @@ const BMCPage: React.FC = () => {
           readonly: false,
           onUpdateBlock,
           onUpdateBusinessContext,
-          setCurrentBlock
+          setCurrentBlock,
+          isFullscreen,
+          toggleFullscreen
         }}>
           <div className="bmc-layout">
             {/* Left panel: Canvas Overview + Chatbot */}
@@ -149,24 +168,28 @@ const BMCPage: React.FC = () => {
               <div className="bmc-canvas-section">
                 <BMCCanvasOverview />
               </div>
-              <div className="bmc-chatbot-section">
-                <div className="chatbot-header-fixed">
-                  <h3>AI Advisor</h3>
+              {!isFullscreen && (
+                <div className="bmc-chatbot-section">
+                  <div className="chatbot-header-fixed">
+                    <h3>AI Advisor</h3>
+                  </div>
+                  <div className="chatbot-body-fixed">
+                    <ChatBot />
+                  </div>
                 </div>
-                <div className="chatbot-body-fixed">
-                  <ChatBot />
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Right panel: Editor only */}
-            <div className="bmc-editor-panel">
-              {isEditingBlock ? (
-                <Outlet />
-              ) : (
-                <BMCWelcome />
-              )}
-            </div>
+            {!isFullscreen && (
+              <div className="bmc-editor-panel">
+                {isEditingBlock ? (
+                  <Outlet />
+                ) : (
+                  <BMCWelcome />
+                )}
+              </div>
+            )}
           </div>
         </BMCContext.Provider>
       </div>
