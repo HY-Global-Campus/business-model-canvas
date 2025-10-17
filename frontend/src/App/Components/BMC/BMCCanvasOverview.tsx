@@ -32,12 +32,6 @@ const BMCCanvasOverview: React.FC = () => {
     return 'complete';
   };
 
-  const truncateText = (text: string, maxLength: number = 60): string => {
-    if (!text) return 'Click to start...';
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
-  };
-
   return (
     <div className="bmc-canvas-overview">
       <div className="canvas-header">
@@ -79,7 +73,7 @@ const BMCCanvasOverview: React.FC = () => {
                 </div>
               </div>
               <div className="block-preview">
-                {truncateText(content)}
+                {content || 'Click to start...'}
               </div>
               <div className="block-footer">
                 <span className="click-hint">Click to edit →</span>
