@@ -1,0 +1,250 @@
+.feedback-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 2px solid #e0e0e0;
+  background: #f8f9fa;
+  flex-shrink: 0;
+}
+
+.feedback-title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.feedback-header h2 {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: #000;
+}
+
+.feedback-grade-badge {
+  background: #4A90E2;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.feedback-grade-badge .grade-value {
+  font-size: 18px;
+  margin-left: 4px;
+}
+
+.feedback-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  color: #666;
+}
+
+.feedback-close-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #000;
+}
+
+.feedback-loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4A90E2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.feedback-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* Markdown content styling */
+.feedback-content h1,
+.feedback-content h2,
+.feedback-content h3 {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-weight: bold;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.feedback-content h1 {
+  font-size: 28px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+.feedback-content h2 {
+  font-size: 22px;
+  color: #2c2c2c;
+}
+
+.feedback-content h3 {
+  font-size: 18px;
+  color: #444;
+}
+
+.feedback-content p {
+  margin: 12px 0;
+  font-size: 15px;
+}
+
+.feedback-content strong {
+  font-weight: bold;
+  color: #000;
+}
+
+.feedback-content em {
+  font-style: italic;
+  color: #555;
+}
+
+.feedback-content ul,
+.feedback-content ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.feedback-content li {
+  margin: 8px 0;
+}
+
+.feedback-content blockquote {
+  border-left: 4px solid #4A90E2;
+  background: #f5f8fc;
+  padding: 12px 16px;
+  margin: 16px 0;
+  color: #333;
+}
+
+.feedback-content code {
+  background: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 14px;
+}
+
+.feedback-content pre {
+  background: #f5f5f5;
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.feedback-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Highlight sections that look like grades */
+.feedback-content p:has(strong:contains("Grade")),
+.feedback-content p:has(strong:contains("grade")) {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 12px 16px;
+  margin: 20px 0;
+  font-weight: 500;
+}
+
+/* Custom scrollbar */
+.feedback-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.feedback-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.feedback-content::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 4px;
+}
+
+.feedback-content::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* Firefox scrollbar */
+.feedback-content {
+  scrollbar-width: thin;
+  scrollbar-color: #bbb #f1f1f1;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .feedback-header {
+    padding: 16px;
+  }
+
+  .feedback-header h2 {
+    font-size: 20px;
+  }
+
+  .feedback-grade-badge {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  .feedback-grade-badge .grade-value {
+    font-size: 16px;
+  }
+
+  .feedback-content {
+    padding: 16px 20px;
+    font-size: 14px;
+  }
+
+  .feedback-content h1 {
+    font-size: 24px;
+  }
+
+  .feedback-content h2 {
+    font-size: 20px;
+  }
+
+  .feedback-content h3 {
+    font-size: 16px;
+  }
+}
+
