@@ -43,8 +43,9 @@ const BMCBlockEditor: React.FC = () => {
   const MIN_FETCH_INTERVAL = 60000; // 1 minute
 
   // Quick tips state
-  const [quickTips, setQuickTips] = useState<string[]>([]);
+  const [quickTips, setQuickTips] = useState<Array<{ tip: string; line: number }>>([]);
   const [quickTipsLoading, setQuickTipsLoading] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const meta = blockId ? getBlockMeta(blockId as BMCBlockId) : null;
 
@@ -314,8 +315,9 @@ const BMCBlockEditor: React.FC = () => {
       )}
 
       <div className="editor-content-with-gutter">
-        <QuickTipsGutter tips={quickTips} loading={quickTipsLoading} />
+        <QuickTipsGutter tips={quickTips} loading={quickTipsLoading} textareaRef={textareaRef} />
         <textarea
+          ref={textareaRef}
           className="block-textarea"
           value={localContent}
           onChange={(e) => handleContentChange(e.target.value)}

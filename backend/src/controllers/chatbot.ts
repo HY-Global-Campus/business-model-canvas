@@ -343,7 +343,8 @@ chatbotRouter.post('/quick-tips', async (req, res) => {
         const quickTipsPrompt = `You are an AI teaching assistant analyzing a Business Model Canvas block.
 
 Current Block: ${blockId}
-Student's Content: ${blockContent || '(empty)'}
+Student's Content (with line numbers):
+${blockContent.split('\n').map((line: string, i: number) => `${i + 1}: ${line}`).join('\n')}
 
 Provide 2-4 SHORT, ACTIONABLE quick tips (each max 8 words).
 
@@ -356,12 +357,14 @@ Rules:
    - "Consider [specific aspect]" (e.g., "Consider mobile vs desktop")
 3. NO generic praise or filler ("Good start", "Keep going", etc.)
 4. Focus on what's MISSING or needs MORE DETAIL
-5. Return ONLY if there are actual improvements needed
+5. Specify which LINE NUMBER each tip applies to (use line numbers shown above)
+6. Return ONLY if there are actual improvements needed
 
-IMPORTANT: Return ONLY a valid JSON array, with NO markdown formatting, NO code blocks, NO explanation.
-Just the raw JSON array: ["tip1", "tip2", "tip3"]
+IMPORTANT: Return ONLY a valid JSON array of objects, with NO markdown formatting, NO code blocks, NO explanation.
+Format: [{"tip": "Add pricing details", "line": 2}, {"tip": "Name competitors", "line": 5}]
 
-If content is already excellent with nothing to add, return: []`;
+- If a tip applies to the whole block (not a specific line), use "line": 0
+- If content is already excellent with nothing to add, return: []`;
         
         const request: CompletionRequest = {
             messages: [{ role: 'user', content: quickTipsPrompt }],
@@ -375,25 +378,42 @@ If content is already excellent with nothing to add, return: []`;
         content = content.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
         
         // Parse JSON response
-        let tips: string[] = [];
+        interface TipWithLine {
+            tip: string;
+            line: number;
+        }
+        let tips: TipWithLine[] = [];
         try {
-            tips = JSON.parse(content);
-            // Ensure it's an array of strings
-            if (!Array.isArray(tips)) {
+            const parsed = JSON.parse(content);
+            // Ensure it's an array
+            if (!Array.isArray(parsed)) {
                 tips = [];
+            } else {
+                // Handle both old format (strings) and new format (objects with line numbers)
+                tips = parsed.map((item: any) => {
+                    if (typeof item === 'string') {
+                        // Old format - convert to new format with line 0
+                        return { tip: item, line: 0 };
+                    } else if (item && typeof item.tip === 'string') {
+                        // New format
+                        return {
+                            tip: item.tip,
+                            line: typeof item.line === 'number' ? item.line : 0
+                        };
+                    }
+                    return null;
+                }).filter((item: any) => item && item.tip && item.tip.trim().length > 0).slice(0, 4);
             }
-            // Filter out empty strings and limit to 4 tips
-            tips = tips.filter(tip => tip && typeof tip === 'string' && tip.trim().length > 0).slice(0, 4);
         } catch (e) {
             // If AI didn't return valid JSON, try to extract tips from text
-            // Look for quoted strings or bullet points
             const lines = content.split('\n').filter(line => line.trim().length > 0);
             tips = lines
                 .map(line => {
                     // Remove bullets, dashes, numbers, quotes
-                    return line.replace(/^[\-\*\d\.\)\]]\s*/, '').replace(/^["']|["']$/g, '').trim();
+                    const cleanedTip = line.replace(/^[\-\*\d\.\)\]]\s*/, '').replace(/^["']|["']$/g, '').trim();
+                    return cleanedTip.length > 0 && cleanedTip.length < 100 ? { tip: cleanedTip, line: 0 } : null;
                 })
-                .filter(line => line.length > 0 && line.length < 100) // Reasonable length for a tip
+                .filter((item): item is TipWithLine => item !== null)
                 .slice(0, 4);
         }
         

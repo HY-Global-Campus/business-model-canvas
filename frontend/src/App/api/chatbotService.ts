@@ -117,8 +117,13 @@ export interface QuickTipsRequest {
     canvasContext: any;
 }
 
+export interface QuickTip {
+    tip: string;
+    line: number;
+}
+
 export interface QuickTipsResponse {
-    tips: string[];
+    tips: QuickTip[];
 }
 
 export const getQuickTips = async (request: QuickTipsRequest): Promise<QuickTipsResponse> => {
