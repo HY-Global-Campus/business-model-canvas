@@ -177,6 +177,22 @@
   overflow: hidden;
 }
 
+.editor-content-with-gutter {
+  flex: 1;
+  display: flex;
+  border: 2px solid #000;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  min-height: 0;
+}
+
+.editor-content-with-gutter .block-textarea {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+}
+
 .block-textarea {
   flex: 1;
   width: 100%;

@@ -205,4 +205,203 @@ Your response will thus consist of: a brief opening praise, a detailed but focus
     }
 });
 
+// Block-by-block AI guidance endpoint
+chatbotRouter.post('/guidance', async (req, res) => {
+    try {
+        const { blockId, blockContent, canvasContext } = req.body;
+        
+        const guidancePrompt = `You are an AI teaching assistant helping a student complete their Business Model Canvas.
+
+Current Block: ${blockId}
+Student's Content: ${blockContent || '(empty)'}
+
+Provide 2-3 specific, actionable tips to improve this block:
+- Ask probing questions to deepen thinking
+- Suggest specific elements they might be missing
+- Connect to other blocks if relevant
+- Keep it brief and encouraging (3-4 sentences max)
+
+Format as a short paragraph, not a list.`;
+        
+        const request: CompletionRequest = {
+            messages: [{ role: 'user', content: guidancePrompt }],
+            canvasContext: canvasContext
+        };
+
+        const response = await getCompletion(request);
+        const guidance = response.choices?.[0]?.messages?.[0]?.content || '';
+        
+        res.json({ guidance });
+    } catch (error) {
+        console.error('Error generating guidance:', error);
+        res.status(500).json({ error: 'Failed to generate guidance' });
+    }
+});
+
+// Consistency check endpoint
+chatbotRouter.post('/consistency', async (req, res) => {
+    try {
+        const { canvasData } = req.body;
+        
+        const consistencyPrompt = `Analyze this Business Model Canvas for logical consistency between blocks.
+
+Check for:
+- Value Proposition matches Customer Segments
+- Channels align with Customer Segments
+- Revenue Streams match Value Proposition and Customer Relationships
+- Key Activities/Resources support Value Proposition
+- Cost Structure aligns with Key Activities/Resources/Partners
+
+Identify 1-3 most important inconsistencies or gaps. For each:
+- State the issue clearly
+- Explain why it matters
+- Suggest a fix
+
+Be specific and constructive. If everything looks good, say so and offer one optimization tip.
+
+Keep response under 200 words total.`;
+        
+        const request: CompletionRequest = {
+            messages: [{ role: 'user', content: consistencyPrompt }],
+            canvasContext: canvasData
+        };
+
+        const response = await getCompletion(request);
+        const issues = response.choices?.[0]?.messages?.[0]?.content || '';
+        
+        res.json({ issues });
+    } catch (error) {
+        console.error('Error checking consistency:', error);
+        res.status(500).json({ error: 'Failed to check consistency' });
+    }
+});
+
+// Competitive analysis endpoint
+chatbotRouter.post('/competitive', async (req, res) => {
+    try {
+        const { canvasData } = req.body;
+        
+        const competitivePrompt = `Based on this Business Model Canvas, suggest 1-2 real-world companies or business models that are similar.
+
+For each example:
+- Name the company/model
+- Explain the similarity (1 sentence)
+- Highlight one key learning point or difference
+
+Be specific and relevant. Keep total response under 150 words.`;
+        
+        const request: CompletionRequest = {
+            messages: [{ role: 'user', content: competitivePrompt }],
+            canvasContext: canvasData
+        };
+
+        const response = await getCompletion(request);
+        const analysis = response.choices?.[0]?.messages?.[0]?.content || '';
+        
+        res.json({ analysis });
+    } catch (error) {
+        console.error('Error generating competitive analysis:', error);
+        res.status(500).json({ error: 'Failed to generate analysis' });
+    }
+});
+
+// Financial reality check endpoint
+chatbotRouter.post('/financial-check', async (req, res) => {
+    try {
+        const { canvasData } = req.body;
+        
+        const financialPrompt = `Review the Revenue Streams and Cost Structure in this Business Model Canvas.
+
+Provide a quick financial reality check:
+- Are the revenue streams realistic for this business type?
+- Are major cost categories missing?
+- Does the business model seem financially viable?
+- Any red flags or optimization opportunities?
+
+Give 2-3 specific, actionable observations. Keep under 150 words.`;
+        
+        const request: CompletionRequest = {
+            messages: [{ role: 'user', content: financialPrompt }],
+            canvasContext: canvasData
+        };
+
+        const response = await getCompletion(request);
+        const check = response.choices?.[0]?.messages?.[0]?.content || '';
+        
+        res.json({ check });
+    } catch (error) {
+        console.error('Error performing financial check:', error);
+        res.status(500).json({ error: 'Failed to perform financial check' });
+    }
+});
+
+// Quick tips endpoint for inline gutter suggestions
+chatbotRouter.post('/quick-tips', async (req, res) => {
+    try {
+        const { blockId, blockContent, canvasContext } = req.body;
+        
+        const quickTipsPrompt = `You are an AI teaching assistant analyzing a Business Model Canvas block.
+
+Current Block: ${blockId}
+Student's Content: ${blockContent || '(empty)'}
+
+Provide 2-4 SHORT, ACTIONABLE quick tips (each max 8 words).
+
+Rules:
+1. Each tip must be actionable or point out a specific gap
+2. Use these formats:
+   - "Add [specific thing]" (e.g., "Add specific pricing numbers")
+   - "Name [specific examples]" (e.g., "Name 2-3 target industries")
+   - "⚠️ Missing [important element]" (e.g., "⚠️ Missing customer pain points")
+   - "Consider [specific aspect]" (e.g., "Consider mobile vs desktop")
+3. NO generic praise or filler ("Good start", "Keep going", etc.)
+4. Focus on what's MISSING or needs MORE DETAIL
+5. Return ONLY if there are actual improvements needed
+
+IMPORTANT: Return ONLY a valid JSON array, with NO markdown formatting, NO code blocks, NO explanation.
+Just the raw JSON array: ["tip1", "tip2", "tip3"]
+
+If content is already excellent with nothing to add, return: []`;
+        
+        const request: CompletionRequest = {
+            messages: [{ role: 'user', content: quickTipsPrompt }],
+            canvasContext: canvasContext
+        };
+
+        const response = await getCompletion(request);
+        let content = response.choices?.[0]?.messages?.[0]?.content || '[]';
+        
+        // Clean up markdown code blocks if present
+        content = content.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+        
+        // Parse JSON response
+        let tips: string[] = [];
+        try {
+            tips = JSON.parse(content);
+            // Ensure it's an array of strings
+            if (!Array.isArray(tips)) {
+                tips = [];
+            }
+            // Filter out empty strings and limit to 4 tips
+            tips = tips.filter(tip => tip && typeof tip === 'string' && tip.trim().length > 0).slice(0, 4);
+        } catch (e) {
+            // If AI didn't return valid JSON, try to extract tips from text
+            // Look for quoted strings or bullet points
+            const lines = content.split('\n').filter(line => line.trim().length > 0);
+            tips = lines
+                .map(line => {
+                    // Remove bullets, dashes, numbers, quotes
+                    return line.replace(/^[\-\*\d\.\)\]]\s*/, '').replace(/^["']|["']$/g, '').trim();
+                })
+                .filter(line => line.length > 0 && line.length < 100) // Reasonable length for a tip
+                .slice(0, 4);
+        }
+        
+        res.json({ tips });
+    } catch (error) {
+        console.error('Error generating quick tips:', error);
+        res.status(500).json({ error: 'Failed to generate quick tips' });
+    }
+});
+
 export default chatbotRouter
