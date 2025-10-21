@@ -1,8 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 import { useBMCContext } from '../../contexts/BMCContext';
 import { getBlockMeta, getBlockOrder } from '../../../content/bmcBlocks';
 import { BMCBlockId } from '../../../types/bmc';
+import AIInsights from './AIInsights';
+import QuickTipsGutter from './QuickTipsGutter';
+import { 
+  getGuidance, 
+  getConsistencyCheck, 
+  getCompetitiveAnalysis, 
+  getFinancialCheck,
+  getQuickTips 
+} from '../../api/chatbotService';
 import './editor.css';
 
 const BMCBlockEditor: React.FC = () => {
@@ -13,6 +23,29 @@ const BMCBlockEditor: React.FC = () => {
   const [localContent, setLocalContent] = useState('');
   const [showGuidance, setShowGuidance] = useState(true);
   const [showExamples, setShowExamples] = useState(false);
+
+  // AI Insights state
+  const [aiInsights, setAiInsights] = useState({
+    guidance: '',
+    consistency: '',
+    competitive: '',
+    financial: ''
+  });
+
+  const [aiLoading, setAiLoading] = useState({
+    guidance: false,
+    consistency: false,
+    competitive: false,
+    financial: false
+  });
+
+  const lastFetchTime = useRef<number>(0);
+  const MIN_FETCH_INTERVAL = 60000; // 1 minute
+
+  // Quick tips state
+  const [quickTips, setQuickTips] = useState<Array<{ tip: string; line: number }>>([]);
+  const [quickTipsLoading, setQuickTipsLoading] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const meta = blockId ? getBlockMeta(blockId as BMCBlockId) : null;
 
@@ -31,6 +64,127 @@ const BMCBlockEditor: React.FC = () => {
       setLocalContent(content);
     }
   }, [project, blockId, meta]);
+
+  // Debounced fetch for block-specific guidance
+  const fetchGuidance = useCallback(
+    debounce(async (currentBlockId: string, content: string, canvasData: any) => {
+      const now = Date.now();
+      if (now - lastFetchTime.current < MIN_FETCH_INTERVAL) return;
+      
+      setAiLoading(prev => ({ ...prev, guidance: true }));
+      try {
+        const response = await getGuidance({
+          blockId: currentBlockId,
+          blockContent: content,
+          canvasContext: canvasData
+        });
+        setAiInsights(prev => ({ ...prev, guidance: response.guidance }));
+        lastFetchTime.current = now;
+      } catch (error) {
+        console.error('Error fetching guidance:', error);
+      } finally {
+        setAiLoading(prev => ({ ...prev, guidance: false }));
+      }
+    }, 3000), // 3 second debounce after typing stops
+    []
+  );
+
+  // Debounced fetch for canvas-wide checks
+  const fetchCanvasInsights = useCallback(
+    debounce(async (canvasData: any) => {
+      const now = Date.now();
+      if (now - lastFetchTime.current < MIN_FETCH_INTERVAL) return;
+      
+      // Fetch all three in parallel
+      setAiLoading(prev => ({ 
+        ...prev, 
+        consistency: true, 
+        competitive: true, 
+        financial: true 
+      }));
+      
+      try {
+        const [consistency, competitive, financial] = await Promise.all([
+          getConsistencyCheck({ canvasData }),
+          getCompetitiveAnalysis({ canvasData }),
+          getFinancialCheck({ canvasData })
+        ]);
+        
+        setAiInsights(prev => ({
+          ...prev,
+          consistency: consistency.issues,
+          competitive: competitive.analysis,
+          financial: financial.check
+        }));
+        lastFetchTime.current = now;
+      } catch (error) {
+        console.error('Error fetching canvas insights:', error);
+      } finally {
+        setAiLoading(prev => ({ 
+          ...prev, 
+          consistency: false, 
+          competitive: false, 
+          financial: false 
+        }));
+      }
+    }, 3000),
+    []
+  );
+
+  // Debounced fetch for quick tips (2.5 seconds)
+  const fetchQuickTips = useCallback(
+    debounce(async (currentBlockId: string, content: string, canvasData: any) => {
+      if (!content || content.trim().length < 10) {
+        setQuickTips([]);
+        return;
+      }
+      
+      setQuickTipsLoading(true);
+      try {
+        const response = await getQuickTips({
+          blockId: currentBlockId,
+          blockContent: content,
+          canvasContext: canvasData
+        });
+        setQuickTips(response.tips || []);
+      } catch (error) {
+        console.error('Error fetching quick tips:', error);
+        setQuickTips([]);
+      } finally {
+        setQuickTipsLoading(false);
+      }
+    }, 2500), // 2.5 second debounce
+    []
+  );
+
+  // Trigger fetches when content changes
+  useEffect(() => {
+    if (!project || !localContent || !blockId) return;
+    
+    // Fetch guidance for current block
+    fetchGuidance(blockId, localContent, project);
+    
+    // Check if enough content exists for canvas-wide checks
+    const totalBlocks = Object.keys(project.canvasData).length;
+    const filledBlocks = Object.values(project.canvasData).filter(
+      v => v && typeof v === 'string' && v.trim().length > 20
+    ).length;
+    
+    // Only run canvas-wide checks if at least 50% of blocks have content
+    if (filledBlocks >= totalBlocks * 0.5) {
+      fetchCanvasInsights(project);
+    }
+  }, [localContent, project, blockId, fetchGuidance, fetchCanvasInsights]);
+
+  // Trigger quick tips fetch separately
+  useEffect(() => {
+    if (!project || !blockId) {
+      setQuickTips([]);
+      return;
+    }
+    
+    fetchQuickTips(blockId, localContent, project);
+  }, [localContent, project, blockId, fetchQuickTips]);
 
   const handleContentChange = useCallback((newContent: string) => {
     setLocalContent(newContent);
@@ -160,8 +314,10 @@ const BMCBlockEditor: React.FC = () => {
         </div>
       )}
 
-      <div className="editor-content">
+      <div className="editor-content-with-gutter">
+        <QuickTipsGutter tips={quickTips} loading={quickTipsLoading} textareaRef={textareaRef} />
         <textarea
+          ref={textareaRef}
           className="block-textarea"
           value={localContent}
           onChange={(e) => handleContentChange(e.target.value)}
@@ -169,6 +325,15 @@ const BMCBlockEditor: React.FC = () => {
           disabled={readonly}
         />
       </div>
+
+      {/* AI Insights */}
+      <AIInsights
+        guidance={aiInsights.guidance}
+        consistency={aiInsights.consistency}
+        competitive={aiInsights.competitive}
+        financial={aiInsights.financial}
+        loading={aiLoading}
+      />
 
       <div className="editor-navigation">
         <button 
