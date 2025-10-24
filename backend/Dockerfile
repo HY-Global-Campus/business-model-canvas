@@ -1,6 +1,12 @@
 # backend/Dockerfile
 FROM node:20
 
+# Install LibreOffice for document conversion
+RUN apt-get update && \
+    apt-get install -y libreoffice && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 ARG NODE_ENV
 
 WORKDIR /usr/src/app
