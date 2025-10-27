@@ -16,7 +16,7 @@ interface Message {
 interface CompletionReponse {
     id: string;
     created: number;
-    choised: Choice[];
+    choices: Choice[];
 }
 
 interface Choice {
@@ -402,7 +402,7 @@ Format: [{"tip": "Add pricing details", "line": 2}, {"tip": "Name competitors", 
                         };
                     }
                     return null;
-                }).filter((item: any) => item && item.tip && item.tip.trim().length > 0).slice(0, 4);
+                }).filter((item): item is TipWithLine => item !== null && item.tip && item.tip.trim().length > 0).slice(0, 4);
             }
         } catch (e) {
             // If AI didn't return valid JSON, try to extract tips from text
