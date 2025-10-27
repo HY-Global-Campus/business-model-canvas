@@ -14,33 +14,18 @@ COPY . .
 # Build the Vite app (outputs to dist/)
 RUN npm run build
 
-# --- runtime: serve static files with nginx ---
-FROM nginx:alpine AS runner
+# --- runtime: serve static files with a simple server ---
+FROM node:20-alpine AS runner
+WORKDIR /app
 
-# Remove default nginx static assets
-RUN rm -rf /usr/share/nginx/html/*
+# Install serve package globally for serving static files
+RUN npm install -g serve
 
 # Copy built static files from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist ./dist
 
-# Copy custom nginx configuration for SPA routing
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Make nginx work with non-root user (for OpenShift)
-# nginx needs write access to /var/cache/nginx, /var/run, and /var/log/nginx
-RUN touch /var/run/nginx.pid && \
-    chown -R nginx:nginx /var/run/nginx.pid && \
-    chown -R nginx:nginx /var/cache/nginx && \
-    chown -R nginx:nginx /var/log/nginx && \
-    chown -R nginx:nginx /etc/nginx/conf.d && \
-    chown -R nginx:nginx /usr/share/nginx/html && \
-    chmod -R g+rwx /var/cache/nginx /var/run /var/log/nginx /usr/share/nginx/html
-
-# Run as non-root user
-USER nginx
-
-# Expose port 8080 for OpenShift compatibility
+# Expose port 8080
 EXPOSE 8080
 
-# nginx runs in foreground by default
-CMD ["nginx", "-g", "daemon off;"]
+# Serve the static files on port 8080, with SPA fallback
+CMD ["serve", "-s", "dist", "-l", "8080"]
