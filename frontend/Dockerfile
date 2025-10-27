@@ -14,18 +14,22 @@ COPY . .
 # Build the Vite app (outputs to dist/)
 RUN npm run build
 
-# --- runtime: serve static files with a simple server ---
+# --- runtime: serve static files with express ---
 FROM node:20-alpine AS runner
+ENV NODE_ENV=production
 WORKDIR /app
 
-# Install serve package globally for serving static files
-RUN npm install -g serve
+# Install only express for serving
+RUN npm install express
 
 # Copy built static files from build stage
 COPY --from=build /app/dist ./dist
 
+# Copy server script
+COPY server.js ./
+
 # Expose port 8080
 EXPOSE 8080
 
-# Serve the static files on port 8080, with SPA fallback
-CMD ["serve", "-s", "dist", "-l", "8080"]
+# Run the server
+CMD ["node", "server.js"]
