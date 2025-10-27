@@ -8,11 +8,11 @@ const PORT = process.env.PORT || 8080;
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Handle SPA routing - return index.html for all other routes
-app.get('/*', (req, res) => {
+// Use a simple middleware instead of route pattern
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Frontend server listening on port ${PORT}`);
 });
-
