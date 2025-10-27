@@ -1,23 +1,31 @@
-# frontend/Dockerfile (dev)
-FROM node:20-alpine
-
-# Ensure writable, random UID friendly locations
-ENV HOME=/tmp \
-	npm_config_cache=/tmp/.npm
-
-WORKDIR /usr/src/app
-
-# Install deps first (leverages layer cache)
+# backend/Dockerfile
+# --- deps stage: install ALL deps incl. dev ---
+FROM node:20-alpine AS deps
+WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-# Copy source
+# --- build stage: compile TS -> JS ---
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# if your build script is "tsc", this will work now
+RUN npm run build
 
-RUN chgrp -R 0 /usr/src/app && \
-	chmod -R g=u /usr/src/app
+# --- runtime stage: only prod deps + compiled code ---
+FROM node:20-alpine AS runner
+ENV NODE_ENV=production
+WORKDIR /app
 
-EXPOSE 5173
+# install only prod deps for a slimmer image
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Run dev server on all interfaces with fixed port
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173", "--strictPort"]
+# copy compiled output
+COPY --from=build /app/dist ./dist
+# copy anything needed at runtime (e.g., prisma schema, migrations, assets)
+# COPY --from=build /app/prisma ./prisma
+
+EXPOSE 8080
+CMD ["node", "dist/index.js"]
