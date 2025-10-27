@@ -6,7 +6,7 @@ interface ExerciseContextProps {
   loading: boolean;
   error: string | null;
   readonly: boolean;
-  onUpdateBookOne: (updatedBook: Partial<Course>) => void;
+  onUpdateBookOne: (updater: Partial<Course> | ((current: Course | null) => Course | null)) => void;
 }
 
 export const ExerciseContext = createContext<ExerciseContextProps | undefined>(undefined);
