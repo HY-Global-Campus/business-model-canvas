@@ -241,3 +241,22 @@ export interface CourseExercises {
   // (These were in exercisesMeta but removed from navigation in earlier changes)
 }
 
+// BMC-related types
+export interface BusinessContext {
+  industry: string;
+  stage: string;
+  description: string;
+}
+
+export interface BMCExercises {
+  customerSegments?: string;
+  valuePropositions?: string;
+  channels?: string;
+  customerRelationships?: string;
+  revenueStreams?: string;
+  keyResources?: string;
+  keyActivities?: string;
+  keyPartnerships?: string;
+  costStructure?: string;
+}
+

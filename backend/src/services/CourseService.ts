@@ -58,7 +58,17 @@ export const findCourseByUserId = async (userId: string) => {
       edges: [],
     };
 
-    course = await Course.create({ userId, exercises, mindmap, displayName: '', reflection: '' });
+    course = await Course.create({ 
+      userId, 
+      exercises, 
+      mindmap, 
+      displayName: '', 
+      reflection: '',
+      canvasData: {},
+      businessContext: { industry: '', stage: '', description: '' },
+      lastModified: {},
+      completionStatus: {}
+    });
   }
 
   return course;

@@ -1,9 +1,9 @@
 //import { CSSProperties } from "react";
 import '../pages.css'
-import placeholderImage from '../../../assets/endpage-placeholder.jpg';
+// import placeholderImage from '../../../assets/endpage-placeholder.jpg';
 import Header from '../../Components/Header'
-import { courseCopy } from '../../../content/copy';
-import { useNavigate } from "react-router";
+// import { courseCopy } from '../../../content/copy';
+// import { useNavigate } from "react-router";
 
 //   const navigationButtonStyle: CSSProperties = {
 //    cursor: 'pointer',
@@ -42,7 +42,7 @@ import { useNavigate } from "react-router";
 //};
 
 const EndPage = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <>
       <Header />
