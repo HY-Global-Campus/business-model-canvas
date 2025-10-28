@@ -61,7 +61,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            VITE_API_URL=${{ vars.VITE_API_URL || 'http://business-model-canvas-backend:8080' }}
+            VITE_API_URL=${{ vars.VITE_API_URL || 'https://business-model-canvas-backend:8080' }}
 
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
