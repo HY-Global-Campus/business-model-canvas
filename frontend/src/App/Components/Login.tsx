@@ -105,15 +105,21 @@ const Login: React.FC = () => {
   const loginMutation: UseMutationResult<LoginResponse, Error, LoginVariables> = useMutation({
     mutationFn: ({ email, password }: LoginVariables) => login(email, password),
     onSuccess: (data: LoginResponse) => {
+      console.log('Login response:', data);
+      if (!data || typeof data !== 'object') {
+        alert('Login failed: Invalid response from server');
+        return;
+      }
       const success = setAuthToken(data.token, data.displayName, data.id, data.email);
       if (success) {
         navigate(from);
       } else {
-        alert('Login failed: Invalid token received from server');
+        alert('Login failed: Invalid or missing authentication data. Please check console for details.');
       }
     },
     onError: (error: Error) => {
       console.error('Login failed:', error);
+      alert(`Login failed: ${error.message || 'Unknown error'}`);
     },
   });
 
@@ -121,15 +127,21 @@ const Login: React.FC = () => {
     mutationFn: ({ email, password, displayName }: RegisterVariables) => 
       register(email, password, displayName),
     onSuccess: (data: LoginResponse) => {
+      console.log('Registration response:', data);
+      if (!data || typeof data !== 'object') {
+        alert('Registration failed: Invalid response from server');
+        return;
+      }
       const success = setAuthToken(data.token, data.displayName, data.id, data.email);
       if (success) {
         navigate(from);
       } else {
-        alert('Registration failed: Invalid token received from server');
+        alert('Registration failed: Invalid or missing authentication data. Please check console for details.');
       }
     },
     onError: (error: Error) => {
       console.error('Registration failed:', error);
+      alert(`Registration failed: ${error.message || 'Unknown error'}`);
     },
   });
 

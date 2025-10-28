@@ -6,15 +6,28 @@ export const logout = () => {
   sessionStorage.removeItem('email');
 };
 
-export const isValidJWT = (token: string): boolean => {
+export const isValidJWT = (token: string | undefined | null): boolean => {
+  if (!token || typeof token !== 'string') {
+    return false;
+  }
   // JWT has 3 parts separated by dots: header.payload.signature
   const parts = token.split('.');
   return parts.length === 3 && parts.every(part => part.length > 0);
 };
 
-export const setAuthToken = (token: string, displayName: string, id: string, email: string): boolean => {
+export const setAuthToken = (token: string | undefined, displayName: string | undefined, id: string | undefined, email: string | undefined): boolean => {
+  if (!token || !displayName || !id || !email) {
+    console.error('Missing required authentication data:', { 
+      hasToken: !!token, 
+      hasDisplayName: !!displayName, 
+      hasId: !!id, 
+      hasEmail: !!email 
+    });
+    return false;
+  }
+  
   if (!isValidJWT(token)) {
-    console.error('Invalid JWT token format');
+    console.error('Invalid JWT token format:', token);
     return false;
   }
   
