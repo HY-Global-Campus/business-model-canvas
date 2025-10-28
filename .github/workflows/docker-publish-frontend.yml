@@ -61,7 +61,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            VITE_API_URL=${{ vars.VITE_API_URL || "https://bos-backend.ext.ocp-prod-0.k8s.it.helsinki.fi"}}
+            VITE_API_URL=${{ "https://bmc-backend.ext.ocp-prod-0.k8s.it.helsinki.fi"}}
 
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
