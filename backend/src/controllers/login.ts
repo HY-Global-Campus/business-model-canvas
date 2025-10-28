@@ -44,7 +44,7 @@ loginRouter.post('/', async (req, res) => {
       return;
     }
     
-    // Generate JWT
+    // Generate JWT with 7 day expiration
     const userForToken: UserTokenForm = {
       displayName: user.displayName,
       id: user.id.toString(),
@@ -52,7 +52,7 @@ loginRouter.post('/', async (req, res) => {
       isAdmin: user.isAdmin || false,
     };
     
-    const token = jsonwebtoken.sign(userForToken, config.JWT_SECRET);
+    const token = jsonwebtoken.sign(userForToken, config.JWT_SECRET, { expiresIn: '7d' });
     
     res.status(200).json({
       token,
@@ -120,7 +120,7 @@ loginRouter.post('/register', async (req, res) => {
       oauthId: null,
     });
     
-    // Auto-login: Generate JWT
+    // Auto-login: Generate JWT with 7 day expiration
     const userForToken: UserTokenForm = {
       displayName: user.displayName,
       id: user.id.toString(),
@@ -128,7 +128,7 @@ loginRouter.post('/register', async (req, res) => {
       isAdmin: user.isAdmin,
     };
     
-    const token = jsonwebtoken.sign(userForToken, config.JWT_SECRET);
+    const token = jsonwebtoken.sign(userForToken, config.JWT_SECRET, { expiresIn: '7d' });
     
     res.status(201).json({
       token,

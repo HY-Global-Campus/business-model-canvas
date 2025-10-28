@@ -2,6 +2,7 @@ import React, { CSSProperties, useState } from 'react';
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { login, register } from '../api/auth';
+import { setAuthToken } from '../utils/auth';
 import borealforest from '../../assets/HY_Serendip-BOREALFOREST.jpg';
 
 interface LoginResponse {
@@ -104,11 +105,12 @@ const Login: React.FC = () => {
   const loginMutation: UseMutationResult<LoginResponse, Error, LoginVariables> = useMutation({
     mutationFn: ({ email, password }: LoginVariables) => login(email, password),
     onSuccess: (data: LoginResponse) => {
-      sessionStorage.setItem('token', data.token);
-      sessionStorage.setItem('displayName', data.displayName);
-      sessionStorage.setItem('id', data.id);
-      sessionStorage.setItem('email', data.email);
-      navigate(from);
+      const success = setAuthToken(data.token, data.displayName, data.id, data.email);
+      if (success) {
+        navigate(from);
+      } else {
+        alert('Login failed: Invalid token received from server');
+      }
     },
     onError: (error: Error) => {
       console.error('Login failed:', error);
@@ -119,11 +121,12 @@ const Login: React.FC = () => {
     mutationFn: ({ email, password, displayName }: RegisterVariables) => 
       register(email, password, displayName),
     onSuccess: (data: LoginResponse) => {
-      sessionStorage.setItem('token', data.token);
-      sessionStorage.setItem('displayName', data.displayName);
-      sessionStorage.setItem('id', data.id);
-      sessionStorage.setItem('email', data.email);
-      navigate(from);
+      const success = setAuthToken(data.token, data.displayName, data.id, data.email);
+      if (success) {
+        navigate(from);
+      } else {
+        alert('Registration failed: Invalid token received from server');
+      }
     },
     onError: (error: Error) => {
       console.error('Registration failed:', error);
