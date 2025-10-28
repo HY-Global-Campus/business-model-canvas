@@ -14,10 +14,16 @@ WORKDIR /app
 ARG VITE_API_URL
 ENV VITE_API_URL=${VITE_API_URL}
 
+# Debug: Print the env var to verify it's set
+RUN echo "Building with VITE_API_URL=${VITE_API_URL}"
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # Build the Vite app (outputs to dist/)
 RUN npm run build
+
+# Debug: Verify the build output contains the env var
+RUN grep -r "VITE_API_URL" dist/ || echo "VITE_API_URL not found in build output" || true
 
 # --- runtime: serve static files with express ---
 FROM node:20-alpine AS runner
