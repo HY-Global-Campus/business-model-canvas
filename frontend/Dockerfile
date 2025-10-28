@@ -28,8 +28,7 @@ COPY --from=build /app/dist ./dist
 # Copy server script
 COPY server.js ./
 
-# Expose port 8080
-EXPOSE 8080
+EXPOSE 3000
 
 # Run the server
 CMD ["node", "server.js"]
