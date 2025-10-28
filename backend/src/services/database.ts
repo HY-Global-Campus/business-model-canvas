@@ -20,8 +20,11 @@ Course.belongsTo(User, { foreignKey: 'userId' });
 
 export const dbSync = async () => {
   try {
-    await sequelize.sync({ force: false }); // Use force: false to avoid dropping tables
-    console.log("All models were synchronized successfully.");
+    // TEMPORARY: force: true to drop and recreate tables with new schema
+    // TODO: Change back to force: false after first deployment, or use migrations
+    const shouldForceSync = process.env.FORCE_DB_SYNC === 'true';
+    await sequelize.sync({ force: shouldForceSync });
+    console.log(`Database synchronized successfully (force: ${shouldForceSync})`);
   } catch (error) {
     console.error("Failed to synchronize database:", error);
   }
