@@ -4,6 +4,7 @@ import html2canvas from 'html2canvas';
 import { useBMCContext } from '../../contexts/BMCContext';
 import { bmcBlocksMeta, getBlockOrder } from '../../../content/bmcBlocks';
 import { BMCBlockId } from '../../../types/bmc';
+import { exportToPowerPoint, exportToPDF, exportToODP } from '../../utils/exportUtils';
 import './canvas.css';
 
 const BMCCanvasOverview: React.FC = () => {
@@ -11,6 +12,9 @@ const BMCCanvasOverview: React.FC = () => {
   const navigate = useNavigate();
   const canvasRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [isExportingPowerPoint, setIsExportingPowerPoint] = useState(false);
+  const [isExportingPDF, setIsExportingPDF] = useState(false);
+  const [isExportingODP, setIsExportingODP] = useState(false);
   const [isRequestingFeedback, setIsRequestingFeedback] = useState(false);
 
   if (loading || !project) {
@@ -156,6 +160,48 @@ const BMCCanvasOverview: React.FC = () => {
     }
   };
 
+  const handleExportPowerPoint = async () => {
+    if (!canvasRef.current || !project) return;
+    
+    setIsExportingPowerPoint(true);
+    try {
+      await exportToPowerPoint(project, canvasRef.current, toggleFullscreen, isFullscreen);
+    } catch (error) {
+      console.error('Error exporting to PowerPoint:', error);
+      alert('Failed to export to PowerPoint. Please try again.');
+    } finally {
+      setIsExportingPowerPoint(false);
+    }
+  };
+
+  const handleExportPDF = async () => {
+    if (!canvasRef.current || !project) return;
+    
+    setIsExportingPDF(true);
+    try {
+      await exportToPDF(project, canvasRef.current, toggleFullscreen, isFullscreen);
+    } catch (error) {
+      console.error('Error exporting to PDF:', error);
+      alert('Failed to export to PDF. Please try again.');
+    } finally {
+      setIsExportingPDF(false);
+    }
+  };
+
+  const handleExportODP = async () => {
+    if (!canvasRef.current || !project) return;
+    
+    setIsExportingODP(true);
+    try {
+      await exportToODP(project, canvasRef.current, toggleFullscreen, isFullscreen);
+    } catch (error) {
+      console.error('Error exporting to ODP:', error);
+      alert('Failed to export to ODP. Please try again.');
+    } finally {
+      setIsExportingODP(false);
+    }
+  };
+
   const getBlockContent = (blockId: BMCBlockId): string => {
     return project.canvasData[blockId] || '';
   };
@@ -207,7 +253,7 @@ const BMCCanvasOverview: React.FC = () => {
               className="canvas-action-btn"
               onClick={handleExport}
               disabled={isExporting}
-              title="Export as image"
+              title="Export as image (PNG)"
             >
               {isExporting ? (
                 // Loading spinner
@@ -215,9 +261,63 @@ const BMCCanvasOverview: React.FC = () => {
                   <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
                 </svg>
               ) : (
-                // Download icon
+                // Image icon
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                  <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+                  <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                </svg>
+              )}
+            </button>
+            <button 
+              className="canvas-action-btn"
+              onClick={handleExportPowerPoint}
+              disabled={isExportingPowerPoint}
+              title="Export as PowerPoint (.pptx)"
+            >
+              {isExportingPowerPoint ? (
+                // Loading spinner
+                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
+                </svg>
+              ) : (
+                // Presentation icon
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM9 8h2v8H9zm4 0h2v8h-2z"/>
+                </svg>
+              )}
+            </button>
+            <button 
+              className="canvas-action-btn"
+              onClick={handleExportODP}
+              disabled={isExportingODP}
+              title="Export as ODF Presentation (.odp)"
+            >
+              {isExportingODP ? (
+                // Loading spinner
+                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
+                </svg>
+              ) : (
+                // Slides icon (similar to presentation but slightly different)
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <path d="M2 6h4v14H2V6zm6 0h4v14H8V6zm6 0h4v14h-4V6zm6-4v20h2V2h-2z"/>
+                </svg>
+              )}
+            </button>
+            <button 
+              className="canvas-action-btn"
+              onClick={handleExportPDF}
+              disabled={isExportingPDF}
+              title="Export as PDF"
+            >
+              {isExportingPDF ? (
+                // Loading spinner
+                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
+                </svg>
+              ) : (
+                // PDF/Document icon
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
                 </svg>
               )}
             </button>
