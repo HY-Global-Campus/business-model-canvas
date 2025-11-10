@@ -1,6 +1,22 @@
 version: "3.9"
 
 services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    healthcheck:
+      # Wait until PG is actually accepting connections on the DB you configured
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h 127.0.0.1"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
   app:
     build:
       context: ./backend
@@ -12,14 +28,14 @@ services:
       JWT_SECRET: developmentsecret
       GCAI_URL: ${GCAI_URL}
       GCAI_TOKEN: ${GCAI_TOKEN}
-      # More reliable file watching inside containers (optional but helpful)
       CHOKIDAR_USEPOLLING: "true"
       CHOKIDAR_INTERVAL: "150"
     ports:
       - "8080:8080"
     depends_on:
-      - db
-    # Use compose watch for live sync + auto rebuild when deps change
+      db:
+        condition: service_healthy
+    restart: unless-stopped
     develop:
       watch:
         - action: sync
@@ -34,25 +50,18 @@ services:
         - action: rebuild
           path: ./backend/package-lock.json
 
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
-    ports:
-      - "5432:5432"
-
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8080
     environment:
       NODE_ENV: development
-      VITE_API_URL: http://localhost:8080
-      # Optional: improves HMR file detection in Docker
+      # Browser calls your machine via published port, so localhost is correct here.
       CHOKIDAR_USEPOLLING: "true"
       CHOKIDAR_INTERVAL: "150"
     ports:
-      - "5173:5173"
+      - "3000:3000"
     depends_on:
       - app
     develop:
@@ -68,4 +77,3 @@ services:
           path: ./frontend/package.json
         - action: rebuild
           path: ./frontend/package-lock.json
-

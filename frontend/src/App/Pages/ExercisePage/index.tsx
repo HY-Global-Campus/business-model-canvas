@@ -62,12 +62,13 @@ const ExercisePage: React.FC = () => {
   });
 
   // Immediate UI update function (no debounce, no server calls)
-  const updateBookOneImmediate = useCallback((updateFn: Partial<Course> | ((current: Course) => Course)) => {
+  const updateBookOneImmediate = useCallback((updateFn: Partial<Course> | ((current: Course | null) => Course | null)) => {
     queryClient.setQueryData<Course>(['course', userId], (old) => {
       if (!old) return old;
       
       if (typeof updateFn === 'function') {
-        return updateFn(old);
+        const result = updateFn(old);
+        return result || old;
       } else {
         return { ...old, ...updateFn };
       }
@@ -85,7 +86,7 @@ const ExercisePage: React.FC = () => {
   ).current;
 
   // Combined function that updates UI immediately and saves to server later
-  const onUpdateBookOne = useCallback((updateFn: Partial<Course> | ((current: Course) => Course)) => {
+  const onUpdateBookOne = useCallback((updateFn: Partial<Course> | ((current: Course | null) => Course | null)) => {
     updateBookOneImmediate(updateFn);
     debouncedSaveToServer();
   }, [updateBookOneImmediate, debouncedSaveToServer]);
