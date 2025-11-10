@@ -1,7 +1,7 @@
 import html2canvas from 'html2canvas';
 import pptxgen from 'pptxgenjs';
 import jsPDF from 'jspdf';
-import { BMCProject, BMCBlockId } from '../../types/bmc';
+import { BMCProject } from '../../types/bmc';
 import { bmcBlocksMeta, getBlockOrder } from '../../content/bmcBlocks';
 import axiosInstance from '../api/axiosInstance';
 
@@ -110,7 +110,7 @@ export async function exportToPowerPoint(
   const contextParts: string[] = [];
   if (project.businessContext.industry) contextParts.push(project.businessContext.industry);
   if (project.businessContext.stage) contextParts.push(project.businessContext.stage);
-  if (project.businessContext.targetMarket) contextParts.push(project.businessContext.targetMarket);
+  if (project.businessContext.description) contextParts.push(project.businessContext.description);
   
   if (contextParts.length > 0) {
     titleSlide.addText(contextParts.join(' • '), {
@@ -256,7 +256,7 @@ export async function exportToPDF(
   const contextParts: string[] = [];
   if (project.businessContext.industry) contextParts.push(project.businessContext.industry);
   if (project.businessContext.stage) contextParts.push(project.businessContext.stage);
-  if (project.businessContext.targetMarket) contextParts.push(project.businessContext.targetMarket);
+  if (project.businessContext.description) contextParts.push(project.businessContext.description);
   
   if (contextParts.length > 0) {
     pdf.setFontSize(14);
@@ -375,7 +375,7 @@ export async function exportToODP(
   const contextParts: string[] = [];
   if (project.businessContext.industry) contextParts.push(project.businessContext.industry);
   if (project.businessContext.stage) contextParts.push(project.businessContext.stage);
-  if (project.businessContext.targetMarket) contextParts.push(project.businessContext.targetMarket);
+  if (project.businessContext.description) contextParts.push(project.businessContext.description);
   
   if (contextParts.length > 0) {
     titleSlide.addText(contextParts.join(' • '), {
