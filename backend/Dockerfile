@@ -14,18 +14,17 @@ WORKDIR /usr/src/app
 # Copy manifests first for caching
 COPY package*.json ./
 
-# Install deps (dev deps only in development)
-RUN if [ "$NODE_ENV" = "development" ]; then \
-	npm ci; \
-	else \
-	npm ci --omit=dev; \
-	fi
+# Install dependencies (including dev deps for build step)
+RUN npm ci
 
 # Copy source
 COPY . .
 
-# Build only for production
-RUN if [ "$NODE_ENV" != "development" ]; then npm run build; fi
+# Build only for production and prune dev dependencies afterwards
+RUN if [ "$NODE_ENV" != "development" ]; then \
+	npm run build && \
+	npm prune --omit=dev; \
+	fi
 
 EXPOSE 8080
 
