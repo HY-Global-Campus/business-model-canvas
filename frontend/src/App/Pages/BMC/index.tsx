@@ -7,13 +7,14 @@ import { Navigate } from 'react-router-dom';
 import ChatBot from '../../Components/ChatBot';
 import BMCCanvasOverview from '../../Components/BMC/BMCCanvasOverview';
 import BMCFeedbackView from '../../Components/BMC/BMCFeedbackView';
+import BMCBusinessPlanView from '../../Components/BMC/BMCBusinessPlanView';
 import { BMCContext } from '../../contexts/BMCContext';
 import { 
   getBMCProjectByUserId, 
   updateBMCProject, 
   calculateBlockCompletion 
 } from '../../api/bmcService';
-import { getFeedback } from '../../api/chatbotService';
+import { getFeedback, getBusinessPlan } from '../../api/chatbotService';
 import { BMCProject, BMCBlockId, BusinessContext } from '../../../types/bmc';
 import './bmc.css';
 
@@ -34,6 +35,8 @@ const BMCPage: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
+  const [businessPlan, setBusinessPlan] = useState<string | null>(null);
+  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
 
   // Fetch BMC project data
   const { data: project, isLoading: loading, error } = useQuery<BMCProject, Error>({
@@ -158,6 +161,7 @@ const BMCPage: React.FC = () => {
     
     setIsFetchingFeedback(true);
     setFeedback(''); // Set empty to trigger loading state
+    setBusinessPlan(null); // Clear business plan if showing
     
     try {
       console.log('Calling getFeedback API...');
@@ -169,6 +173,36 @@ const BMCPage: React.FC = () => {
       setFeedback('Failed to generate feedback. Please try again later.');
     } finally {
       setIsFetchingFeedback(false);
+    }
+  }, [project, location.pathname, navigate]);
+
+  // Handle business plan generation
+  const handleGenerateBusinessPlan = useCallback(async () => {
+    console.log('handleGenerateBusinessPlan called', { project: !!project });
+    if (!project) {
+      console.error('No project available');
+      return;
+    }
+    
+    // Navigate to main canvas view if currently editing a block
+    if (location.pathname !== '/bmc') {
+      navigate('/bmc');
+    }
+    
+    setIsGeneratingPlan(true);
+    setBusinessPlan(''); // Set empty to trigger loading state
+    setFeedback(null); // Clear feedback if showing
+    
+    try {
+      console.log('Calling getBusinessPlan API...');
+      const response = await getBusinessPlan({ canvasData: project });
+      console.log('Business plan response received:', response);
+      setBusinessPlan(response.businessPlan);
+    } catch (error) {
+      console.error('Error generating business plan:', error);
+      setBusinessPlan('Failed to generate business plan. Please try again later.');
+    } finally {
+      setIsGeneratingPlan(false);
     }
   }, [project, location.pathname, navigate]);
 
@@ -195,7 +229,8 @@ const BMCPage: React.FC = () => {
           setCurrentBlock,
           isFullscreen,
           toggleFullscreen,
-          onRequestFeedback: handleRequestFeedback
+          onRequestFeedback: handleRequestFeedback,
+          onGenerateBusinessPlan: handleGenerateBusinessPlan
         }}>
           <div className="bmc-layout">
             {/* Left panel: Canvas Overview + Chatbot */}
@@ -215,11 +250,18 @@ const BMCPage: React.FC = () => {
               )}
             </div>
 
-            {/* Right panel: Editor/Feedback/Welcome */}
+            {/* Right panel: Editor/Feedback/BusinessPlan/Welcome */}
             {!isFullscreen && (
               <div className="bmc-editor-panel">
                 {isEditingBlock ? (
                   <Outlet />
+                ) : businessPlan !== null ? (
+                  <BMCBusinessPlanView 
+                    businessPlan={businessPlan} 
+                    onClose={() => setBusinessPlan(null)} 
+                    isLoading={isGeneratingPlan}
+                    projectName={project?.displayName}
+                  />
                 ) : feedback !== null ? (
                   <BMCFeedbackView 
                     feedback={feedback} 
