@@ -335,6 +335,264 @@ Give 2-3 specific, actionable observations. Keep under 150 words.`;
     }
 });
 
+// Business plan generation endpoint
+chatbotRouter.post('/business-plan', async (req, res) => {
+    try {
+        const { canvasData } = req.body;
+        
+        // Format BMC data for the prompt
+        const formatBMCData = (data: any): string => {
+            const blocks = [
+                { id: 'customerSegments', title: 'Customer Segments' },
+                { id: 'valuePropositions', title: 'Value Propositions' },
+                { id: 'channels', title: 'Channels' },
+                { id: 'customerRelationships', title: 'Customer Relationships' },
+                { id: 'revenueStreams', title: 'Revenue Streams' },
+                { id: 'keyResources', title: 'Key Resources' },
+                { id: 'keyActivities', title: 'Key Activities' },
+                { id: 'keyPartnerships', title: 'Key Partnerships' },
+                { id: 'costStructure', title: 'Cost Structure' }
+            ];
+            
+            let formatted = '';
+            blocks.forEach(block => {
+                const content = data?.canvasData?.[block.id] || '(empty)';
+                formatted += `${block.title}: ${content}\n\n`;
+            });
+            
+            // Add business context
+            const context = data?.businessContext || {};
+            if (context.industry || context.stage || context.description) {
+                formatted += `Business Context:\n`;
+                if (context.industry) formatted += `Industry: ${context.industry}\n`;
+                if (context.stage) formatted += `Stage: ${context.stage}\n`;
+                if (context.description) formatted += `Description: ${context.description}\n`;
+            }
+            
+            return formatted.trim();
+        };
+        
+        const bmcFormatted = formatBMCData(canvasData);
+        
+        const businessPlanPrompt = `Prompt: Generate a Formal, In-Depth Business Plan From a Business Model Canvas
+
+You are a senior business analyst. Transform the user's Business Model Canvas (BMC) into a formal, in-depth Business Plan for internal planning (not for investors). Prioritize clarity, feasibility, and internal decision-making value. Use a professional tone. Make reasonable assumptions where data is missing and label them clearly.
+
+Input (BMC)
+
+Between the tags below is the complete BMC with nine sections.
+
+<BMC>
+
+${bmcFormatted}
+
+</BMC>
+
+Output Format (must include BOTH parts in this order)
+
+	1.	A Markdown business plan using the exact section structure below.
+
+	2.	A metadata JSON block (on a new line after the Markdown) matching the schema provided.
+
+⸻
+
+Required Section Structure (Markdown)
+
+Executive Summary
+
+	•	250–400 words: concept overview, core value proposition, target market, key success factors, brief financial outlook.
+
+Company Description
+
+	•	Mission, vision, goals
+
+	•	Problem & opportunity context
+
+	•	Offering overview (from Value Propositions)
+
+	•	Ownership & team (from Key Resources)
+
+	•	Strategic objectives & milestones
+
+Market Analysis
+
+	•	Target market (from Customer Segments; demographics/psychographics/use cases)
+
+	•	Market needs & trends
+
+	•	Competitor landscape & differentiation
+
+	•	Market size & growth (state assumptions if estimating)
+
+	•	SWOT summary
+
+Marketing & Sales Strategy
+
+	•	Positioning (from Value Propositions)
+
+	•	Channels (acquisition & communication)
+
+	•	Customer relationships (retention, loyalty, feedback)
+
+	•	Sales funnel / lifecycle
+
+Operations Plan
+
+	•	Key Activities (operational processes)
+
+	•	Resources (physical/human/tech)
+
+	•	Partnerships (critical suppliers/alliances)
+
+	•	Production/service delivery workflow & logistics
+
+	•	Legal/compliance notes and operational risks
+
+Management & Organization
+
+	•	Org structure (roles, reporting lines)
+
+	•	Leadership & responsibilities
+
+	•	Hiring plan & capability development
+
+	•	Governance & decision-making
+
+Financial Plan
+
+	•	Revenue model (from Revenue Streams)
+
+	•	Cost structure (fixed/variable, from Cost Structure)
+
+	•	Unit economics & contribution margin (state assumptions)
+
+	•	Breakeven and profitability outlook (state assumptions)
+
+	•	Cash flow overview (high-level)
+
+	•	Risk & sensitivity analysis (key drivers & scenarios)
+
+Implementation Timeline
+
+	•	Milestones (near/mid/long term)
+
+	•	Action plan (who/what/when)
+
+	•	KPIs & monitoring cadence
+
+Appendices (Optional)
+
+	•	Supporting market data, bios, additional charts, risk mitigations
+
+⸻
+
+Transformation Rules
+
+	•	Coherence: Ensure all sections align with the BMC. If BMC pieces conflict, call it out and suggest a reconciliation.
+
+	•	Gaps: If any BMC section is missing/weak, fill with clearly labeled assumptions (e.g., "Assumption: …").
+
+	•	Rigor over hype: Formal, neutral tone. Prefer realistic ranges and drivers over sales language.
+
+	•	Traceability: When you make assumptions or infer data, tie them back to the most relevant BMC block(s).
+
+	•	Tables/Lists: Use when helpful (e.g., SWOT, milestones, cost breakdowns).
+
+	•	Length Guidance: Aim for 1,500–3,500 words total. Keep Executive Summary within 250–400 words.
+
+	•	Units & Currency: Pick sensible defaults and state them once (e.g., "All figures are EUR; volumes are annual unless specified").
+
+	•	Internal use: Highlight operational constraints, dependencies, and decision points the team must resolve.
+
+⸻
+
+Metadata JSON Schema (append after the Markdown)
+
+After the plan, output a single JSON object on a new line, no code fences, exactly with these keys:
+
+{
+  "assumptions": ["string", "..."],
+  "key_risks": ["string", "..."],
+  "priority_kpis": ["string", "..."],
+  "section_word_counts": {
+    "Executive Summary": 0,
+    "Company Description": 0,
+    "Market Analysis": 0,
+    "Marketing & Sales Strategy": 0,
+    "Operations Plan": 0,
+    "Management & Organization": 0,
+    "Financial Plan": 0,
+    "Implementation Timeline": 0,
+    "Appendices": 0
+  }
+}
+
+Rules for the JSON:
+
+	•	Keep arrays to 3–7 concise items each.
+
+	•	Word counts must reflect the generated Markdown sections.
+
+	•	No extra keys, no trailing commas.
+
+⸻
+
+Mapping Hints (for the model)
+
+	•	Value Propositions → Positioning, offering description, pricing logic, unit economics drivers.
+
+	•	Customer Segments → Target market sizes, use cases, willingness to pay.
+
+	•	Channels → Acquisition & communication; CAC assumptions; funnel.
+
+	•	Customer Relationships → Retention mechanics, service levels, feedback loops.
+
+	•	Revenue Streams → Revenue model variants; ARPU; pricing tiers; upsell/cross-sell.
+
+	•	Key Resources → Team, tech stack, IP, facilities; capacity constraints.
+
+	•	Key Activities → Core ops processes; SLAs; throughput & bottlenecks.
+
+	•	Key Partnerships → Dependencies, SLAs, risks, exit options.
+
+	•	Cost Structure → Fixed vs variable; drivers; breakeven.
+
+⸻
+
+Quality Checklist (self-verify before finalizing)
+
+	•	Executive Summary within 250–400 words.
+
+	•	All nine sections are represented and consistent with BMC or labeled assumptions.
+
+	•	At least one table/list (e.g., SWOT, milestones, KPIs).
+
+	•	Financial Plan includes: revenue model, cost breakdown, unit economics, breakeven logic, sensitivity notes.
+
+	•	Metadata JSON outputs valid JSON and correct word counts.
+
+⸻
+
+Now generate the Business Plan (Markdown), followed by the metadata JSON on a new line.`;
+        
+        const businessPlanRequest: CompletionRequest = {
+            messages: [{
+                role: 'user',
+                content: businessPlanPrompt
+            }],
+            canvasContext: canvasData
+        };
+
+        const response = await getCompletion(businessPlanRequest);
+        const businessPlan = response.choices?.[0]?.messages?.[0]?.content || 'Unable to generate business plan at this time. Please try again later.';
+        
+        res.json({ businessPlan });
+    } catch (error) {
+        console.error('Error generating business plan:', error);
+        res.status(500).json({ error: 'Failed to generate business plan' });
+    }
+});
+
 // Quick tips endpoint for inline gutter suggestions
 chatbotRouter.post('/quick-tips', async (req, res) => {
     try {

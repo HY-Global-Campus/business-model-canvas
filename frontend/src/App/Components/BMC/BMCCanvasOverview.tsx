@@ -8,7 +8,7 @@ import { exportToPowerPoint, exportToPDF, exportToODP } from '../../utils/export
 import './canvas.css';
 
 const BMCCanvasOverview: React.FC = () => {
-  const { project, loading, isFullscreen, toggleFullscreen, onRequestFeedback } = useBMCContext();
+  const { project, loading, isFullscreen, toggleFullscreen, onRequestFeedback, onGenerateBusinessPlan } = useBMCContext();
   const navigate = useNavigate();
   const canvasRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -16,6 +16,7 @@ const BMCCanvasOverview: React.FC = () => {
   const [isExportingPDF, setIsExportingPDF] = useState(false);
   const [isExportingODP, setIsExportingODP] = useState(false);
   const [isRequestingFeedback, setIsRequestingFeedback] = useState(false);
+  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
 
   if (loading || !project) {
     return <div className="canvas-loading">Loading canvas...</div>;
@@ -51,6 +52,35 @@ const BMCCanvasOverview: React.FC = () => {
       alert('Failed to request feedback. Please try again.');
     } finally {
       setIsRequestingFeedback(false);
+    }
+  };
+
+  const handleGenerateBusinessPlan = async () => {
+    if (!project || !onGenerateBusinessPlan) {
+      console.log('Cannot generate business plan:', { project: !!project, onGenerateBusinessPlan: !!onGenerateBusinessPlan });
+      return;
+    }
+    
+    // Check if canvas has any content
+    const hasContent = Object.values(project.canvasData).some(content => {
+      return content && typeof content === 'string' && content.trim().length > 0;
+    });
+    
+    if (!hasContent) {
+      alert('Please add some content to your canvas before generating a business plan.');
+      return;
+    }
+    
+    console.log('Generating business plan...');
+    setIsGeneratingPlan(true);
+    try {
+      await onGenerateBusinessPlan();
+      console.log('Business plan generated');
+    } catch (error) {
+      console.error('Error generating business plan:', error);
+      alert('Failed to generate business plan. Please try again.');
+    } finally {
+      setIsGeneratingPlan(false);
     }
   };
 
@@ -246,6 +276,25 @@ const BMCCanvasOverview: React.FC = () => {
                 // Feedback/grade icon
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
                   <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-7h8v2H8v-2zm0 4h8v2H8v-2zm0-8h5v2H8V9z"/>
+                </svg>
+              )}
+            </button>
+            <button 
+              className="canvas-action-btn"
+              onClick={handleGenerateBusinessPlan}
+              disabled={isGeneratingPlan}
+              title="Generate business plan"
+            >
+              {isGeneratingPlan ? (
+                // Loading spinner
+                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
+                </svg>
+              ) : (
+                // Business plan/document icon
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+                  <path d="M8 10h8v2H8zm0 4h8v2H8zm0 4h5v2H8z"/>
                 </svg>
               )}
             </button>

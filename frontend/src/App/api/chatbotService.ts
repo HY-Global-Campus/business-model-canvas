@@ -130,3 +130,16 @@ export const getQuickTips = async (request: QuickTipsRequest): Promise<QuickTips
     const response = await api.post<QuickTipsResponse>('/chatbot/quick-tips', request);
     return response.data;
 };
+
+export interface BusinessPlanRequest {
+    canvasData: any;
+}
+
+export interface BusinessPlanResponse {
+    businessPlan: string;
+}
+
+export const getBusinessPlan = async (request: BusinessPlanRequest): Promise<BusinessPlanResponse> => {
+    const response = await api.post<BusinessPlanResponse>('/chatbot/business-plan', request);
+    return response.data;
+};

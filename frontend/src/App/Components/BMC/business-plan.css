@@ -1,0 +1,321 @@
+.business-plan-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+}
+
+.business-plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 2px solid #e0e0e0;
+  background: #f8f9fa;
+  flex-shrink: 0;
+}
+
+.business-plan-title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.business-plan-header h2 {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: #000;
+}
+
+.business-plan-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.business-plan-download-btn,
+.business-plan-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  color: #666;
+}
+
+.business-plan-download-btn:hover,
+.business-plan-close-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #000;
+}
+
+.business-plan-loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4A90E2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.business-plan-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.business-plan-markdown {
+  padding: 24px 32px;
+  line-height: 1.7;
+  color: #333;
+}
+
+.business-plan-metadata {
+  margin-top: 32px;
+  padding: 24px 32px;
+  border-top: 2px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.business-plan-metadata h3 {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 20px 0;
+  color: #000;
+}
+
+.metadata-section {
+  margin-bottom: 24px;
+}
+
+.metadata-section h4 {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 12px 0;
+  color: #2c2c2c;
+}
+
+.metadata-section ul {
+  margin: 0;
+  padding-left: 24px;
+  list-style-type: disc;
+}
+
+.metadata-section li {
+  margin: 8px 0;
+  color: #333;
+}
+
+.word-count-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.word-count-table thead {
+  background: #e0e0e0;
+}
+
+.word-count-table th,
+.word-count-table td {
+  padding: 10px 16px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.word-count-table th {
+  font-weight: bold;
+  color: #000;
+}
+
+.word-count-table td {
+  color: #333;
+}
+
+.word-count-table tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* Markdown content styling */
+.business-plan-markdown h1,
+.business-plan-markdown h2,
+.business-plan-markdown h3 {
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-weight: bold;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.business-plan-markdown h1 {
+  font-size: 28px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+.business-plan-markdown h2 {
+  font-size: 22px;
+  color: #2c2c2c;
+}
+
+.business-plan-markdown h3 {
+  font-size: 18px;
+  color: #444;
+}
+
+.business-plan-markdown p {
+  margin: 12px 0;
+  font-size: 15px;
+}
+
+.business-plan-markdown strong {
+  font-weight: bold;
+  color: #000;
+}
+
+.business-plan-markdown em {
+  font-style: italic;
+  color: #555;
+}
+
+.business-plan-markdown ul,
+.business-plan-markdown ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.business-plan-markdown li {
+  margin: 8px 0;
+}
+
+.business-plan-markdown blockquote {
+  border-left: 4px solid #4A90E2;
+  background: #f5f8fc;
+  padding: 12px 16px;
+  margin: 16px 0;
+  color: #333;
+}
+
+.business-plan-markdown code {
+  background: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 14px;
+}
+
+.business-plan-markdown pre {
+  background: #f5f5f5;
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.business-plan-markdown pre code {
+  background: none;
+  padding: 0;
+}
+
+.business-plan-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.business-plan-markdown table th,
+.business-plan-markdown table td {
+  padding: 10px 16px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.business-plan-markdown table th {
+  background: #e0e0e0;
+  font-weight: bold;
+  color: #000;
+}
+
+.business-plan-markdown table tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* Custom scrollbar */
+.business-plan-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.business-plan-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.business-plan-content::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 4px;
+}
+
+.business-plan-content::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* Firefox scrollbar */
+.business-plan-content {
+  scrollbar-width: thin;
+  scrollbar-color: #bbb #f1f1f1;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .business-plan-header {
+    padding: 16px;
+  }
+
+  .business-plan-header h2 {
+    font-size: 20px;
+  }
+
+  .business-plan-markdown,
+  .business-plan-metadata {
+    padding: 16px 20px;
+    font-size: 14px;
+  }
+
+  .business-plan-markdown h1 {
+    font-size: 24px;
+  }
+
+  .business-plan-markdown h2 {
+    font-size: 20px;
+  }
+
+  .business-plan-markdown h3 {
+    font-size: 16px;
+  }
+}
+
