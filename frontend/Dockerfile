@@ -6,6 +6,19 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+# --- dev: local development with Vite dev server ---
+FROM node:20-alpine AS dev
+WORKDIR /app
+
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
+ENV NODE_ENV=development
+
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000", "--strictPort"]
+
 # --- build: compile Vite/React app to static files ---
 FROM node:20-alpine AS build
 WORKDIR /app
