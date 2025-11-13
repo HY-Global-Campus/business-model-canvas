@@ -1,22 +1,36 @@
-import React, { useRef, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
+import { useQueryClient } from '@tanstack/react-query';
 import { useBMCContext } from '../../contexts/BMCContext';
 import { bmcBlocksMeta, getBlockOrder } from '../../../content/bmcBlocks';
-import { BMCBlockId } from '../../../types/bmc';
+import { BMCBlockId, BMCProject } from '../../../types/bmc';
 import { exportToPowerPoint, exportToPDF, exportToODP } from '../../utils/exportUtils';
+import {
+  CanvasSnapshotError,
+  createCanvasSnapshot,
+  createSnapshotBlob,
+  getSnapshotFilename,
+  parseCanvasSnapshotFile,
+  SNAPSHOT_FILE_EXTENSION,
+} from '../../utils/canvasPersistence';
+import { updateBMCProject } from '../../api/bmcService';
 import './canvas.css';
 
 const BMCCanvasOverview: React.FC = () => {
   const { project, loading, isFullscreen, toggleFullscreen, onRequestFeedback, onGenerateBusinessPlan } = useBMCContext();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const canvasRef = useRef<HTMLDivElement>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isExportingPowerPoint, setIsExportingPowerPoint] = useState(false);
   const [isExportingPDF, setIsExportingPDF] = useState(false);
   const [isExportingODP, setIsExportingODP] = useState(false);
   const [isRequestingFeedback, setIsRequestingFeedback] = useState(false);
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
+  const [isSavingSnapshot, setIsSavingSnapshot] = useState(false);
+  const [isImportingSnapshot, setIsImportingSnapshot] = useState(false);
 
   if (loading || !project) {
     return <div className="canvas-loading">Loading canvas...</div>;
@@ -24,6 +38,91 @@ const BMCCanvasOverview: React.FC = () => {
 
   const handleBlockClick = (blockId: BMCBlockId) => {
     navigate(`/bmc/${blockId}`);
+  };
+
+  const handleSaveSnapshot = async () => {
+    if (!project) {
+      return;
+    }
+
+    setIsSavingSnapshot(true);
+    try {
+      const snapshot = createCanvasSnapshot(project);
+      const blob = createSnapshotBlob(snapshot);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = getSnapshotFilename(project);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error saving canvas snapshot:', error);
+      const message =
+        error instanceof CanvasSnapshotError
+          ? error.message
+          : 'Failed to save canvas snapshot. Please try again.';
+      alert(message);
+    } finally {
+      setIsSavingSnapshot(false);
+    }
+  };
+
+  const handleImportSnapshotClick = () => {
+    if (isImportingSnapshot) {
+      return;
+    }
+    importInputRef.current?.click();
+  };
+
+  const handleSnapshotFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    setIsImportingSnapshot(true);
+    const queryKey = ['bmc-project', project.userId] as const;
+    const previousData = queryClient.getQueryData<BMCProject>(queryKey);
+
+    try {
+      const snapshot = await parseCanvasSnapshotFile(file);
+      const updates = {
+        displayName: snapshot.project.displayName,
+        businessContext: snapshot.project.businessContext,
+        canvasData: snapshot.project.canvasData,
+        lastModified: snapshot.project.lastModified,
+        completionStatus: snapshot.project.completionStatus,
+      };
+
+      queryClient.setQueryData<BMCProject | undefined>(queryKey, (old) => {
+        if (!old) {
+          return old;
+        }
+        return { ...old, ...updates };
+      });
+
+      const savedProject = await updateBMCProject(project.id, updates);
+      queryClient.setQueryData<BMCProject>(queryKey, savedProject);
+
+      alert('Canvas imported successfully.');
+    } catch (error) {
+      console.error('Error importing canvas snapshot:', error);
+      if (previousData) {
+        queryClient.setQueryData<BMCProject>(queryKey, previousData);
+      }
+      const message =
+        error instanceof CanvasSnapshotError
+          ? error.message
+          : error instanceof Error
+          ? error.message
+          : 'Failed to import canvas snapshot. Please try again.';
+      alert(message);
+    } finally {
+      event.target.value = '';
+      setIsImportingSnapshot(false);
+    }
   };
 
   const handleRequestFeedback = async () => {
@@ -261,6 +360,52 @@ const BMCCanvasOverview: React.FC = () => {
             )}
           </div>
           <div className="canvas-actions">
+            <input
+              ref={importInputRef}
+              type="file"
+              accept={`${SNAPSHOT_FILE_EXTENSION},application/json`}
+              style={{ display: 'none' }}
+              onChange={handleSnapshotFileChange}
+            />
+            <button
+              className="canvas-action-btn"
+              onClick={handleSaveSnapshot}
+              disabled={isSavingSnapshot}
+              title={`Save canvas snapshot (${SNAPSHOT_FILE_EXTENSION})`}
+            >
+              {isSavingSnapshot ? (
+                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <path d="M5 20h14v-2H5v2zm7-18l-5 5h3v6h4V7h3l-5-5z" />
+                </svg>
+              )}
+            </button>
+            <button
+              className="canvas-action-btn"
+              onClick={handleImportSnapshotClick}
+              disabled={isImportingSnapshot}
+              title={`Import canvas snapshot (${SNAPSHOT_FILE_EXTENSION})`}
+            >
+              {isImportingSnapshot ? (
+                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  width="20"
+                  height="20"
+                  style={{ transform: 'rotate(180deg)' }}
+                >
+                  <path d="M5 20h14v-2H5v2zm7-16l5 5h-3v6h-4v-6H7l5-5z" />
+                </svg>
+              )}
+            </button>
             <button 
               className="canvas-action-btn"
               onClick={handleRequestFeedback}
@@ -268,14 +413,12 @@ const BMCCanvasOverview: React.FC = () => {
               title="Get detailed feedback"
             >
               {isRequestingFeedback ? (
-                // Loading spinner
                 <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
                   <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
                 </svg>
               ) : (
-                // Feedback/grade icon
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                  <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-7h8v2H8v-2zm0 4h8v2H8v-2zm0-8h5v2H8V9z"/>
+                  <path d="M4 4h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-4.586L12 20.414 8.586 16H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v8h5.414L12 17.586 14.586 14H20V6H4z" />
                 </svg>
               )}
             </button>
@@ -293,7 +436,7 @@ const BMCCanvasOverview: React.FC = () => {
               ) : (
                 // Business plan/document icon
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                  <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+                  <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
                   <path d="M8 10h8v2H8zm0 4h8v2H8zm0 4h5v2H8z"/>
                 </svg>
               )}
