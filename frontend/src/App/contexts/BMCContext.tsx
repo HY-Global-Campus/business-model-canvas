@@ -14,6 +14,10 @@ interface BMCContextProps {
   toggleFullscreen: () => void;
   onRequestFeedback?: () => Promise<void>;
   onGenerateBusinessPlan?: () => Promise<void>;
+  showCanvas: boolean;
+  showChatbot: boolean;
+  toggleCanvas: () => void;
+  toggleChatbot: () => void;
 }
 
 export const BMCContext = createContext<BMCContextProps | undefined>(undefined);

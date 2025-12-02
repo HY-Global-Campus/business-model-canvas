@@ -32,6 +32,59 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* Actions menu dropdown */
+.canvas-actions-menu {
+  position: relative;
+}
+
+.canvas-actions-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 180px;
+  overflow: hidden;
+}
+
+.canvas-action-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: white;
+  border: none;
+  border-bottom: 1px solid #eee;
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.canvas-action-menu-item:last-child {
+  border-bottom: none;
+}
+
+.canvas-action-menu-item:hover:not(:disabled) {
+  background: #f8f9fa;
+}
+
+.canvas-action-menu-item:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.canvas-action-menu-item svg {
+  flex-shrink: 0;
 }
 
 .canvas-action-btn {
@@ -212,6 +265,27 @@
       "key-partnerships key-resources channels"
       "cost-structure cost-structure revenue-streams"
       "cost-structure cost-structure revenue-streams";
+  }
+}
+
+/* Mobile: Hide secondary actions, show menu */
+@media (max-width: 768px) {
+  .canvas-actions {
+    gap: 6px;
+  }
+
+  .canvas-action-btn:not(.canvas-action-essential):not(.canvas-action-menu-toggle) {
+    display: none;
+  }
+
+  .canvas-header-content {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .canvas-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 }
 

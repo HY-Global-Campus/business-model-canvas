@@ -205,6 +205,7 @@
   resize: none;
   background: white;
   box-sizing: border-box;
+  min-height: 200px;
 }
 
 .block-textarea:focus {
@@ -268,38 +269,94 @@
 @media (max-width: 768px) {
   .block-editor {
     padding: 12px;
+    min-height: 0;
+  }
+
+  .editor-header {
+    margin-bottom: 10px;
   }
 
   .editor-title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .editor-stats {
     flex-wrap: wrap;
-    gap: 10px;
-    font-size: 12px;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .editor-description {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    font-size: 13px;
   }
 
   .editor-toggles {
     flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
   }
 
   .toggle-button {
     flex: 1;
-    min-width: 150px;
+    min-width: 140px;
+    padding: 6px 12px;
+    font-size: 12px;
   }
 
   .guidance-panel,
   .examples-panel {
-    max-height: 150px;
+    max-height: 120px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+
+  .editor-content,
+  .editor-content-with-gutter {
+    margin-bottom: 10px;
+    min-height: 0;
+  }
+
+  .block-textarea {
+    min-height: 250px;
+    padding: 12px;
+    font-size: 14px;
   }
 
   .editor-navigation {
     flex-direction: column;
+    gap: 8px;
+    padding-top: 10px;
   }
 
   .nav-button {
     max-width: 100%;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .block-editor {
+    padding: 10px;
+  }
+
+  .editor-title {
+    font-size: 16px;
+  }
+
+  .block-textarea {
+    min-height: 300px;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .guidance-panel,
+  .examples-panel {
+    max-height: 100px;
   }
 }
 

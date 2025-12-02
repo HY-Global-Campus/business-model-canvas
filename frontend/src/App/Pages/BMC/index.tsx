@@ -37,6 +37,9 @@ const BMCPage: React.FC = () => {
   const [isFetchingFeedback, setIsFetchingFeedback] = useState(false);
   const [businessPlan, setBusinessPlan] = useState<string | null>(null);
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
+  // On mobile, hide canvas/chatbot by default to prioritize editor
+  const [showCanvas, setShowCanvas] = useState(() => window.innerWidth > 640);
+  const [showChatbot, setShowChatbot] = useState(() => window.innerWidth > 640);
 
   // Fetch BMC project data
   const { data: project, isLoading: loading, error } = useQuery<BMCProject, Error>({
@@ -135,6 +138,16 @@ const BMCPage: React.FC = () => {
     setIsFullscreen(prev => !prev);
   }, []);
 
+  // Toggle canvas visibility
+  const toggleCanvas = useCallback(() => {
+    setShowCanvas(prev => !prev);
+  }, []);
+
+  // Toggle chatbot visibility
+  const toggleChatbot = useCallback(() => {
+    setShowChatbot(prev => !prev);
+  }, []);
+
   // Handle ESC key to exit fullscreen
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -230,25 +243,66 @@ const BMCPage: React.FC = () => {
           isFullscreen,
           toggleFullscreen,
           onRequestFeedback: handleRequestFeedback,
-          onGenerateBusinessPlan: handleGenerateBusinessPlan
+          onGenerateBusinessPlan: handleGenerateBusinessPlan,
+          showCanvas,
+          showChatbot,
+          toggleCanvas,
+          toggleChatbot
         }}>
           <div className="bmc-layout">
+            {/* Toggle buttons for mobile */}
+            {!isFullscreen && (
+              <>
+                <button
+                  className="panel-toggle-btn canvas-toggle"
+                  onClick={toggleCanvas}
+                  title={showCanvas ? 'Hide Canvas' : 'Show Canvas'}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                    {showCanvas ? (
+                      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    ) : (
+                      <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    )}
+                  </svg>
+                  Canvas
+                </button>
+                <button
+                  className="panel-toggle-btn chatbot-toggle"
+                  onClick={toggleChatbot}
+                  title={showChatbot ? 'Hide Chatbot' : 'Show Chatbot'}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                    {showChatbot ? (
+                      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    ) : (
+                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                    )}
+                  </svg>
+                  Chat
+                </button>
+              </>
+            )}
             {/* Left panel: Canvas Overview + Chatbot */}
-            <div className="bmc-left-panel">
-              <div className="bmc-canvas-section">
-                <BMCCanvasOverview />
+            {!isFullscreen && (
+              <div className={`bmc-left-panel ${!showCanvas && !showChatbot ? 'collapsed' : ''}`}>
+                {showCanvas && (
+                  <div className="bmc-canvas-section">
+                    <BMCCanvasOverview />
+                  </div>
+                )}
+                {showChatbot && (
+                  <div className="bmc-chatbot-section">
+                    <div className="chatbot-header-fixed">
+                      <h3>AI Advisor</h3>
+                    </div>
+                    <div className="chatbot-body-fixed">
+                      <ChatBot />
+                    </div>
+                  </div>
+                )}
               </div>
-              {!isFullscreen && (
-                <div className="bmc-chatbot-section">
-                  <div className="chatbot-header-fixed">
-                    <h3>AI Advisor</h3>
-                  </div>
-                  <div className="chatbot-body-fixed">
-                    <ChatBot />
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
 
             {/* Right panel: Editor/Feedback/BusinessPlan/Welcome */}
             {!isFullscreen && (

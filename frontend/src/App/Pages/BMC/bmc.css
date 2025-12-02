@@ -134,6 +134,66 @@
   margin-bottom: 0;
 }
 
+/* Toggle buttons for collapsible panels */
+.panel-toggle-btn {
+  position: fixed;
+  top: 10px;
+  z-index: 1000;
+  background: #2c2c2c;
+  color: white;
+  border: 2px solid #000;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: 'Gotham Narrow', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.panel-toggle-btn:hover {
+  background: #000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.panel-toggle-btn.canvas-toggle {
+  left: 10px;
+}
+
+.panel-toggle-btn.chatbot-toggle {
+  left: 140px;
+}
+
+@media (min-width: 769px) {
+  .panel-toggle-btn {
+    display: none;
+  }
+}
+
+/* Collapsible panel transitions */
+.bmc-left-panel {
+  transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.bmc-left-panel.collapsed {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  border: none;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.bmc-canvas-section,
+.bmc-chatbot-section {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
 /* Responsive design */
 @media (max-width: 1400px) {
   .bmc-left-panel {
@@ -170,6 +230,7 @@
   }
 }
 
+/* Mobile-first: prioritize editor */
 @media (max-width: 768px) {
   .bmc-page {
     height: auto;
@@ -181,27 +242,36 @@
     height: auto;
   }
 
+  /* Editor panel always visible and full-width */
+  .bmc-editor-panel {
+    flex: none;
+    width: 100%;
+    min-height: 60vh;
+    order: 1;
+  }
+
+  /* Left panel (canvas + chatbot) - collapsible */
   .bmc-left-panel {
     flex: none;
-    height: auto;
-    min-height: 800px;
+    width: 100%;
+    order: 2;
+    border-right: none;
+    border-bottom: 2px solid #000;
+    max-height: 40vh;
+    overflow-y: auto;
   }
   
   .bmc-canvas-section {
     flex: 1;
-    min-height: 400px;
+    min-height: 200px;
     max-height: 50%;
+    border-bottom: 1px solid #ddd;
   }
   
   .bmc-chatbot-section {
     flex: 1;
-    min-height: 400px;
+    min-height: 200px;
     max-height: 50%;
-  }
-
-  .bmc-editor-panel {
-    flex: none;
-    min-height: 400px;
   }
 
   .bmc-welcome {
@@ -210,6 +280,19 @@
 
   .bmc-welcome h2 {
     font-size: 22px;
+  }
+}
+
+/* Very small screens - hide canvas/chatbot by default */
+@media (max-width: 640px) {
+  .bmc-left-panel {
+    max-height: 0;
+    overflow: hidden;
+    border: none;
+  }
+
+  .bmc-editor-panel {
+    min-height: 70vh;
   }
 }
 

@@ -17,6 +17,21 @@ const BMCCanvasOverview: React.FC = () => {
   const [isExportingODP, setIsExportingODP] = useState(false);
   const [isRequestingFeedback, setIsRequestingFeedback] = useState(false);
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
+  const [showActionsMenu, setShowActionsMenu] = useState(false);
+  const actionsMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (actionsMenuRef.current && !actionsMenuRef.current.contains(event.target as Node)) {
+        setShowActionsMenu(false);
+      }
+    };
+    if (showActionsMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showActionsMenu]);
 
   if (loading || !project) {
     return <div className="canvas-loading">Loading canvas...</div>;
@@ -261,8 +276,9 @@ const BMCCanvasOverview: React.FC = () => {
             )}
           </div>
           <div className="canvas-actions">
+            {/* Essential buttons - always visible */}
             <button 
-              className="canvas-action-btn"
+              className="canvas-action-btn canvas-action-essential"
               onClick={handleRequestFeedback}
               disabled={isRequestingFeedback}
               title="Get detailed feedback"
@@ -280,7 +296,7 @@ const BMCCanvasOverview: React.FC = () => {
               )}
             </button>
             <button 
-              className="canvas-action-btn"
+              className="canvas-action-btn canvas-action-essential"
               onClick={handleGenerateBusinessPlan}
               disabled={isGeneratingPlan}
               title="Generate business plan"
@@ -298,8 +314,76 @@ const BMCCanvasOverview: React.FC = () => {
                 </svg>
               )}
             </button>
+            {/* Secondary actions - in dropdown on mobile */}
+            <div className="canvas-actions-menu" ref={actionsMenuRef}>
+              <button
+                className="canvas-action-btn canvas-action-menu-toggle"
+                onClick={() => setShowActionsMenu(!showActionsMenu)}
+                title="More actions"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                  <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+              </button>
+              {showActionsMenu && (
+                <div className="canvas-actions-dropdown">
+                  <button 
+                    className="canvas-action-menu-item"
+                    onClick={() => {
+                      handleExport();
+                      setShowActionsMenu(false);
+                    }}
+                    disabled={isExporting}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                      <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                    </svg>
+                    Export PNG
+                  </button>
+                  <button 
+                    className="canvas-action-menu-item"
+                    onClick={() => {
+                      handleExportPowerPoint();
+                      setShowActionsMenu(false);
+                    }}
+                    disabled={isExportingPowerPoint}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                      <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM9 8h2v8H9zm4 0h2v8h-2z"/>
+                    </svg>
+                    Export PowerPoint
+                  </button>
+                  <button 
+                    className="canvas-action-menu-item"
+                    onClick={() => {
+                      handleExportODP();
+                      setShowActionsMenu(false);
+                    }}
+                    disabled={isExportingODP}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                      <path d="M2 6h4v14H2V6zm6 0h4v14H8V6zm6 0h4v14h-4V6zm6-4v20h2V2h-2z"/>
+                    </svg>
+                    Export ODP
+                  </button>
+                  <button 
+                    className="canvas-action-menu-item"
+                    onClick={() => {
+                      handleExportPDF();
+                      setShowActionsMenu(false);
+                    }}
+                    disabled={isExportingPDF}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                      <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                    Export PDF
+                  </button>
+                </div>
+              )}
+            </div>
             <button 
-              className="canvas-action-btn"
+              className="canvas-action-btn canvas-action-essential"
               onClick={handleExport}
               disabled={isExporting}
               title="Export as image (PNG)"
@@ -317,61 +401,7 @@ const BMCCanvasOverview: React.FC = () => {
               )}
             </button>
             <button 
-              className="canvas-action-btn"
-              onClick={handleExportPowerPoint}
-              disabled={isExportingPowerPoint}
-              title="Export as PowerPoint (.pptx)"
-            >
-              {isExportingPowerPoint ? (
-                // Loading spinner
-                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
-                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
-                </svg>
-              ) : (
-                // Presentation icon
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                  <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM9 8h2v8H9zm4 0h2v8h-2z"/>
-                </svg>
-              )}
-            </button>
-            <button 
-              className="canvas-action-btn"
-              onClick={handleExportODP}
-              disabled={isExportingODP}
-              title="Export as ODF Presentation (.odp)"
-            >
-              {isExportingODP ? (
-                // Loading spinner
-                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
-                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
-                </svg>
-              ) : (
-                // Slides icon (similar to presentation but slightly different)
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                  <path d="M2 6h4v14H2V6zm6 0h4v14H8V6zm6 0h4v14h-4V6zm6-4v20h2V2h-2z"/>
-                </svg>
-              )}
-            </button>
-            <button 
-              className="canvas-action-btn"
-              onClick={handleExportPDF}
-              disabled={isExportingPDF}
-              title="Export as PDF"
-            >
-              {isExportingPDF ? (
-                // Loading spinner
-                <svg className="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
-                  <circle cx="12" cy="12" r="10" strokeWidth="2" strokeDasharray="32" strokeLinecap="round" />
-                </svg>
-              ) : (
-                // PDF/Document icon
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                  <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                </svg>
-              )}
-            </button>
-            <button 
-              className="canvas-action-btn"
+              className="canvas-action-btn canvas-action-essential"
               onClick={toggleFullscreen}
               title={isFullscreen ? 'Exit fullscreen (ESC)' : 'View fullscreen'}
             >

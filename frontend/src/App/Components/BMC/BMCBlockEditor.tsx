@@ -21,7 +21,9 @@ const BMCBlockEditor: React.FC = () => {
   const { project, onUpdateBlock, readonly, setCurrentBlock } = useBMCContext();
   
   const [localContent, setLocalContent] = useState('');
-  const [showGuidance, setShowGuidance] = useState(true);
+  const [showGuidance, setShowGuidance] = useState(() => {
+    return window.innerWidth > 768;
+  });
   const [showExamples, setShowExamples] = useState(false);
 
   // AI Insights state

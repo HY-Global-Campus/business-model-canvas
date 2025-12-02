@@ -53,6 +53,7 @@ services:
   frontend:
     build: 
       context: ./frontend
+      target: dev
       args:
         VITE_API_URL: http://localhost:8080
     environment:
@@ -73,6 +74,8 @@ services:
       - --strictPort
     ports:
       - "3000:3000"
+    volumes:
+      - frontend-node-modules:/usr/src/app/node_modules
     depends_on:
       - app
     develop:
@@ -88,3 +91,6 @@ services:
           path: ./frontend/package.json
         - action: rebuild
           path: ./frontend/package-lock.json
+
+volumes:
+  frontend-node-modules:
