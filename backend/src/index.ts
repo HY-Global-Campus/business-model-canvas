@@ -8,6 +8,7 @@ import CourseRouter from './controllers/CourseController.js'
 import cors from 'cors';
 import chatbotRouter from './controllers/chatbot.js';
 import exportsRouter from './controllers/exports.js';
+import testRouter from './controllers/testErrorHandler.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/chatbot', authMiddleware, chatbotRouter)
 app.use('/bookones', authMiddleware, BookOneRouter);
 app.use('/course', authMiddleware, CourseRouter);
 app.use('/exports', authMiddleware, exportsRouter);
+app.use('/test', testRouter);
 
 app.get('/', authMiddleware, async (_, res) => {
   res.status(200).send('Success');

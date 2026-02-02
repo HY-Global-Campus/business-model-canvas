@@ -119,7 +119,9 @@ const Login: React.FC = () => {
     },
     onError: (error: Error) => {
       console.error('Login failed:', error);
-      alert(`Login failed: ${error.message || 'Unknown error'}`);
+      // The axios interceptor already provides user-friendly messages
+      // Just show the error message without the "Login failed:" prefix
+      // since the message is already user-friendly
     },
   });
 
@@ -141,7 +143,9 @@ const Login: React.FC = () => {
     },
     onError: (error: Error) => {
       console.error('Registration failed:', error);
-      alert(`Registration failed: ${error.message || 'Unknown error'}`);
+      // The axios interceptor already provides user-friendly messages
+      // Just show the error message without the "Registration failed:" prefix
+      // since the message is already user-friendly
     },
   });
 
@@ -161,12 +165,12 @@ const Login: React.FC = () => {
     }
 
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      alert('Passwords do not match. Please make sure both password fields are identical.');
       return;
     }
 
     if (password.length < 6) {
-      alert('Password must be at least 6 characters long');
+      alert('Password must be at least 6 characters long for security.');
       return;
     }
 
@@ -222,7 +226,7 @@ const Login: React.FC = () => {
             </button>
             {loginMutation.isError && (
               <p style={errorStyle}>
-                {loginMutation.error?.message || 'Login failed. Please check your credentials.'}
+                {loginMutation.error?.message || 'Login failed. Please check your credentials and try again.'}
               </p>
             )}
           </form>
@@ -279,7 +283,7 @@ const Login: React.FC = () => {
             </button>
             {registerMutation.isError && (
               <p style={errorStyle}>
-                {registerMutation.error?.message || 'Registration failed. Please try again.'}
+                {registerMutation.error?.message || 'Registration failed. Please check your information and try again.'}
               </p>
             )}
           </form>
