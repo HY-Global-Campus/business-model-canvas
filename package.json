@@ -1,0 +1,13 @@
+{
+  "name": "business-model-canvas",
+  "version": "1.0.0",
+  "description": "Business Model Canvas Application",
+  "scripts": {
+    "sync-types": "bash scripts/sync-shared-types.sh",
+    "build": "cd frontend && npm run build",
+    "build-backend": "cd backend && npm run build",
+    "build-all": "npm run sync-types && npm run build && npm run build-backend",
+    "test-types": "cd frontend && npx tsc --noEmit --skipLibCheck && cd ../backend && npx tsc --noEmit --skipLibCheck"
+  },
+  "private": true
+}

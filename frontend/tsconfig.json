@@ -21,9 +21,10 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@exercises/*": ["../shared_types/*"]
+      "@exercises/*": ["../shared_types/*"],
+      "@shared_types/*": ["../shared_types/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../shared_types/**/*"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

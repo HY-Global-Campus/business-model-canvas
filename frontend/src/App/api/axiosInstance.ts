@@ -54,7 +54,8 @@ api.interceptors.response.use(
       // Handle standardized error responses from our backend
       if (data && data.error && data.code) {
         // Use the user-friendly message from our ERROR_MESSAGES map
-        const userFriendlyMessage = ERROR_MESSAGES[data.code] || data.error;
+        const errorCode = data.code as keyof typeof ERROR_MESSAGES;
+        const userFriendlyMessage = ERROR_MESSAGES[errorCode] || data.error;
         
         // Create a new error with the user-friendly message
         const userFriendlyError = new Error(userFriendlyMessage);

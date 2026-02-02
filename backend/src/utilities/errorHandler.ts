@@ -69,6 +69,18 @@ export const ErrorTypes = {
     status: 404
   },
   
+  // Validation errors
+  VALIDATION_ERROR: {
+    code: 'VAL_005',
+    message: 'Validation failed. Please check the errors and try again.',
+    status: 400
+  },
+  PASSWORD_WEAK: {
+    code: 'VAL_006',
+    message: 'Password must be at least 8 characters and contain uppercase, lowercase, number, and special character',
+    status: 400
+  },
+  
   // System errors
   INTERNAL_SERVER_ERROR: {
     code: 'SYS_001',

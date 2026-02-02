@@ -1,8 +1,6 @@
 
 
-import dotenv from 'dotenv';
 
-dotenv.config();
 
 interface Config {
   JWT_SECRET: string,

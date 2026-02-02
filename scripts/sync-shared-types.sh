@@ -1,3 +1,22 @@
+#!/bin/bash
+
+# Script to sync shared types between frontend, backend, and shared_types directory
+
+echo "Syncing shared types..."
+
+# Copy shared types to frontend
+echo "Copying shared types to frontend..."
+cp shared_types/exercises.ts frontend/src/types/exercises.ts
+cp shared_types/bmc.ts frontend/src/types/bmc.ts
+
+# Copy shared types to backend (with combined file)
+echo "Copying shared types to backend..."
+cp shared_types/exercises.ts backend/src/types/exercises.ts
+cp shared_types/bmc.ts backend/src/types/bmc.ts
+
+# For backend, we need to combine the types into a single file
+echo "Creating combined backend types file..."
+cat > backend/src/types/exercises.ts << 'EOF'
 // This file contains the shared type definitions to ensure consistency
 // between frontend and backend
 
@@ -313,3 +332,6 @@ export interface BMCBlockMeta {
   gridArea: string; // CSS grid area name
   color: string; // Block color
 }
+EOF
+
+echo "Shared types synced successfully!"

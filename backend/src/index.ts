@@ -8,19 +8,44 @@ import CourseRouter from './controllers/CourseController.js'
 import cors from 'cors';
 import chatbotRouter from './controllers/chatbot.js';
 import exportsRouter from './controllers/exports.js';
-import testRouter from './controllers/testErrorHandler.js';
+
+
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 
+// Security: Add helmet for security headers
+app.use(helmet());
 
-app.use(cors());
+// Security: Add rate limiting to prevent brute force attacks
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later',
+  standardHeaders: true, // Return rate limit info in headers
+  legacyHeaders: false, // Disable the X-RateLimit-* headers
+});
+
+// Apply rate limiting to all requests
+app.use(limiter);
+
+// CORS with more secure configuration
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use('/login', loginRouter);
+
 app.use('/chatbot', authMiddleware, chatbotRouter)
 app.use('/bookones', authMiddleware, BookOneRouter);
 app.use('/course', authMiddleware, CourseRouter);
 app.use('/exports', authMiddleware, exportsRouter);
-app.use('/test', testRouter);
+
 
 app.get('/', authMiddleware, async (_, res) => {
   res.status(200).send('Success');

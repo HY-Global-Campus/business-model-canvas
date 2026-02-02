@@ -5,6 +5,9 @@ import User from "../models/user.js";
 import config from "../config.js";
 import { UserTokenForm } from "../types/user.js";
 import { sendErrorResponse, handleUnexpectedError, validateRequest, ErrorTypes } from "../utilities/errorHandler.js";
+import { validateRequest as validateMiddleware, ValidationRules, checkEmailNotExists } from "../middlewares/validation.js";
+import { validateStrongPassword } from "../middlewares/security.js";
+
 
 const loginRouter = express.Router();
 
@@ -12,12 +15,10 @@ const loginRouter = express.Router();
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // POST /login - Email/Password Login
-loginRouter.post('/', async (req, res) => {
+loginRouter.post('/', 
+  validateMiddleware(ValidationRules.login),
+  async (req, res) => {
   const { email, password } = req.body;
-  
-  if (!validateRequest(!!email && !!password, res, 'MISSING_REQUIRED_FIELDS')) {
-    return;
-  }
 
   try {
     // Find user by email
@@ -66,28 +67,13 @@ loginRouter.post('/', async (req, res) => {
 });
 
 // POST /register - User Registration
-loginRouter.post('/register', async (req, res) => {
+loginRouter.post('/register',
+  validateMiddleware([
+    ...ValidationRules.register,
+    checkEmailNotExists(User)
+  ]),
+  async (req, res) => {
   const { email, password, displayName } = req.body;
-  
-  // Validate required fields
-  if (!validateRequest(!!email && !!password && !!displayName, res, 'MISSING_REQUIRED_FIELDS')) {
-    return;
-  }
-
-  // Validate email format
-  if (!validateRequest(EMAIL_REGEX.test(email), res, 'INVALID_EMAIL_FORMAT')) {
-    return;
-  }
-
-  // Validate password length
-  if (!validateRequest(password.length >= 6, res, 'PASSWORD_TOO_SHORT')) {
-    return;
-  }
-
-  // Validate display name length
-  if (!validateRequest(displayName.trim().length >= 2, res, 'DISPLAY_NAME_TOO_SHORT')) {
-    return;
-  }
 
   try {
     const normalizedEmail = email.toLowerCase().trim();

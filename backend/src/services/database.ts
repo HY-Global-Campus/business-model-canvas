@@ -20,13 +20,27 @@ Course.belongsTo(User, { foreignKey: 'userId' });
 
 export const dbSync = async () => {
   try {
-    // TEMPORARY: force: true to drop and recreate tables with new schema
-    // TODO: Change back to force: false after first deployment, or use migrations
-    const shouldForceSync = process.env.FORCE_DB_SYNC === 'true';
-    await sequelize.sync({ force: shouldForceSync });
-    console.log(`Database synchronized successfully (force: ${shouldForceSync})`);
+    // Use migrations for production, sync for development
+    if (process.env.NODE_ENV === 'production') {
+      // Run migrations for production
+      const { Umzug, SequelizeStorage } = await import('umzug');
+      const umzug = new Umzug({
+        migrations: { glob: 'migrations/*.js' },
+        context: sequelize.getQueryInterface(),
+        storage: new SequelizeStorage({ sequelize }),
+        logger: console,
+      });
+      
+      await umzug.up();
+      console.log('Database migrations completed successfully');
+    } else {
+      // Use sync for development (convenience)
+      await sequelize.sync({ alter: true });
+      console.log('Database synchronized successfully (development mode)');
+    }
   } catch (error) {
     console.error("Failed to synchronize database:", error);
+    throw error; // Re-throw to fail fast in production
   }
 };
 
