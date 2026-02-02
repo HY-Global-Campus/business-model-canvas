@@ -19,12 +19,10 @@ const ERROR_MESSAGES = {
   'SYS_002': 'The service is temporarily unavailable. Please try again later.',
 };
 
-// Log the API URL for debugging
+// Log the API URL for debugging (only in development)
 const apiUrl = import.meta.env.VITE_API_URL;
-console.log('[axios] VITE_API_URL:', apiUrl);
-
-if (!apiUrl) {
-  console.error('[axios] VITE_API_URL is not set! API requests will fail.');
+if (import.meta.env.DEV && !apiUrl) {
+  console.warn('[axios] VITE_API_URL is not set! API requests will fail.');
 }
 
 const api = axios.create({

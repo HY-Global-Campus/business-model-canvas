@@ -39,7 +39,7 @@ export const loadMessages = (): Message[] => {
   
   try {
     const parsed = JSON.parse(saved);
-    return parsed.map((msg: any) => ({
+    return parsed.map((msg: { [key: string]: any }) => ({
       ...msg,
       timestamp: new Date(msg.timestamp),
     }));

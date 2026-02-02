@@ -105,7 +105,6 @@ const Login: React.FC = () => {
   const loginMutation: UseMutationResult<LoginResponse, Error, LoginVariables> = useMutation({
     mutationFn: ({ email, password }: LoginVariables) => login(email, password),
     onSuccess: (data: LoginResponse) => {
-      console.log('Login response:', data);
       if (!data || typeof data !== 'object') {
         alert('Login failed: Invalid response from server');
         return;
@@ -129,7 +128,6 @@ const Login: React.FC = () => {
     mutationFn: ({ email, password, displayName }: RegisterVariables) => 
       register(email, password, displayName),
     onSuccess: (data: LoginResponse) => {
-      console.log('Registration response:', data);
       if (!data || typeof data !== 'object') {
         alert('Registration failed: Invalid response from server');
         return;

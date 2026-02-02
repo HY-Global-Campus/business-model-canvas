@@ -27,9 +27,12 @@ export const register = async (
 
 // Placeholder for future OAuth implementation
 export const loginWithOAuth = async (provider: string): Promise<LoginResponse> => {
-  // TODO: Implement OAuth flow
-  // 1. Redirect to OAuth provider
-  // 2. Handle callback
-  // 3. Exchange code for token
+  // FEATURE: OAuth implementation planned for future release
+  // Implementation steps:
+  // 1. Redirect to OAuth provider (Google, GitHub, etc.)
+  // 2. Handle OAuth callback with authorization code
+  // 3. Exchange code for access token
+  // 4. Create session with OAuth credentials
+  throw new Error('OAuth login not yet implemented');
   throw new Error(`OAuth with ${provider} not yet implemented`);
 };

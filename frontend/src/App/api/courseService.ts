@@ -4,7 +4,7 @@ import { MindMap } from '../../types/mindmap';
 
 export interface Course {
   id: number;
-  exercises: CourseExercises; // TODO: replace with new types after shared types update
+  exercises: CourseExercises;
   mindmap: MindMap;
   displayName: string;
   reflection: string;

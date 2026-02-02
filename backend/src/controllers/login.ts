@@ -126,10 +126,12 @@ loginRouter.post('/register',
 loginRouter.post('/oauth/callback', async (req, res) => {
   const { provider, code } = req.body;
   
-  // TODO: Implement OAuth2 flow
-  // 1. Exchange code for access token with OAuth provider
-  // 2. Get user info from OAuth provider
-  // 3. Find or create user with oauthProvider and oauthId
+  // FEATURE: OAuth2 implementation planned for future release
+  // Implementation steps:
+  // 1. Exchange authorization code for access token with OAuth provider
+  // 2. Fetch user profile from OAuth provider using access token
+  // 3. Find existing user by oauthProvider + oauthId or create new user
+  // 4. Generate JWT token for authenticated session
   // 4. Generate JWT and return token
   
   sendErrorResponse(res, 'INTERNAL_SERVER_ERROR', {

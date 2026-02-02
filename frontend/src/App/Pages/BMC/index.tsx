@@ -148,9 +148,8 @@ const BMCPage: React.FC = () => {
 
   // Handle feedback request
   const handleRequestFeedback = useCallback(async () => {
-    console.log('handleRequestFeedback called', { project: !!project });
     if (!project) {
-      console.error('No project available');
+      setFeedback('No project available');
       return;
     }
     
@@ -164,9 +163,7 @@ const BMCPage: React.FC = () => {
     setBusinessPlan(null); // Clear business plan if showing
     
     try {
-      console.log('Calling getFeedback API...');
       const response = await getFeedback({ canvasData: project });
-      console.log('Feedback response received:', response);
       setFeedback(response.feedback);
     } catch (error) {
       console.error('Error fetching feedback:', error);
