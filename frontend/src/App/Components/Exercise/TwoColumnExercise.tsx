@@ -69,10 +69,15 @@ const TwoColumnExercise: React.FC = () => {
 
   const { leftColumn, rightColumn } = meta.props;
 
+  const getTextareaMinHeight = (placeholder: string) =>
+    placeholder.includes('200')
+      ? 'clamp(140px, 18vh, 240px)'
+      : 'clamp(96px, 12vh, 160px)';
+
   return (
-    <div className="exercise-content" style={{ height: 'calc(100vh - 160px)', display: 'flex', flexDirection: 'column' }}>
-      <div className="exercise-two-column" style={{ flex: 1, display: 'flex', gap: '40px' }}>
-        <div className="exercise-column" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+    <div className="exercise-content">
+      <div className="exercise-two-column">
+        <div className="exercise-column">
           <h2 className="exercise-title">{leftColumn.title}</h2>
           {leftColumn.description && (
             <p className="exercise-description" style={{
@@ -85,7 +90,7 @@ const TwoColumnExercise: React.FC = () => {
             </p>
           )}
           {leftColumn.fields.map((field, index) => (
-            <div key={index} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <div key={index} style={{ display: 'flex', flexDirection: 'column', marginBottom: 'clamp(16px, 2vh, 28px)' }}>
               <label style={{ 
                 display: 'block', 
                 fontWeight: 'bold', 
@@ -115,14 +120,13 @@ const TwoColumnExercise: React.FC = () => {
                   background: 'white',
                   boxSizing: 'border-box',
                   resize: 'vertical',
-                  flex: 1,
-                  minHeight: '200px'
+                  minHeight: getTextareaMinHeight(field.placeholder)
                 }}
               />
             </div>
           ))}
         </div>
-        <div className="exercise-column" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div className="exercise-column">
           {rightColumn.title && (
             <h2 className="exercise-title">{rightColumn.title}</h2>
           )}
@@ -138,7 +142,7 @@ const TwoColumnExercise: React.FC = () => {
           )}
           {rightColumn.fields.map((field, index) => {
             return (
-              <div key={index} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <div key={index} style={{ display: 'flex', flexDirection: 'column', marginBottom: 'clamp(16px, 2vh, 28px)' }}>
                 {field.label && (
                   <label style={{ 
                     display: 'block', 
@@ -170,8 +174,7 @@ const TwoColumnExercise: React.FC = () => {
                     background: 'white',
                     boxSizing: 'border-box',
                     resize: 'vertical',
-                    flex: 1,
-                    minHeight: '200px'
+                    minHeight: getTextareaMinHeight(field.placeholder)
                   }}
                 />
               </div>

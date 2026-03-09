@@ -206,17 +206,21 @@ export interface BookOneExercises {}
 
 export type CourseExercises = BookOneExercises & {
   courseInfo?: {
-    Name?: string;
-    Scope?: string;
-    'Target students'?: string;
-    'Students\' skill level'?: string;
+    curriculum?: string;
+    nameAndScope?: string;
+    focus?: string;
+    targetStudents?: string;
+    sizeAndEnvironment?: string;
   };
   learningObjectives?: {
-    value: string[][];
+    ilosBeforeAI?: string;
+    ilosAfterAI?: string;
+    argueChoice?: string;
   };
   coreContent?: {
-    'Core content'?: string;
-    ''?: string; // Right column field without label
+    mustKnow?: string;
+    shouldKnow?: string;
+    niceToKnow?: string;
   };
   teachingMethods?: {
     value: string[][];
@@ -224,29 +228,14 @@ export type CourseExercises = BookOneExercises & {
   assessmentMethods?: {
     value: string[][];
   };
-  gradingCriteriaReflection?: {
-    'Grading criteria'?: string;
-    'Reflection'?: string;
+  evaluationAndReflection?: {
+    describeAssessmentMethods?: string;
+    constructiveAlignmentReflection?: string;
   };
-  targetAudience?: {
+  reflectionGoodTeaching?: {
     value: string;
   };
-  courseStructure?: {
-    value: string[][];
-  };
-  assessmentStrategy?: {
-    value: string;
-  };
-  resources?: {
-    value: string[][];
-  };
-  technology?: {
-    value: string;
-  };
-  timeline?: {
-    value: string[][];
-  };
-  evaluation?: {
-    value: string;
+  canvasShareLink?: {
+    linkOrPdf: string;
   };
 };

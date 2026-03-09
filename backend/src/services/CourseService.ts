@@ -22,27 +22,37 @@ export const findCourseByUserId = async (userId: string) => {
   if (!course) {
     const exercises: CourseExercises = {
       courseInfo: {
-        name: '',
-        scope: '',
+        curriculum: '',
+        nameAndScope: '',
+        focus: '',
         targetStudents: '',
-        studentsSkillLevel: '',
+        sizeAndEnvironment: '',
       },
       learningObjectives: {
-        learningOutcomes: '',
+        ilosBeforeAI: '',
+        ilosAfterAI: '',
+        argueChoice: '',
       },
       coreContent: {
-        coreContentLeft: '',
-        coreContentRight: '',
+        mustKnow: '',
+        shouldKnow: '',
+        niceToKnow: '',
       },
       teachingMethods: {
-        value: Array(4).fill(null).map(() => ['', '', '']),
+        value: Array(5).fill(null).map(() => ['', '', '', '']),
       },
       assessmentMethods: {
-        value: Array(4).fill(null).map(() => ['', '', '']),
+        value: Array(5).fill(null).map(() => ['', '', '']),
       },
-      gradingCriteriaReflection: {
-        gradingCriteria: '',
-        reflection: '',
+      evaluationAndReflection: {
+        describeAssessmentMethods: '',
+        constructiveAlignmentReflection: '',
+      },
+      reflectionGoodTeaching: {
+        value: '',
+      },
+      canvasShareLink: {
+        linkOrPdf: '',
       },
     };
 
@@ -62,6 +72,15 @@ export const findCourseByUserId = async (userId: string) => {
   }
 
   return course;
+};
+
+export const findExistingCourseByUserId = async (userId: string) => {
+  const user = await User.findOne({ where: { id: userId } });
+  if (!user) {
+    return null;
+  }
+
+  return await Course.findOne({ where: { userId }, include: [User] });
 };
 
 export const createCourse = async (courseData: CourseCreationAttributes) => {

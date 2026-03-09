@@ -4,7 +4,7 @@ import { courseCopy } from '../../../content/copy';
 import '../pages.css';
 import '../../Components/Exercise/exercises.css';
 
-const Part3Page: React.FC = () => {
+const Part4Page: React.FC = () => {
   return (
     <div className="page-with-header">
       <Header />
@@ -13,18 +13,18 @@ const Part3Page: React.FC = () => {
           <div className="exercise-single-column">
             <div className="exercise-panel">
               <h2 className="exercise-title" style={{ fontSize: '48px', marginBottom: '20px' }}>
-                {courseCopy.part3.title}
+                {courseCopy.part4.title}
               </h2>
               <p className="exercise-description" style={{ fontSize: '20px' }}>
-                {courseCopy.part3.instruction}
+                {courseCopy.part4.instruction}
               </p>
-              {courseCopy.part3.peerReviewCriteria?.length ? (
+              {courseCopy.part4.peerReviewCriteria?.length ? (
                 <>
                   <h3 className="exercise-subtitle" style={{ fontSize: '24px', marginTop: '24px', marginBottom: '12px' }}>
-                    Part 3 peer review criteria:
+                    Part 4 peer review criteria:
                   </h3>
                   <ul className="exercise-list" style={{ fontSize: '18px', paddingLeft: '24px' }}>
-                    {courseCopy.part3.peerReviewCriteria.map((criterion, i) => (
+                    {courseCopy.part4.peerReviewCriteria.map((criterion, i) => (
                       <li key={i}>{criterion}</li>
                     ))}
                   </ul>
@@ -38,4 +38,4 @@ const Part3Page: React.FC = () => {
   );
 };
 
-export default Part3Page;
+export default Part4Page;

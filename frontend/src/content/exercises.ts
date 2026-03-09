@@ -33,9 +33,20 @@ export type ExerciseMeta = {
   };
 };
 
-// Inferred order from Miro: adjust titles/props as needed when final copy is ready
+// Order matches Book of Serendip: Reflection after Part 1, then The course, ILO, etc.
 export const exercisesMeta: ExerciseMeta[] = [
-  { 
+  {
+    id: 'reflectionGoodTeaching',
+    title: 'Reflection',
+    route: '/exercise/reflection-good-teaching',
+    type: 'text',
+    props: {
+      multiline: true,
+      required: true,
+      placeholder: 'What are, in your opinion, the characteristics of good teaching and learning at university? Type your answer here max 50 word',
+    },
+  },
+  {
     id: 'courseInfo', 
     title: 'Course Information', 
     route: '/exercise/course-info', 
@@ -43,32 +54,36 @@ export const exercisesMeta: ExerciseMeta[] = [
     props: { 
       leftColumn: {
         title: 'The course',
-        description: 'Select a course in which you could be a teacher. You may choose a course from university curricula (e.g. see link to University of Helsinki\'s courses) or think about your own course that you\'re currently teaching.',
+        description: '',
         fields: [
-          { label: 'name', placeholder: 'Type your answer here max 50 word', required: true },
-          { label: 'scope', placeholder: 'Type your answer here max 50 word', required: true }
+          { label: 'curriculum', placeholder: 'Describe where the course is in the curriculum of your degree program. Type your answer here max 200 words', required: true },
+          { label: 'nameAndScope', placeholder: 'What is the name and scope of your course? Type your answer here max 50 words', required: true },
+          { label: 'focus', placeholder: 'What is the focus of your course development task? Type your answer here max 200 words', required: true }
         ]
       },
       rightColumn: {
-        title: 'Target students',
+        title: '',
+        description: '',
         fields: [
-          { label: 'targetStudents', placeholder: 'Type your answer here max 50 word', required: true },
-          { label: 'studentsSkillLevel', placeholder: 'Type your answer here max 50 word', required: true }
+          { label: 'targetStudents', placeholder: 'Who are the target students? Type your answer here max 50 words', required: true },
+          { label: 'sizeAndEnvironment', placeholder: 'Describe the size (number of students) of the course and the learning environment. Type your answer here max 50 words', required: true }
         ]
       }
     } 
   },
   { 
     id: 'learningObjectives', 
-    title: 'Learning Objectives', 
+    title: 'Intended learning outcomes (ILOs)', 
     route: '/exercise/learning-objectives', 
     type: 'two-column', 
     props: { 
       leftColumn: {
         title: 'Intended learning outcomes',
-        description: '1. Define the intended learning outcomes. Consider knowledge, skills, core competencies, key skills, scientific/knowledge, and skills-related outcomes.\n\n2. Ask the Chatbot for feedback using the following prompt: "Please comment how the intended learning outcomes of my course could be improved. Please make sure that my intended learning outcomes use the following structure: Upon completing the course + student is able to + Bloom\'s taxonomy action verb + object and context. Give suggestions for the Bloom\'s taxonomy action verbs. Next. I will paste the text that you should comment."\n\n3. Finalize the outcomes, being critical of AI-based feedback.',
+        description: '',
         fields: [
-          { label: 'learningOutcomes', placeholder: 'Type your answer here max 150 word', required: true }
+          { label: 'ilosBeforeAI', placeholder: 'Type your answer here max 150 words', required: true },
+          { label: 'ilosAfterAI', placeholder: 'Type your answer here max 150 words', required: true },
+          { label: 'argueChoice', placeholder: 'Type your answer here max 150 words', required: true }
         ]
       },
       rightColumn: {
@@ -85,16 +100,16 @@ export const exercisesMeta: ExerciseMeta[] = [
     props: { 
       leftColumn: {
         title: 'Core content',
-        description: 'Analyse the content of the course you are planning. You can use any categorization that suits the best for your purposes or use a template as the one shown in the course. Write in the box below the core content of the course. Make sure you are using scaffolding principles when deciding the order of your content.',
+        description: 'Analyse the content of the course you are planning or developing. Use the following categorization (Must know content of the course, should know content of the course and nice to know content of the course) as a template. Remember to take into consideration the student\'s workload.',
         fields: [
-          { label: 'coreContentLeft', placeholder: 'Type your answer here max 50 word', required: true }
+          { label: 'mustKnow', placeholder: 'Must know 80%. Type your answer here max 50 words', required: true },
+          { label: 'shouldKnow', placeholder: 'Should know 15%. Type your answer here max 50 words', required: true },
+          { label: 'niceToKnow', placeholder: 'Nice to know 5%. Type your answer here max 50 words', required: true }
         ]
       },
       rightColumn: {
         title: '',
-        fields: [
-          { label: 'coreContentRight', placeholder: 'Type your answer here max 50 word', required: true }
-        ]
+        fields: []
       }
     } 
   },
@@ -105,9 +120,9 @@ export const exercisesMeta: ExerciseMeta[] = [
     type: 'table', 
     props: { 
       subTitle: 'Teaching methods',
-      description: 'For each of the intended learning outcomes (ILO) write down: a) what kind of active teaching methods would support your students attaining of the ILO, b) what students are doing/what are the concrete actions that students do when you apply your teaching method.',
-      headers: ['Intended learning outcomes', 'Teaching methods', 'Assessment methods'],
-      rows: 4
+      description: 'Select between 3 to 5 of the ILOs of your course and write down: what kind of active teaching methods would support your students attaining the ILO, what students are doing, and what resources do you need.',
+      headers: ['Intended learning outcomes', 'Teaching methods', "Students' actions", 'Resources (e.g. teachers, TA, tools, learning environments).'],
+      rows: 5
     } 
   },
   { 
@@ -117,40 +132,33 @@ export const exercisesMeta: ExerciseMeta[] = [
     type: 'table', 
     props: { 
       subTitle: 'Course alignment',
-      description: 'Based on the ILO, content and teaching methods of your course, which assessment methods would be suitable and why? List the assessment methods that correspond to each ILO below and explain your choices.',
+      description: 'Based on the ILO, content and teaching methods of your course, which assessment methods would be suitable and why? List the assessment methods that correspond to each ILO below.',
       headers: ['Intended learning outcomes', 'Teaching methods', 'Assessment methods'],
-      rows: 4
+      rows: 5
     } 
   },
   { 
-    id: 'gradingCriteriaReflection', 
-    title: 'Grading Criteria & Reflection', 
-    route: '/exercise/grading-criteria-reflection', 
+    id: 'evaluationAndReflection', 
+    title: 'Evaluation of the plan and reflection', 
+    route: '/exercise/evaluation-and-reflection', 
     type: 'two-column', 
     props: { 
       leftColumn: {
-        title: 'Grading criteria',
-        description: 'Formulate grading criteria for your course.',
+        title: 'Describe assessment methods',
+        description: 'How will you assess the students\' learning during and at the end of the course?',
         fields: [
-          { label: 'gradingCriteria', placeholder: 'Type your answer here max 150 word', required: true }
+          { label: 'describeAssessmentMethods', placeholder: 'Type your answer here max 150 words', required: true }
         ]
       },
       rightColumn: {
-        title: 'Reflection',
-        description: 'What was challenging, problematic, or otherwise in need of attention within the design, teaching, or assessment of the course you have selected to develop or create? Describe this focus of development by defining what it is exactly that you would like to enhance? Why would you like to develop particularly this aspect of the course? As examples, you may consider targeting assessment practices, teaching methods, or bringing more meaningful variety into the use of educational technologies and online materials within your selected course. In your write-up, you may also reflect on what you would specifically do or create to further develop the course, if you already have initial thoughts on this. You can brainstorm and write about, e.g., a more purposeful grading method, or making the course more activating for students, or developing an online-based or blended course from the basis of a contact-class course.',
+        title: 'Constructive alignment reflection',
+        description: 'Does your course plan meet the criteria of constructive alignment?',
         fields: [
-          { label: 'reflection', placeholder: 'Type your answer here max 150 word', required: true }
+          { label: 'constructiveAlignmentReflection', placeholder: 'Type your answer here max 200 words', required: true }
         ]
       }
     } 
   },
-  { id: 'targetAudience', title: 'Target Audience', route: '/exercise/target-audience', type: 'text', props: { multiline: true, required: true, placeholder: 'Describe your target learners, their background, and prerequisites...' } },
-  { id: 'courseStructure', title: 'Course Structure', route: '/exercise/course-structure', type: 'table', props: { headers: ['Module', 'Topics', 'Duration'], rows: 6 } },
-  { id: 'assessmentStrategy', title: 'Assessment Strategy', route: '/exercise/assessment-strategy', type: 'text', props: { multiline: true, placeholder: 'Outline your assessment methods and grading criteria...' } },
-  { id: 'resources', title: 'Learning Resources', route: '/exercise/resources', type: 'table', props: { headers: ['Resource Type', 'Description', 'Access'], rows: 8 } },
-  { id: 'technology', title: 'Technology Requirements', route: '/exercise/technology', type: 'text', props: { multiline: true, placeholder: 'List required technologies, platforms, and tools...' } },
-  { id: 'timeline', title: 'Implementation Timeline', route: '/exercise/timeline', type: 'table', props: { headers: ['Phase', 'Tasks', 'Deadline'], rows: 5 } },
-  { id: 'evaluation', title: 'Course Evaluation Plan', route: '/exercise/evaluation', type: 'text', props: { multiline: true, placeholder: 'Describe how you will evaluate the effectiveness of your course...' } },
 ];
 
 

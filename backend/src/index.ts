@@ -5,6 +5,7 @@ import User from './models/user.js';
 import { dbSync } from './services/database.js';
 import BookOneRouter from './controllers/BookOneController.js'
 import CourseRouter from './controllers/CourseController.js'
+import { findExistingCourseByUserId } from './services/CourseService.js';
 import cors from 'cors';
 import chatbotRouter from './controllers/chatbot.js';
 
@@ -16,6 +17,21 @@ app.use(express.json());
 app.use('/login', loginRouter);
 app.use('/chatbot', authMiddleware, chatbotRouter)
 app.use('/bookones', authMiddleware, BookOneRouter);
+app.get('/course/share/:userid', async (req, res) => {
+  try {
+    const course = await findExistingCourseByUserId(req.params.userid);
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+    return res.json(course);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({ message: error.message });
+    }
+
+    return res.status(500).json({ message: 'An unknown error occurred' });
+  }
+});
 app.use('/course', authMiddleware, CourseRouter);
 
 app.get('/', authMiddleware, async (_, res) => {

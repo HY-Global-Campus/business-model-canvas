@@ -4,6 +4,27 @@ import { exercisesMeta } from '../../../content/exercises';
 import { useLocation } from 'react-router-dom';
 import ChatBot from '../ChatBot';
 
+const fieldCopy: Record<string, { title: string; description: string; placeholder: string }> = {
+  ilosBeforeAI: {
+    title: '1. ILOs before AI',
+    description:
+      'What are the ILOs of your course? Define 3 to 5 ILOs. If you are developing an existing course, develop them further. If you are working with a new course, formulate the ILOs.',
+    placeholder: 'Type your answer here max 150 words',
+  },
+  ilosAfterAI: {
+    title: '2. ILOs after AI (final ILOs)',
+    description:
+      `Ask the Chatbot to give you feedback about your ILOs. Start by using the following prompt: "Please comment how the intended learning outcomes of my course could be improved. Please make sure that my intended learning outcomes use the following structure: Upon completing the course + student is able to + Bloom's taxonomy action verb + object and context. Give suggestions for the Bloom's taxonomy action verbs. Next. I will paste the text that you should comment." After the feedback, adjust your ILOs if needed.`,
+    placeholder: 'Type your answer here max 150 words',
+  },
+  argueChoice: {
+    title: '3. Argue your choice of the final ILOs and reflect on the use of AI',
+    description:
+      'Remember to be critical when considering AI based feedback. Reflect on the feedback given by AI and justify your choice of ILOs.',
+    placeholder: 'Type your answer here max 150 words',
+  },
+};
+
 const LearningObjectivesExercise: React.FC = () => {
   const { bookOne, onUpdateBookOne, readonly } = useExerciseContext();
   const location = useLocation();
@@ -51,35 +72,35 @@ const LearningObjectivesExercise: React.FC = () => {
       <div className="exercise-two-column">
         <div className="exercise-column">
           <h2 className="exercise-title">{leftColumn.title}</h2>
-          {leftColumn.description && (
-            <p className="exercise-description" style={{
-              marginBottom: '24px',
-              lineHeight: '1.5',
-              fontSize: '16px',
-              color: '#000',
-              whiteSpace: 'pre-line'
-            }}>
-              {leftColumn.description}
-            </p>
-          )}
           {leftColumn.fields.map((field, index) => (
-            <div key={index} style={{ marginBottom: '24px', minHeight: '140px' }}>
-              <label style={{ 
+            <div key={index} style={{ marginBottom: 'clamp(16px, 2vh, 28px)' }}>
+              <label style={{
                 display: 'block', 
                 fontWeight: 'bold', 
-                marginBottom: '12px',
+                marginBottom: '8px',
                 fontFamily: "'Gotham Narrow', Arial, sans-serif",
                 fontSize: '16px',
                 color: '#000'
               }}>
-                {field.label}:
+                {fieldCopy[field.label]?.title ?? field.label}
               </label>
+              <p
+                className="exercise-description"
+                style={{
+                  marginBottom: '12px',
+                  lineHeight: '1.5',
+                  fontSize: '16px',
+                  color: '#000',
+                }}
+              >
+                {fieldCopy[field.label]?.description ?? field.placeholder}
+              </p>
               <textarea
                 className="exercise-textarea"
                 value={getFieldValue(field.label)}
                 onChange={(e) => updateFieldValue(field.label, e.target.value)}
                 disabled={readonly}
-                placeholder={field.placeholder}
+                placeholder={fieldCopy[field.label]?.placeholder ?? field.placeholder}
                 required={field.required}
                 rows={6}
                 style={{
@@ -92,40 +113,19 @@ const LearningObjectivesExercise: React.FC = () => {
                   background: 'white',
                   boxSizing: 'border-box',
                   resize: 'vertical',
-                  minHeight: '120px',
-                  height: '120px'
+                  minHeight: 'clamp(110px, 14vh, 180px)'
                 }}
               />
             </div>
           ))}
         </div>
         <div className="exercise-column">
-          <h2 className="exercise-title">{rightColumn.title}</h2>
-          <div style={{
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            height: '450px',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <div style={{
-              background: '#f5f5f5',
-              padding: '12px 16px',
-              borderBottom: '1px solid #ccc',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              color: '#666',
-              flexShrink: 0
-            }}>
+          <h2 className="exercise-title learning-objectives-chat-title">{rightColumn.title}</h2>
+          <div className="learning-objectives-chat-shell">
+            <div className="learning-objectives-chat-label">
               Conversation with Chatbot
             </div>
-            <div style={{ 
-              flex: 1, 
-              minHeight: 0,
-              height: '100%',
-              position: 'relative'
-            }}>
+            <div className="learning-objectives-chat-body">
               <ChatBot />
             </div>
           </div>

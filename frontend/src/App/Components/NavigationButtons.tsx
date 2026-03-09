@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Components/components.css';
 
@@ -33,56 +33,28 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ pages, currentPag
 
   if (currentPage < 0) return null;
 
-  return (
-    <>
-      {/* Mobile buttons */}
-      <div className="nav-buttons-mobile">
-        {currentPage > 0 && (
-          <button
-            className="nav-btn-mobile"
-            style={{ color: pages[currentPage]?.color || 'black' }}
-            onClick={goToPreviousPage}
-          >
-            {'<'}
-          </button>
-        )}
-        {currentPage < pages.length - 1 && (
-          <button
-            className="nav-btn-mobile"
-            style={{ color: pages[currentPage]?.color || 'black' }}
-            onClick={goToNextPage}
-          >
-            {'>'}
-          </button>
-        )}
-      </div>
+  const canGoPrevious = currentPage > 0;
+  const canGoNext = currentPage < pages.length - 1;
 
-      {/* Desktop arrows */}
-      {currentPage > 0 && (
-        <div
-          className="nav-arrow left"
-          style={{ color: pages[currentPage]?.color || 'black' }}
-          onClick={goToPreviousPage}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && goToPreviousPage()}
-        >
-          {'<'}
-        </div>
-      )}
-      {currentPage < pages.length - 1 && (
-        <div
-          className="nav-arrow right"
-          style={{ color: pages[currentPage]?.color || 'black' }}
-          onClick={goToNextPage}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && goToNextPage()}
-        >
-          {'>'}
-        </div>
-      )}
-    </>
+  return (
+    <div className="nav-buttons">
+      <button
+        className="nav-btn nav-btn-prev"
+        style={{ color: pages[currentPage]?.color || 'black' }}
+        onClick={goToPreviousPage}
+        disabled={!canGoPrevious}
+      >
+        Previous
+      </button>
+      <button
+        className="nav-btn nav-btn-next"
+        style={{ color: pages[currentPage]?.color || 'black' }}
+        onClick={goToNextPage}
+        disabled={!canGoNext}
+      >
+        Next
+      </button>
+    </div>
   );
 };
 

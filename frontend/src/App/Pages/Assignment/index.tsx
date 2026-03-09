@@ -5,7 +5,7 @@ import '../pages.css';
 
 const AssignmentPage: React.FC = () => {
   return (
-    <>
+    <div className="page-with-header">
       <Header />
       <div className="exercise-container">
         <div className="exercise-content">
@@ -29,7 +29,7 @@ const AssignmentPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

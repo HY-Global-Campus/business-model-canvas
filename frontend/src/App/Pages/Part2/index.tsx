@@ -6,7 +6,7 @@ import '../../Components/Exercise/exercises.css';
 
 const Part2Page: React.FC = () => {
   return (
-    <>
+    <div className="page-with-header">
       <Header />
       <div className="exercise-container">
         <div className="exercise-content">
@@ -18,11 +18,23 @@ const Part2Page: React.FC = () => {
               <p className="exercise-description" style={{ fontSize: '20px' }}>
                 {courseCopy.part2.instruction}
               </p>
+              {courseCopy.part2.peerReviewCriteria?.length ? (
+                <>
+                  <h3 className="exercise-subtitle" style={{ fontSize: '24px', marginTop: '24px', marginBottom: '12px' }}>
+                    Part 2 peer review criteria:
+                  </h3>
+                  <ul className="exercise-list" style={{ fontSize: '18px', paddingLeft: '24px' }}>
+                    {courseCopy.part2.peerReviewCriteria.map((criterion, i) => (
+                      <li key={i}>{criterion}</li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

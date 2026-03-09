@@ -214,17 +214,21 @@ export interface BookOneExercises {
 
 export interface CourseExercises {
   courseInfo?: {
-    name?: string;
-    scope?: string;
+    curriculum?: string;
+    nameAndScope?: string;
+    focus?: string;
     targetStudents?: string;
-    studentsSkillLevel?: string;
+    sizeAndEnvironment?: string;
   };
   learningObjectives?: {
-    learningOutcomes?: string;
+    ilosBeforeAI?: string;
+    ilosAfterAI?: string;
+    argueChoice?: string;
   };
   coreContent?: {
-    coreContentLeft?: string;
-    coreContentRight?: string;
+    mustKnow?: string;
+    shouldKnow?: string;
+    niceToKnow?: string;
   };
   teachingMethods?: {
     value: string[][];
@@ -232,12 +236,15 @@ export interface CourseExercises {
   assessmentMethods?: {
     value: string[][];
   };
-  gradingCriteriaReflection?: {
-    gradingCriteria?: string;
-    reflection?: string;
+  evaluationAndReflection?: {
+    describeAssessmentMethods?: string;
+    constructiveAlignmentReflection?: string;
   };
-  // Keep only exercises that are actually used in the current course
-  // Remove: targetAudience, courseStructure, assessmentStrategy, resources, technology, timeline, evaluation
-  // (These were in exercisesMeta but removed from navigation in earlier changes)
+  reflectionGoodTeaching?: {
+    value: string;
+  };
+  canvasShareLink?: {
+    linkOrPdf: string;
+  };
 }
 

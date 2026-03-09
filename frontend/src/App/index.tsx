@@ -4,12 +4,14 @@ import AssignmentPage from './Pages/Assignment';
 import Part1Page from './Pages/Part1';
 import Part2Page from './Pages/Part2';
 import Part3Page from './Pages/Part3';
+import Part4Page from './Pages/Part4';
+import Part5Page from './Pages/Part5';
 import ExercisePage from './Pages/ExercisePage';
 import gothamNarrow from '../assets/Gotham-Narrow-Font-Family/GothamNarrow-Book.otf';
 import EndPage from './Pages/EndPage';
 import ProtectedRoute from './Components/ProtectedRoute';
+import AppLayout from './Components/AppLayout';
 import Login from './Components/Login';
-import NavigationButtons from './Components/NavigationButtons';
 import Logout from './Components/Logout';
 import ViewAllExercises from './Pages/View';
 import TextExercise from './Components/Exercise/TextExercise';
@@ -17,17 +19,25 @@ import TableExercise from './Components/Exercise/TableExercise';
 import TwoColumnExercise from './Components/Exercise/TwoColumnExercise';
 import LearningObjectivesExercise from './Components/Exercise/LearningObjectivesExercise';
 import { exercisesMeta } from '../content/exercises';
+import './Pages/pages.css';
 
+// Order matches Book of Serendip
 const pages = [
   { path: '/', label: 'FrontPage', color: 'white' },
   { path: '/assignment', label: 'Assignment', color: 'black' },
   { path: '/part1', label: 'Part 1', color: 'black' },
-  ...exercisesMeta.slice(0, 2).map(e => ({ path: e.route, label: e.title, color: 'black' })), // Course Info and Learning Objectives
+  { path: exercisesMeta[0].route, label: exercisesMeta[0].title, color: 'black' },
   { path: '/part2', label: 'Part 2', color: 'black' },
-  ...exercisesMeta.slice(2, 4).map(e => ({ path: e.route, label: e.title, color: 'black' })), // Core Content and Teaching Methods
+  { path: exercisesMeta[1].route, label: exercisesMeta[1].title, color: 'black' },
+  { path: exercisesMeta[2].route, label: exercisesMeta[2].title, color: 'black' },
   { path: '/part3', label: 'Part 3', color: 'black' },
-  ...exercisesMeta.slice(4, 6).map(e => ({ path: e.route, label: e.title, color: 'black' })), // Assessment Methods and Grading Criteria & Reflection
-  { path: '/endpage', label: 'End', color: 'black' },
+  { path: exercisesMeta[3].route, label: exercisesMeta[3].title, color: 'black' },
+  { path: '/part4', label: 'Part 4', color: 'black' },
+  { path: exercisesMeta[4].route, label: exercisesMeta[4].title, color: 'black' },
+  { path: '/part5', label: 'Part 5', color: 'black' },
+  { path: exercisesMeta[5].route, label: exercisesMeta[5].title, color: 'black' },
+  { path: exercisesMeta[6].route, label: exercisesMeta[6].title, color: 'black' },
+  { path: '/endpage', label: 'Share your course canvas', color: 'black' },
 ];
 
 function App() {
@@ -51,34 +61,42 @@ function App() {
       <style>
         {myFontFace}
       </style>
-      <NavigationButtons pages={pages} currentPage={currentPageIndex} />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/" element={<ProtectedRoute />}>
+        <Route path="/view/:userId" element={<ViewAllExercises />} />
+        <Route
+          path="/"
+          element={
+            <AppLayout pages={pages} currentPageIndex={currentPageIndex}>
+              <ProtectedRoute />
+            </AppLayout>
+          }
+        >
           <Route path="/bos" element={<Navigate to="/" />} />
           <Route path="/" element={<FrontPage />} />
           <Route path="/assignment" element={<AssignmentPage />} />
           <Route path="/part1" element={<Part1Page />} />
           <Route path="/part2" element={<Part2Page />} />
           <Route path="/part3" element={<Part3Page />} />
+          <Route path="/part4" element={<Part4Page />} />
+          <Route path="/part5" element={<Part5Page />} />
           <Route path="/exercise" element={<ExercisePage />}>
             {exercisesMeta.map(meta => (
-              <Route 
-                key={meta.id} 
-                path={meta.route.replace('/exercise/', '')} 
+              <Route
+                key={meta.id}
+                path={meta.route.replace('/exercise/', '')}
                 element={
                   meta.id === 'learningObjectives' ? <LearningObjectivesExercise /> :
-                  meta.type === 'text' ? <TextExercise /> : 
-                  meta.type === 'table' ? <TableExercise /> : 
-                  meta.type === 'two-column' ? <TwoColumnExercise /> : 
+                  meta.type === 'text' ? <TextExercise /> :
+                  meta.type === 'table' ? <TableExercise /> :
+                  meta.type === 'two-column' ? <TwoColumnExercise /> :
                   <TextExercise />
-                } 
+                }
               />
             ))}
           </Route>
           <Route path="/endpage" element={<EndPage />} />
-          <Route path='/view/:userId' element={<ViewAllExercises />} />
         </Route>
       </Routes>
     </>

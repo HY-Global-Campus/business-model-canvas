@@ -1,14 +1,13 @@
 // import React, { useRef, CSSProperties } from 'react';
 import React, { useRef, useCallback } from 'react';
 import '../pages.css'
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import Header from '../../Components/Header';
 import { getCourseByUserId, updateCourse, Course } from '../../api/courseService';
 import { ExerciseContext } from '../../Components/Exercise/ExerciseContext';
 import axios from 'axios';
-import { exercisesMeta } from '../../../content/exercises';
 
 // Define the type for the mutation context
 type MutationContext = {
@@ -18,8 +17,6 @@ type MutationContext = {
 const ExercisePage: React.FC = () => {
   const queryClient = useQueryClient();
   const userId = sessionStorage.getItem('id');
-  const location = useLocation();
-  const navigate = useNavigate();
 
   // Use `useQuery` to fetch the bookOne data
   const { data: bookOne, isLoading: loading, error } = useQuery<Course, Error>({
@@ -99,67 +96,15 @@ const ExercisePage: React.FC = () => {
   }
 
   return (
-    <>
+    <div className="page-with-header">
       <Header />
       <div className="exercise-page">
         <ExerciseContext.Provider value={{ bookOne: bookOne || null, loading, error: error?.message || null, readonly: false, onUpdateBookOne }}>
           <Outlet />
-          <NavigationControls bookOne={bookOne} currentPath={location.pathname} onNavigate={navigate} />
         </ExerciseContext.Provider>
       </div>
-    </>
+    </div>
   );
 };
 
 export default ExercisePage;
-
-type NavProps = {
-  bookOne: Course | undefined;
-  currentPath: string;
-  onNavigate: ReturnType<typeof useNavigate>;
-};
-
-const NavigationControls: React.FC<NavProps> = ({ bookOne, currentPath, onNavigate }) => {
-  const currentIndex = exercisesMeta.findIndex(e => e.route === currentPath);
-  const isFirst = currentIndex <= 0;
-  const isLast = currentIndex === exercisesMeta.length - 1;
-
-  const validate = (): boolean => {
-    if (!bookOne) return false;
-    const meta = exercisesMeta[currentIndex];
-    if (!meta) return true;
-    const data: any = (bookOne as any).exercises?.[meta.id];
-    if (meta.type === 'text') {
-      if (meta.props?.required) return !!data?.value && String(data.value).trim().length > 0;
-      return true;
-    }
-    if (meta.type === 'table') {
-      if (!meta.props?.required) return true;
-      const rows: string[][] = data?.value ?? [];
-      return rows.some(r => r.some(c => (c ?? '').trim().length > 0));
-    }
-    return true;
-  };
-
-  const goPrev = () => {
-    if (isFirst) return;
-    const prev = exercisesMeta[currentIndex - 1];
-    if (prev) onNavigate(prev.route);
-  };
-
-  const goNext = () => {
-    if (isLast) return;
-    if (!validate()) return;
-    const next = exercisesMeta[currentIndex + 1];
-    if (next) onNavigate(next.route);
-  };
-
-  const canNext = !isLast && validate();
-
-  return (
-    <div className="exercise-navigation">
-      <button className="nav-button" onClick={goPrev} disabled={isFirst}>←</button>
-      <button className="nav-button" onClick={goNext} disabled={!canNext}>→</button>
-    </div>
-  );
-};
