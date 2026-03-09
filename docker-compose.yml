@@ -1,5 +1,4 @@
 version: "3.9"
-
 services:
   app:
     build: ./backend
@@ -65,4 +64,3 @@ services:
           path: ./frontend/package.json
         - action: rebuild
           path: ./frontend/package-lock.json
-
