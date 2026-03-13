@@ -58,31 +58,23 @@ services:
         VITE_API_URL: http://localhost:8080
     environment:
       NODE_ENV: development
-      # Browser calls your machine via published port, so localhost is correct here.
+      VITE_API_URL: http://localhost:8080
       PORT: 3000
       CHOKIDAR_USEPOLLING: "true"
       CHOKIDAR_INTERVAL: "150"
-    command:
-      - npm
-      - run
-      - dev
-      - --
-      - --host
-      - 0.0.0.0
-      - --port
-      - "3000"
-      - --strictPort
+    working_dir: /app
+    command: []
     ports:
       - "3000:3000"
     volumes:
-      - frontend-node-modules:/usr/src/app/node_modules
+      - frontend-node-modules:/app/node_modules
     depends_on:
       - app
     develop:
       watch:
         - action: sync
           path: ./frontend
-          target: /usr/src/app
+          target: /app
           ignore:
             - node_modules/
             - .git/

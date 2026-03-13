@@ -8,7 +8,7 @@ RUN npm ci
 
 # --- dev: local development with Vite dev server ---
 FROM node:20-alpine AS dev
-WORKDIR /usr/src/app
+WORKDIR /app
 
 ARG VITE_API_URL
 ENV VITE_API_URL=${VITE_API_URL}
