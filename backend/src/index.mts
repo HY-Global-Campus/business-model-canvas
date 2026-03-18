@@ -9,6 +9,8 @@ import cors from 'cors';
 import chatbotRouter from './controllers/chatbot.js';
 import exportsRouter from './controllers/exports.js';
 
+import cookieParser from 'cookie-parser';
+import config from './config.js';
 
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -39,6 +41,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(cookieParser(config.COOKIE_SECRET));
 app.use('/login', loginRouter);
 
 app.use('/chatbot', authMiddleware, chatbotRouter)

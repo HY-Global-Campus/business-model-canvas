@@ -1,5 +1,5 @@
 import { body, validationResult, ValidationChain } from 'express-validator';
-import { sendErrorResponse } from '../utilities/errorHandler';
+import { sendErrorResponse } from '../utilities/errorHandler.js';
 import { Request, Response, NextFunction } from 'express';
 
 /**
@@ -36,11 +36,7 @@ export const ValidationRules = {
   register: [
     body('email').isEmail().withMessage('Please enter a valid email address'),
     body('password')
-      .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
-      .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
-      .matches(/[a-z]/).withMessage('Password must contain at least one lowercase letter')
-      .matches(/[0-9]/).withMessage('Password must contain at least one number')
-      .matches(/[@$!%*?&]/).withMessage('Password must contain at least one special character'),
+      .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
     body('displayName').isLength({ min: 2 }).withMessage('Display name must be at least 2 characters')
   ],
   
@@ -52,11 +48,7 @@ export const ValidationRules = {
   // Password validation with strength requirements
   strongPassword: [
     body('password')
-      .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
-      .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
-      .matches(/[a-z]/).withMessage('Password must contain at least one lowercase letter')
-      .matches(/[0-9]/).withMessage('Password must contain at least one number')
-      .matches(/[@$!%*?&]/).withMessage('Password must contain at least one special character')
+      .isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
   ]
 };
 

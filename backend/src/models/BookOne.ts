@@ -1,6 +1,6 @@
 
 import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
-import { BookOneExercises } from '../types/exercises';
+import { BookOneExercises } from '../types/exercises.js';
 
 export interface BookOneAttributes {
   id: number;

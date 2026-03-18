@@ -183,7 +183,7 @@ const BMCBlockEditor: React.FC = () => {
       return;
     }
     
-    fetchQuickTips(blockId, localContent, project);
+    fetchQuickTips(blockId, localContent, project.canvasData);
   }, [localContent, project, blockId, fetchQuickTips]);
 
   const handleContentChange = useCallback((newContent: string) => {

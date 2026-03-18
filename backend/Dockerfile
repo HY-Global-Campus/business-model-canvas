@@ -29,4 +29,4 @@ RUN if [ "$NODE_ENV" != "development" ]; then \
 EXPOSE 8080
 
 # Dev: nodemon + ts-node/esm; Prod: compiled JS
-CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev:watch; else npm run start; fi"]
+CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"development\" ]; then npm run dev:watch; else node dist/index.js; fi"]

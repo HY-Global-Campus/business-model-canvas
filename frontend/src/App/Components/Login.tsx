@@ -1,27 +1,6 @@
-import React, { CSSProperties, useState } from 'react';
-import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { login, register } from '../api/auth';
-import { setAuthToken } from '../utils/auth';
+import React, { CSSProperties } from 'react';
+import { useLocation } from 'react-router-dom';
 import borealforest from '../../assets/HY_Serendip-BOREALFOREST.jpg';
-
-interface LoginResponse {
-  token: string;
-  displayName: string;
-  id: string;
-  email: string;
-}
-
-interface LoginVariables {
-  email: string;
-  password: string;
-}
-
-interface RegisterVariables {
-  email: string;
-  password: string;
-  displayName: string;
-}
 
 const wrapperStyle: CSSProperties = {
   background: `url(${borealforest}) no-repeat center center fixed`,
@@ -44,29 +23,11 @@ const containerStyle: CSSProperties = {
   width: '100%',
 };
 
-const inputStyle: CSSProperties = {
-  display: 'block',
-  width: '100%',
-  padding: '12px',
-  margin: '10px 0',
-  borderRadius: '5px',
-  border: '1px solid #ccc',
-  fontSize: '16px',
-  boxSizing: 'border-box',
-};
-
-const labelStyle: CSSProperties = {
-  marginBottom: '5px',
-  fontWeight: 'bold',
-  display: 'block',
-  textAlign: 'left',
-};
-
 const buttonStyle: CSSProperties = {
   display: 'block',
   width: '100%',
   padding: '12px',
-  backgroundColor: '#4CAF50',
+  backgroundColor: '#2196F3',
   color: 'white',
   border: 'none',
   borderRadius: '5px',
@@ -76,221 +37,29 @@ const buttonStyle: CSSProperties = {
   marginTop: '10px',
 };
 
-const linkButtonStyle: CSSProperties = {
-  background: 'none',
-  border: 'none',
-  color: '#4CAF50',
-  textDecoration: 'underline',
-  cursor: 'pointer',
-  fontSize: '14px',
-  marginTop: '15px',
-};
-
-const errorStyle: CSSProperties = {
-  color: 'red',
-  marginTop: '10px',
-  fontSize: '14px',
-};
-
 const Login: React.FC = () => {
-  const [isRegisterMode, setIsRegisterMode] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [displayName, setDisplayName] = useState<string>('');
-  const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as { from: Location })?.from?.pathname || '/';
+  const from = (location.state as { from?: Location })?.from?.pathname || '/';
 
-  const loginMutation: UseMutationResult<LoginResponse, Error, LoginVariables> = useMutation({
-    mutationFn: ({ email, password }: LoginVariables) => login(email, password),
-    onSuccess: (data: LoginResponse) => {
-      if (!data || typeof data !== 'object') {
-        alert('Login failed: Invalid response from server');
-        return;
-      }
-      const success = setAuthToken(data.token, data.displayName, data.id, data.email);
-      if (success) {
-        navigate(from);
-      } else {
-        alert('Login failed: Invalid or missing authentication data. Please check console for details.');
-      }
-    },
-    onError: (error: Error) => {
-      console.error('Login failed:', error);
-      // The axios interceptor already provides user-friendly messages
-      // Just show the error message without the "Login failed:" prefix
-      // since the message is already user-friendly
-    },
-  });
-
-  const registerMutation: UseMutationResult<LoginResponse, Error, RegisterVariables> = useMutation({
-    mutationFn: ({ email, password, displayName }: RegisterVariables) => 
-      register(email, password, displayName),
-    onSuccess: (data: LoginResponse) => {
-      if (!data || typeof data !== 'object') {
-        alert('Registration failed: Invalid response from server');
-        return;
-      }
-      const success = setAuthToken(data.token, data.displayName, data.id, data.email);
-      if (success) {
-        navigate(from);
-      } else {
-        alert('Registration failed: Invalid or missing authentication data. Please check console for details.');
-      }
-    },
-    onError: (error: Error) => {
-      console.error('Registration failed:', error);
-      // The axios interceptor already provides user-friendly messages
-      // Just show the error message without the "Registration failed:" prefix
-      // since the message is already user-friendly
-    },
-  });
-
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) {
+  const startMoocLogin = () => {
+    sessionStorage.setItem('postLoginRedirect', from);
+    const apiUrl = import.meta.env.VITE_API_URL;
+    if (!apiUrl) {
+      alert('VITE_API_URL is not set. Cannot start login.');
       return;
     }
-    loginMutation.mutate({ email, password });
-  };
-
-  const handleRegisterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password || !displayName) {
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert('Passwords do not match. Please make sure both password fields are identical.');
-      return;
-    }
-
-    if (password.length < 6) {
-      alert('Password must be at least 6 characters long for security.');
-      return;
-    }
-
-    registerMutation.mutate({ email, password, displayName });
-  };
-
-  const toggleMode = () => {
-    setIsRegisterMode(!isRegisterMode);
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
-    setDisplayName('');
-    loginMutation.reset();
-    registerMutation.reset();
+    window.location.href = `${apiUrl.replace(/\/$/, '')}/login/mooc/start`;
   };
 
   return (
     <div style={wrapperStyle}>
       <div style={containerStyle}>
-        <h1>{isRegisterMode ? 'Register' : 'Login'}</h1>
+        <h1>Login</h1>
         <p style={{ marginBottom: '20px', color: '#555' }}>
-          {isRegisterMode 
-            ? 'Create a new account to get started' 
-            : 'Welcome back! Please login to continue'}
+          Continue by signing in with mooc.fi.
         </p>
-
-        {!isRegisterMode ? (
-          <form onSubmit={handleLoginSubmit}>
-            <div>
-              <label style={labelStyle}>Email:</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={inputStyle}
-                placeholder="your@email.com"
-                required
-              />
-            </div>
-            <div>
-              <label style={labelStyle}>Password:</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={inputStyle}
-                placeholder="Enter your password"
-                required
-              />
-            </div>
-            <button type="submit" style={buttonStyle} disabled={loginMutation.isPending}>
-              {loginMutation.isPending ? 'Logging in...' : 'Login'}
-            </button>
-            {loginMutation.isError && (
-              <p style={errorStyle}>
-                {loginMutation.error?.message || 'Login failed. Please check your credentials and try again.'}
-              </p>
-            )}
-          </form>
-        ) : (
-          <form onSubmit={handleRegisterSubmit}>
-            <div>
-              <label style={labelStyle}>Display Name:</label>
-              <input
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                style={inputStyle}
-                placeholder="How should we call you?"
-                required
-                minLength={2}
-              />
-            </div>
-            <div>
-              <label style={labelStyle}>Email:</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={inputStyle}
-                placeholder="your@email.com"
-                required
-              />
-            </div>
-            <div>
-              <label style={labelStyle}>Password:</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={inputStyle}
-                placeholder="At least 6 characters"
-                required
-                minLength={6}
-              />
-            </div>
-            <div>
-              <label style={labelStyle}>Confirm Password:</label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                style={inputStyle}
-                placeholder="Re-enter your password"
-                required
-              />
-            </div>
-            <button type="submit" style={buttonStyle} disabled={registerMutation.isPending}>
-              {registerMutation.isPending ? 'Creating account...' : 'Register'}
-            </button>
-            {registerMutation.isError && (
-              <p style={errorStyle}>
-                {registerMutation.error?.message || 'Registration failed. Please check your information and try again.'}
-              </p>
-            )}
-          </form>
-        )}
-
-        <button onClick={toggleMode} style={linkButtonStyle}>
-          {isRegisterMode 
-            ? 'Already have an account? Login here' 
-            : "Don't have an account? Register here"}
+        <button onClick={startMoocLogin} style={buttonStyle}>
+          Login with mooc.fi
         </button>
       </div>
     </div>

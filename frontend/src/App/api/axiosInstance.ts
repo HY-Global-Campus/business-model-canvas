@@ -10,9 +10,10 @@ const ERROR_MESSAGES = {
   'AUTH_003': 'You are not authorized to access this resource.',
   'AUTH_004': 'You do not have permission to perform this action.',
   'VAL_001': 'Please enter a valid email address.',
-  'VAL_002': 'Password must be at least 6 characters long.',
+  'VAL_002': 'Password must be at least 6 characters.',
   'VAL_003': 'Display name must be at least 2 characters long.',
   'VAL_004': 'Please fill in all required fields.',
+  'VAL_005': 'Validation failed. Please check the errors below.',
   'RES_001': 'This email is already registered. Please use a different email or try logging in.',
   'RES_002': 'The requested resource was not found.',
   'SYS_001': 'An unexpected error occurred. Please try again later.',
@@ -27,6 +28,7 @@ if (import.meta.env.DEV && !apiUrl) {
 
 const api = axios.create({
   baseURL: apiUrl, // Set your API base URL here
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
@@ -64,6 +66,11 @@ api.interceptors.response.use(
           (userFriendlyError as any).originalError = error;
           (userFriendlyError as any).status = status;
           (userFriendlyError as any).errorCode = data.code;
+          
+          // Special handling for validation errors - include the specific field errors
+          if (data.code === 'VAL_005' && data.errors) {
+            (userFriendlyError as any).validationErrors = data.errors;
+          }
         }
         
         return Promise.reject(userFriendlyError);

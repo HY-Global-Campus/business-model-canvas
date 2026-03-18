@@ -56,6 +56,11 @@ export const ErrorTypes = {
     message: 'Please fill in all required fields.',
     status: 400
   },
+  VALIDATION_ERROR: {
+    code: 'VAL_005',
+    message: 'Validation failed. Please check the errors and try again.',
+    status: 400
+  },
   
   // Resource errors
   EMAIL_ALREADY_REGISTERED: {
@@ -68,16 +73,35 @@ export const ErrorTypes = {
     message: 'The requested resource was not found.',
     status: 404
   },
-  
-  // Validation errors
-  VALIDATION_ERROR: {
-    code: 'VAL_005',
-    message: 'Validation failed. Please check the errors and try again.',
-    status: 400
-  },
+ 
   PASSWORD_WEAK: {
     code: 'VAL_006',
     message: 'Password must be at least 8 characters and contain uppercase, lowercase, number, and special character',
+    status: 400
+  },
+  MISSING_FIELDS: {
+    code: 'VAL_007',
+    message: 'Required fields are missing. Please fill in all required information.',
+    status: 400
+  },
+  INVALID_OR_EXPIRED_TOKEN: {
+    code: 'AUTH_005',
+    message: 'The token is invalid or has expired. Please request a new one.',
+    status: 401
+  },
+  INVALID_TOKEN: {
+    code: 'AUTH_006',
+    message: 'The provided token is invalid.',
+    status: 401
+  },
+  SUCCESS: {
+    code: 'SYS_003',
+    message: 'Operation completed successfully.',
+    status: 200
+  },
+  OAUTH_USER_NO_PASSWORD: {
+    code: 'AUTH_007',
+    message: 'This account uses OAuth login and does not have a password to reset.',
     status: 400
   },
   
