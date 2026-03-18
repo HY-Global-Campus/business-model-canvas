@@ -1,6 +1,6 @@
 
 import { Model, DataTypes, Sequelize, Association } from 'sequelize';
-import BookOne from './BookOne';
+import BookOne from './BookOne.js';
 
 interface UserAttributes {
   id?: string;
@@ -10,6 +10,10 @@ interface UserAttributes {
   oauthProvider?: string | null;
   oauthId?: string | null;
   isAdmin?: boolean;
+  passwordResetToken?: {
+    token: string;
+    expiresAt: Date;
+  } | null;
 }
 
 class User extends Model<UserAttributes> implements UserAttributes {
@@ -20,6 +24,10 @@ class User extends Model<UserAttributes> implements UserAttributes {
   declare oauthProvider: string | null;
   declare oauthId: string | null;
   declare isAdmin: boolean;
+  declare passwordResetToken: {
+    token: string;
+    expiresAt: Date;
+  } | null;
 
   declare static associations: {
     BookOne: Association<User, BookOne>;
@@ -59,6 +67,10 @@ class User extends Model<UserAttributes> implements UserAttributes {
         isAdmin: {
           type: DataTypes.BOOLEAN,
           defaultValue: false,
+        },
+        passwordResetToken: {
+          type: DataTypes.JSONB,
+          allowNull: true,
         },
       },
       {

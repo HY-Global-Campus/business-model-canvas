@@ -7,21 +7,19 @@ import {
     updateBookOne,
     deleteBookOne,
     findBookOneByUserId
-} from '../services/BookOneService.js'; 
+} from '../services/BookOneService.js';
+import { sendErrorResponse, handleUnexpectedError } from '../utilities/errorHandler.js'; 
 
 const router = Router();
 
-const handleError = (error: unknown, res: Response) => {
-    if (error instanceof Error) {
-        res.status(500).json({ message: error.message });
-    } else {
-        res.status(500).json({ message: 'An unknown error occurred' });
-    }
+const handleError = (error: unknown, res: Response, context: string = 'BookOneController') => {
+    handleUnexpectedError(error, res, context);
 };
 
 router.get('/', async (req: Request, res: Response) => {
     if (!req.user?.isAdmin) {
-        return res.status(401).send();
+        sendErrorResponse(res, 'UNAUTHORIZED');
+        return;
     }
     try {
         const books = await findAllBookOnes();
@@ -38,7 +36,8 @@ router.get('/:id', async (req: Request, res: Response) => {
     try {
         const book = await findBookOneById(parseInt(req.params.id));
         if (!book) {
-            return res.status(404).json({ message: 'BookOne not found' });
+            sendErrorResponse(res, 'RESOURCE_NOT_FOUND', { resource: 'BookOne' });
+            return;
         }
         res.json(book);
     } catch (error) {
@@ -53,7 +52,8 @@ router.get('/user/:userid', async (req: Request, res: Response) => {
   try {
     const book = await findBookOneByUserId(req.params.userid);
     if (!book) {
-      return res.status(404).json({message: 'BookOne not found'});
+      sendErrorResponse(res, 'RESOURCE_NOT_FOUND', { resource: 'BookOne' });
+      return;
     }
     res.json(book);
   } catch (error) {
@@ -74,11 +74,13 @@ router.put('/:id', async (req: Request, res: Response) => {
     try {
         const owner_id = (await findBookOneById(parseInt(req.params.id)))?.userId;
         if (req.user?.id !== owner_id) {
-            return res.status(401).send();
+            sendErrorResponse(res, 'FORBIDDEN');
+            return;
         }
         const updatedBook = await updateBookOne(parseInt(req.params.id), req.body);
         if (!updatedBook) {
-            return res.status(404).json({ message: 'Book not found' });
+            sendErrorResponse(res, 'RESOURCE_NOT_FOUND', { resource: 'BookOne' });
+            return;
         }
         res.json(updatedBook);
     } catch (error) {
@@ -90,11 +92,13 @@ router.delete('/:id', async (req: Request, res: Response) => {
     try {
         const owner_id = (await findBookOneById(parseInt(req.params.id)))?.userId;
         if (req.user?.id !== owner_id && !req.user?.isAdmin) {
-            return res.status(401).send();
+            sendErrorResponse(res, 'FORBIDDEN');
+            return;
         }
         const result = await deleteBookOne(parseInt(req.params.id));
         if (!result) {
-            return res.status(404).json({ message: 'Book not found' });
+            sendErrorResponse(res, 'RESOURCE_NOT_FOUND', { resource: 'BookOne' });
+            return;
         }
         res.json({ message: 'Book deleted successfully' });
     } catch (error) {

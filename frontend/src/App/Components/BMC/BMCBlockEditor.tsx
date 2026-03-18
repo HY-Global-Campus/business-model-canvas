@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { useBMCContext } from '../../contexts/BMCContext';
 import { getBlockMeta, getBlockOrder } from '../../../content/bmcBlocks';
-import { BMCBlockId } from '../../../types/bmc';
+import { BMCBlockId, BMCExercises } from '../../../types/bmc';
 import AIInsights from './AIInsights';
 import QuickTipsGutter from './QuickTipsGutter';
 import { 
@@ -67,7 +67,7 @@ const BMCBlockEditor: React.FC = () => {
 
   // Debounced fetch for block-specific guidance
   const fetchGuidance = useCallback(
-    debounce(async (currentBlockId: string, content: string, canvasData: any) => {
+    debounce(async (currentBlockId: string, content: string, canvasData: BMCExercises) => {
       const now = Date.now();
       if (now - lastFetchTime.current < MIN_FETCH_INTERVAL) return;
       
@@ -91,7 +91,7 @@ const BMCBlockEditor: React.FC = () => {
 
   // Debounced fetch for canvas-wide checks
   const fetchCanvasInsights = useCallback(
-    debounce(async (canvasData: any) => {
+    debounce(async (canvasData: BMCExercises) => {
       const now = Date.now();
       if (now - lastFetchTime.current < MIN_FETCH_INTERVAL) return;
       
@@ -133,7 +133,7 @@ const BMCBlockEditor: React.FC = () => {
 
   // Debounced fetch for quick tips (2.5 seconds)
   const fetchQuickTips = useCallback(
-    debounce(async (currentBlockId: string, content: string, canvasData: any) => {
+    debounce(async (currentBlockId: string, content: string, canvasData: BMCExercises) => {
       if (!content || content.trim().length < 10) {
         setQuickTips([]);
         return;
@@ -162,7 +162,7 @@ const BMCBlockEditor: React.FC = () => {
     if (!project || !localContent || !blockId) return;
     
     // Fetch guidance for current block
-    fetchGuidance(blockId, localContent, project);
+    fetchGuidance(blockId, localContent, project.canvasData);
     
     // Check if enough content exists for canvas-wide checks
     const totalBlocks = Object.keys(project.canvasData).length;
@@ -172,7 +172,7 @@ const BMCBlockEditor: React.FC = () => {
     
     // Only run canvas-wide checks if at least 50% of blocks have content
     if (filledBlocks >= totalBlocks * 0.5) {
-      fetchCanvasInsights(project);
+      fetchCanvasInsights(project.canvasData);
     }
   }, [localContent, project, blockId, fetchGuidance, fetchCanvasInsights]);
 
@@ -183,7 +183,7 @@ const BMCBlockEditor: React.FC = () => {
       return;
     }
     
-    fetchQuickTips(blockId, localContent, project);
+    fetchQuickTips(blockId, localContent, project.canvasData);
   }, [localContent, project, blockId, fetchQuickTips]);
 
   const handleContentChange = useCallback((newContent: string) => {

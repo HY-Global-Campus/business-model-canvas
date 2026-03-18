@@ -127,7 +127,6 @@ const BMCCanvasOverview: React.FC = () => {
 
   const handleRequestFeedback = async () => {
     if (!project || !onRequestFeedback) {
-      console.log('Cannot request feedback:', { project: !!project, onRequestFeedback: !!onRequestFeedback });
       return;
     }
     
@@ -141,11 +140,9 @@ const BMCCanvasOverview: React.FC = () => {
       return;
     }
     
-    console.log('Requesting feedback...');
     setIsRequestingFeedback(true);
     try {
       await onRequestFeedback();
-      console.log('Feedback received');
     } catch (error) {
       console.error('Error requesting feedback:', error);
       alert('Failed to request feedback. Please try again.');

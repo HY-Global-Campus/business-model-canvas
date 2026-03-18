@@ -9,20 +9,18 @@ import {
 } from '../services/CourseService.js';
 import Course from '../models/Course.js';
 import BookOne from '../models/BookOne.js';
+import { sendErrorResponse, handleUnexpectedError } from '../utilities/errorHandler.js';
 
 const router = Router();
 
-const handleError = (error: unknown, res: Response) => {
-  if (error instanceof Error) {
-    res.status(500).json({ message: error.message });
-  } else {
-    res.status(500).json({ message: 'An unknown error occurred' });
-  }
+const handleError = (error: unknown, res: Response, context: string = 'CourseController') => {
+  handleUnexpectedError(error, res, context);
 };
 
 router.get('/', async (req: Request, res: Response) => {
   if (!req.user?.isAdmin) {
-    return res.status(401).send();
+    sendErrorResponse(res, 'UNAUTHORIZED');
+    return;
   }
   try {
     const courses = await findAllCourses();
@@ -34,12 +32,14 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
   if (!req.user?.isAdmin) {
-    return res.status(401).send();
+    sendErrorResponse(res, 'UNAUTHORIZED');
+    return;
   }
   try {
     const course = await findCourseById(parseInt(req.params.id));
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      sendErrorResponse(res, 'RESOURCE_NOT_FOUND', { resource: 'Course' });
+      return;
     }
     res.json(course);
   } catch (error) {
@@ -51,7 +51,8 @@ router.get('/user/:userid', async (req: Request, res: Response) => {
   try {
     const course = await findCourseByUserId(req.params.userid);
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      sendErrorResponse(res, 'RESOURCE_NOT_FOUND', { resource: 'Course' });
+      return;
     }
     res.json(course);
   } catch (error) {
@@ -72,11 +73,13 @@ router.put('/:id', async (req: Request, res: Response) => {
   try {
     const owner_id = (await findCourseById(parseInt(req.params.id)))?.userId;
     if (req.user?.id !== owner_id) {
-      return res.status(401).send();
+      sendErrorResponse(res, 'FORBIDDEN');
+      return;
     }
     const updatedCourse = await updateCourse(parseInt(req.params.id), req.body);
     if (!updatedCourse) {
-      return res.status(404).json({ message: 'Course not found' });
+      sendErrorResponse(res, 'RESOURCE_NOT_FOUND', { resource: 'Course' });
+      return;
     }
     res.json(updatedCourse);
   } catch (error) {
@@ -88,11 +91,13 @@ router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const owner_id = (await findCourseById(parseInt(req.params.id)))?.userId;
     if (req.user?.id !== owner_id && !req.user?.isAdmin) {
-      return res.status(401).send();
+      sendErrorResponse(res, 'FORBIDDEN');
+      return;
     }
     const result = await deleteCourse(parseInt(req.params.id));
     if (!result) {
-      return res.status(404).json({ message: 'Course not found' });
+      sendErrorResponse(res, 'RESOURCE_NOT_FOUND', { resource: 'Course' });
+      return;
     }
     res.json({ message: 'Course deleted successfully' });
   } catch (error) {

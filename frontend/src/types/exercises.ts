@@ -1,4 +1,5 @@
 
+// Book One Exercise Types
 export interface ChooseChallenge {
   left: {
     title: string;
@@ -211,6 +212,7 @@ export interface BookOneExercises {
   futurePitchAnswer: FuturePitchAnswer;
 }
 
+// Course Exercise Types
 export interface CourseExercises {
   courseInfo?: {
     name?: string;
@@ -235,9 +237,29 @@ export interface CourseExercises {
     gradingCriteria?: string;
     reflection?: string;
   };
-  // Keep only exercises that are actually used in the current course
-  // Remove: targetAudience, courseStructure, assessmentStrategy, resources, technology, timeline, evaluation
-  // (These were in exercisesMeta but removed from navigation in earlier changes)
+  // Legacy fields that may still exist in some databases
+  targetAudience?: {
+    value: string;
+  };
+  courseStructure?: {
+    value: string[][];
+  };
+  assessmentStrategy?: {
+    value: string;
+  };
+  resources?: {
+    value: string[][];
+  };
+  technology?: {
+    value: string;
+  };
+  timeline?: {
+    value: string[][];
+  };
+  evaluation?: {
+    value: string;
+  };
 }
 
-
+// Import BMC types
+export * from './bmc';

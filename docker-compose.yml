@@ -28,6 +28,12 @@ services:
       JWT_SECRET: developmentsecret
       GCAI_URL: ${GCAI_URL}
       GCAI_TOKEN: ${GCAI_TOKEN}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      MOOC_CLIENT_ID: ${MOOC_CLIENT_ID}
+      MOOC_CLIENT_SECRET: ${MOOC_CLIENT_SECRET}
+      MOOC_ISSUER_URL: ${MOOC_ISSUER_URL}
+      MOOC_REDIRECT_URI: ${MOOC_REDIRECT_URI}
       CHOKIDAR_USEPOLLING: "true"
       CHOKIDAR_INTERVAL: "150"
     ports:
@@ -59,13 +65,13 @@ services:
     environment:
       NODE_ENV: development
       VITE_API_URL: http://localhost:8080
-      PORT: 3000
+      PORT: 5173
       CHOKIDAR_USEPOLLING: "true"
       CHOKIDAR_INTERVAL: "150"
     working_dir: /app
     command: []
     ports:
-      - "3000:3000"
+      - "5173:5173"
     depends_on:
       - app
     develop:

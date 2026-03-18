@@ -1,5 +1,5 @@
 import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
-import { CourseExercises, BMCExercises, BusinessContext } from '../types/exercises';
+import { CourseExercises, BMCExercises, BusinessContext } from '../types/exercises.js';
 
 export interface CourseAttributes {
   id: number;

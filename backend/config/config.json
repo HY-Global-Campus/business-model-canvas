@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "user",
+    "password": "password",
+    "database": "mydatabase",
+    "host": "db",
+    "dialect": "postgres",
+    "migrationStorageTableName": "sequelize_migrations"
+  },
+  "test": {
+    "username": "user",
+    "password": "password",
+    "database": "mydatabase_test",
+    "host": "db",
+    "dialect": "postgres",
+    "migrationStorageTableName": "sequelize_migrations"
+  },
+  "production": {
+    "username": "user",
+    "password": "password",
+    "database": "mydatabase",
+    "host": "db",
+    "dialect": "postgres",
+    "migrationStorageTableName": "sequelize_migrations"
+  }
+}
