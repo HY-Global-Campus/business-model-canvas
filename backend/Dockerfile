@@ -20,9 +20,11 @@ RUN npm ci
 # Copy source
 COPY . .
 
-# Build only for production and prune dev dependencies afterwards
+# Always build so dist/ exists in all images
+RUN npm run build
+
+# Prune dev dependencies for non-development images
 RUN if [ "$NODE_ENV" != "development" ]; then \
-	npm run build && \
 	npm prune --omit=dev; \
 	fi
 
