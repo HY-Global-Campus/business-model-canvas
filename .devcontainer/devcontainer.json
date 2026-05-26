@@ -5,6 +5,7 @@
     "docker-compose.yml"
   ],
   "service": "dev",
+  "runServices": ["db", "app", "frontend", "dev"],
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
   "forwardPorts": [5173, 8080, 5432],

@@ -1,8 +1,10 @@
 services:
   dev:
     image: mcr.microsoft.com/devcontainers/javascript-node:20-bookworm
+    init: true
     volumes:
-      - ..:/workspace:cached
+      # Relative paths are resolved from ../docker-compose.yml, the first compose file.
+      - .:/workspace:cached
     command: sleep infinity
     depends_on:
       db:
