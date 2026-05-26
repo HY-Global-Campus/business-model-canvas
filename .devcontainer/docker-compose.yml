@@ -1,0 +1,25 @@
+services:
+  dev:
+    image: mcr.microsoft.com/devcontainers/javascript-node:20-bookworm
+    init: true
+    volumes:
+      # Relative paths are resolved from ../docker-compose.yml, the first compose file.
+      - .:/workspace:cached
+    command: sleep infinity
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    environment:
+      ALLOWED_ORIGINS: http://localhost:5173
+      MOOC_REDIRECT_URI: http://localhost:5173/auth/callback
+      DEV_AUTH_BYPASS: "true"
+
+  frontend:
+    environment:
+      VITE_DEV_AUTH_BYPASS: "true"
+    command:
+      - sh
+      - -c
+      - npm run dev -- --host 0.0.0.0 --port ${PORT:-5173} --strictPort

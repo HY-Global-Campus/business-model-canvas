@@ -1,14 +1,17 @@
-version: "3.9"
+name: business-model-canvas
 
 services:
   db:
     image: postgres:13
+    restart: unless-stopped
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: mydatabase
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
       # Wait until PG is actually accepting connections on the DB you configured
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h 127.0.0.1"]
@@ -18,6 +21,7 @@ services:
       start_period: 5s
 
   app:
+    init: true
     build:
       context: ./backend
       args:
@@ -26,21 +30,27 @@ services:
       NODE_ENV: development
       DATABASE_URL: postgres://user:password@db:5432/mydatabase
       JWT_SECRET: developmentsecret
-      GCAI_URL: ${GCAI_URL}
-      GCAI_TOKEN: ${GCAI_TOKEN}
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
-      COOKIE_SECRET: ${COOKIE_SECRET}
-      MOOC_CLIENT_ID: ${MOOC_CLIENT_ID}
-      MOOC_CLIENT_SECRET: ${MOOC_CLIENT_SECRET}
-      MOOC_ISSUER_URL: ${MOOC_ISSUER_URL}
-      MOOC_REDIRECT_URI: ${MOOC_REDIRECT_URI}
+      GCAI_URL: ${GCAI_URL:-}
+      GCAI_TOKEN: ${GCAI_TOKEN:-}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:5173}
+      COOKIE_SECRET: ${COOKIE_SECRET:-developmentsecret}
+      MOOC_CLIENT_ID: ${MOOC_CLIENT_ID:-bmc}
+      MOOC_CLIENT_SECRET: ${MOOC_CLIENT_SECRET:-}
+      MOOC_ISSUER_URL: ${MOOC_ISSUER_URL:-https://courses.mooc.fi/api/v0/main-frontend/oauth}
+      MOOC_REDIRECT_URI: ${MOOC_REDIRECT_URI:-http://localhost:5173/auth/callback}
       CHOKIDAR_USEPOLLING: "true"
       CHOKIDAR_INTERVAL: "150"
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"const net=require('net'); const s=net.connect(8080,'127.0.0.1'); s.on('connect',()=>process.exit(0)); s.on('error',()=>process.exit(1)); setTimeout(()=>process.exit(1),2000);\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
     restart: unless-stopped
     develop:
       watch:
@@ -57,6 +67,7 @@ services:
           path: ./backend/package-lock.json
 
   frontend:
+    init: true
     build: 
       context: ./frontend
       target: dev
@@ -71,9 +82,10 @@ services:
     working_dir: /app
     command: []
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5173:5173"
     depends_on:
-      - app
+      app:
+        condition: service_healthy
     develop:
       watch:
         - action: sync
@@ -87,3 +99,6 @@ services:
           path: ./frontend/package.json
         - action: rebuild
           path: ./frontend/package-lock.json
+
+volumes:
+  postgres-data:
