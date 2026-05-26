@@ -21,6 +21,7 @@ interface Config {
   MOOC_CLIENT_SECRET: string,
   MOOC_REDIRECT_URI: string,
   COOKIE_SECRET: string,
+  DEV_AUTH_BYPASS: boolean,
 }
 
 const config: Config = {
@@ -42,6 +43,10 @@ const config: Config = {
   MOOC_CLIENT_SECRET: process.env.MOOC_CLIENT_SECRET?.trim() || '',
   MOOC_REDIRECT_URI: process.env.MOOC_REDIRECT_URI?.trim() || 'http://localhost:5173/auth/callback',
   COOKIE_SECRET: process.env.COOKIE_SECRET?.trim() || (process.env.JWT_SECRET?.trim() || 'developmentsecret'),
+  DEV_AUTH_BYPASS: process.env.DEV_AUTH_BYPASS === 'true',
 }
+
+export const isDevAuthBypassEnabled = (): boolean =>
+  config.NODE_ENV === 'development' && config.DEV_AUTH_BYPASS;
 
 export default config;

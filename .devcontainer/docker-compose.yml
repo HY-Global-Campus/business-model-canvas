@@ -14,8 +14,11 @@ services:
     environment:
       ALLOWED_ORIGINS: http://localhost:5173
       MOOC_REDIRECT_URI: http://localhost:5173/auth/callback
+      DEV_AUTH_BYPASS: "true"
 
   frontend:
+    environment:
+      VITE_DEV_AUTH_BYPASS: "true"
     command:
       - sh
       - -c

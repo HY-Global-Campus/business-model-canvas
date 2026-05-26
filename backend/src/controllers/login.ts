@@ -4,7 +4,7 @@ import express from "express";
 import { Op } from "sequelize";
 import * as oidc from "openid-client";
 import User from "../models/user.js";
-import config from "../config.js";
+import config, { isDevAuthBypassEnabled } from "../config.js";
 import { UserTokenForm } from "../types/user.js";
 import { sendErrorResponse, handleUnexpectedError, validateRequest, ErrorTypes } from "../utilities/errorHandler.js";
 import { validateRequest as validateMiddleware, ValidationRules, checkEmailNotExists } from "../middlewares/validation.js";
@@ -187,6 +187,44 @@ loginRouter.post("/mooc/exchange", async (req, res) => {
     });
   } catch (error) {
     handleUnexpectedError(error, res, "Mooc OIDC exchange");
+  }
+});
+
+// POST /login/dev - Development-only login without MOOC OIDC
+loginRouter.post("/dev", async (req, res) => {
+  if (!isDevAuthBypassEnabled()) {
+    res.status(404).end();
+    return;
+  }
+
+  try {
+    const [user] = await User.findOrCreate({
+      where: { oauthProvider: "dev", oauthId: "local" },
+      defaults: {
+        email: "dev@localhost",
+        displayName: "Dev User",
+        oauthProvider: "dev",
+        oauthId: "local",
+        isAdmin: false,
+      },
+    });
+
+    const userForToken: UserTokenForm = {
+      displayName: user.displayName,
+      id: user.id.toString(),
+      email: user.email,
+      isAdmin: user.isAdmin || false,
+    };
+    const token = jsonwebtoken.sign(userForToken, config.JWT_SECRET, { expiresIn: "7d" });
+
+    res.status(200).json({
+      token,
+      displayName: user.displayName,
+      id: user.id,
+      email: user.email,
+    });
+  } catch (error) {
+    handleUnexpectedError(error, res, "Dev login");
   }
 });
 

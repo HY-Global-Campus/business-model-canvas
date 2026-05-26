@@ -12,6 +12,11 @@ export const exchangeMoocCode = async (code: string, state: string): Promise<Log
   return response.data;
 };
 
+export const devLogin = async (): Promise<LoginResponse> => {
+  const response = await api.post<LoginResponse>('/login/dev');
+  return response.data;
+};
+
 // Forgot Password API functions
 export interface ForgotPasswordResponse {
   success: boolean;
