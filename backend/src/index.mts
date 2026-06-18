@@ -17,28 +17,49 @@ import rateLimit from 'express-rate-limit';
 
 const app = express();
 
-// Security: Add helmet for security headers
-app.use(helmet());
+const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
 
-// Security: Add rate limiting to prevent brute force attacks
+const defaultDevOrigins = ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173', 'http://127.0.0.1:3000'];
+const corsOrigins = allowedOrigins.length > 0 ? allowedOrigins : defaultDevOrigins;
+
+// CORS first so preflight OPTIONS always gets Access-Control-* (before rate limit / helmet)
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      if (corsOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 204,
+  })
+);
+
+// Security: Add helmet for security headers
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+
+// Security: Add rate limiting (skip browser CORS preflight)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later',
   standardHeaders: true, // Return rate limit info in headers
   legacyHeaders: false, // Disable the X-RateLimit-* headers
+  skip: (req) => req.method === 'OPTIONS',
 });
 
-// Apply rate limiting to all requests
 app.use(limiter);
-
-// CORS with more secure configuration
-app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
 
 app.use(express.json());
 app.use(cookieParser(config.COOKIE_SECRET));
